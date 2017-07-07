@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300italic' rel='stylesheet' type='text/css'>
+    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.typeit/4.4.0/typeit.min.js"></script>
+</head>
+
+<body>
+    <div class="nav">
+        <div class="container">
+            <ul class="pull-left">
+                <li>
+                    <a href="https://www.linkedin.com/in/majok-ring-4b1936110/"><img src="http://1000logos.net/wp-content/uploads/2017/03/LinkedIn-Logo.png" width="20" height="20"></a>
+                </li>
+                <li><a href="https://catlife.ucmerced.edu/organization/q/about">Q project</a></li>
+                <li><a href="Pages/about.html">About Me</a></li>
+            </ul>
+            <ul class="pull-right">
+                <li> <a href="#">Resume</a> </li>
+                <li><a href="Pages/upload.html">Cover Letter</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="#">Github</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <a name="top">
+        <div class="jumbotron" align="center">
+
+
+
+
+
+            <!--            Holds terminal info page-->
+            <div class="infoPanel" align="center">
+
+                <div class="line" align="center">
+
+                </div>
+
+                <div class="terminal">
+
+                    <p id="username1">
+                        <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span>
+                        <p1 id="terminal_ls"> ls</p1>
+                    </p>
+                    <p id="fileList"><span style="color: #a3a3f8"><br>introduction.sh <br>resume.pdf <br> cover_letter.pdf<br> skills.txt<br>projects.txt<br></span></p>
+                    <p id="username2">
+                        <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span>
+                    </p>
+
+
+                    <p id="intro_script">./introduction.sh</p>
+
+
+
+                    <p id="name_card"> <br> Name: <br> > </p>
+                    <p id="name_card_answer">Majok Francis Ring</p>
+
+                    <p id="university_card"> <br> College: <br> > </p>
+                    <p id="university_card_answer"> University of California, Merced</p>
+
+                    <p id="major_card"> <br> Field of Study: <br> > </p>
+                    <p id="major_card_answer">B.S Computer Science and Engineering 2014-2018</p>
+
+                    <p id="graduation_card"> <br> Graduating: <br> > </p>
+                    <p id="graduation_card_answer"> May 2018</p>
+
+                    <p id="username3">
+                        <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span>
+                    </p>
+
+                    <p id="cat_command1">cat skills.txt <br></p>
+                    <p id="cat_card_answer1">C++<br>Python<br>HTML<br>C<br>SQL<br>CSS<br>OpenGl<br>Android<br>Git<br>Java<br>MIPS Assembly<br>Algorithms</p>
+
+
+
+                </div>
+
+
+                <div class="skillsSection" align="center">
+
+                    <div class="skillsTitle" align="center">
+                        <txt>Skills</txt>
+                    </div>
+
+
+                    <div class="skillsTable" align="center">
+                        <table width="400">
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C++</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Python</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">HTML</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">SQL</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">CSS</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">OpenGl</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Android</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Git</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Java</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Assembley</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Algorithms</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+            <div class="row example-centered">
+                <div class="col-md-12 example-title">
+                    <h2>Journey</h2>
+                    <span class="type-it"></span>
+
+
+                    <script>
+                        //                Hide all elements 
+                        $('#fileList').hide();
+                        $('#username2').hide();
+                        $('#intro_script').hide();
+                        $('#name_card').hide();
+                        $('#name_card_answer').hide();
+                        $('#university_card').hide();
+                        $('#university_card_answer').hide();
+                        $('#major_card').hide();
+                        $('#major_card_answer').hide();
+                        $('#graduation_card').hide();
+                        $('#graduation_card_answer').hide();
+
+                        $('#username3').hide();
+                        $('#cat_command1').hide();
+                        $('#cat_card_answer1').hide();
+
+
+
+                        $('#terminal_ls').typeIt({
+                            strings: ['This is my string!'],
+                            startDelay: 3500,
+                            speed: 350,
+                            callback: function() {
+                                setTimeout(function() {
+                                    $('#fileList').show();
+                                }, 500);
+                                setTimeout(function() {
+                                    $('#username2').show();
+                                }, 500);
+                                $('#terminal_ls').find('.ti-cursor').css("visibility", "hidden");
+
+                                setTimeout(function() {
+                                    $('#intro_script').show();
+                                }, 650);
+
+                                $('#intro_script').typeIt({
+                                    strings: ['This is my string!'],
+                                    startDelay: 1500,
+                                    callback: function() {
+                                        setTimeout(function() {
+                                            $('#name_card').show();
+                                        }, 500);
+
+                                        $('#intro_script').find('.ti-cursor').css("visibility", "hidden");
+
+                                        setTimeout(function() {
+                                            $('#name_card_answer').show();
+                                        }, 650);
+                                        $('#name_card_answer').typeIt({
+                                            strings: ['This is my string!'],
+                                            startDelay: 1500,
+                                            callback: function() {
+                                                setTimeout(function() {
+                                                    $('#university_card').show();
+                                                }, 500);
+
+                                                $('#name_card_answer').find('.ti-cursor').css("visibility", "hidden");
+
+                                                setTimeout(function() {
+                                                    $('#university_card_answer').show();
+                                                }, 650);
+
+                                                $('#university_card_answer').typeIt({
+                                                    strings: ['This is my string!'],
+                                                    startDelay: 1500,
+                                                    callback: function() {
+
+                                                        setTimeout(function() {
+                                                            $('#major_card').show();
+                                                        }, 500);
+
+                                                        $('#university_card_answer').find('.ti-cursor').css("visibility", "hidden");
+
+                                                        setTimeout(function() {
+                                                            $('#major_card_answer').show();
+                                                        }, 650);
+
+
+                                                        $('#major_card_answer').typeIt({
+                                                            strings: ['This is my string!'],
+                                                            startDelay: 1500,
+                                                            callback: function() {
+
+
+                                                                setTimeout(function() {
+                                                                    $('#graduation_card').show();
+                                                                }, 500);
+
+                                                                $('#major_card_answer').find('.ti-cursor').css("visibility", "hidden");
+
+                                                                setTimeout(function() {
+                                                                    $('#graduation_card_answer').show();
+                                                                }, 650);
+
+
+
+
+
+
+
+                                                                $('#graduation_card_answer').typeIt({
+                                                                    strings: ['This is my string!'],
+                                                                    startDelay: 1500,
+                                                                    callback: function() {
+
+
+                                                                    }
+
+                                                                });
+                                                            }
+
+                                                        });
+
+                                                    }
+
+                                                });
+                                            }
+
+                                        });
+                                    }
+
+                                });
+
+                            }
+
+                        });
+
+
+
+
+//                                                
+//                                                                                                        $('#terminal_ls').typeIt({
+//                                                                                                    strings: ['This is my string!'],
+//                                                                                                    startDelay: 1500,
+//                                                                                                    callback: function() {
+//                                                                                                        
+//                                                                        
+//                                                                                                    }
+//                                                                        
+//                                                                                                });
+                    </script>
+
+
+                    <p>Welcome! Let's take a look at where I've been, and where I'm going.</p>
+                </div>
+                <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
+                    <ul class="timeline timeline-centered">
+
+
+
+                        <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+                        <li class="timeline-item period">
+                            <div class="timeline-info"></div>
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h2 class="timeline-title">September 2014</h2>
+                            </div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-info">
+                                <span>September 2014 - May 2018</span>
+                            </div>
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
+                                <p><strong>Secretary</strong> <br><br> The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods; to discover big data analytics of complex questions; and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics. The Q Project (“Q”) is a graduate student run organization furthering the diversity and advancement of the analyses of very large data sets in the sciences</p>
+                            </div>
+                        </li>
+
+
+
+
+
+                        <!--    August 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+                        <li class="timeline-item period">
+                            <div class="timeline-info"></div>
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h2 class="timeline-title">August 2014</h2>
+                            </div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-info">
+                                <span>August 2014 - May 2018</span>
+                            </div>
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">University of California, Merced</h3>
+                                <p>Bachelor’s Degree, Computer Science and Engineering</p>
+                            </div>
+                        </li>
+
+
+
+
+
+                        <!--    June 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+                        <li class="timeline-item period">
+                            <div class="timeline-info"></div>
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h2 class="timeline-title">June 2014</h2>
+                            </div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-info">
+                                <span>June 13, 2014</span>
+                            </div>
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">Canyon Crest Academy High School</h3>
+                                <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
+                            </div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-info">
+                                <span>April 2013 - January 2014</span>
+                            </div>
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">TEDxYouth@SanDiego</h3>
+                                <p>• Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area. <br><br> • As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.<br><br> • Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</p>
+                            </div>
+                        </li>
+
+                        <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+
+
+                    </ul>
+                </div>
+            </div>
+
+    </a>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+<!--
+        <div class="slideshow-container">
+  <div class="mySlides fade">
+    <div class="numbertext">1 / 3</div>
+    <img src="Resources/ucm.jpg" style="width:100%" height="480">
+    <div class="text">Caption Text</div>
+  </div>
+
+  <div class="mySlides fade">
+    <div class="numbertext">2 / 3</div>
+    <img src="Resources/recursiveTree.PNG" style="width:100%" height="480">
+    <div class="text">Caption Two</div>
+  </div>
+
+  <div class="mySlides fade">
+    <div class="numbertext">3 / 3</div>
+    <img src="Resources/gameplay.gif" style="width:100%" height="480">
+    <div class="text">Caption Three</div>
+  </div>
+
+  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+  <a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+<br>
+
+<div style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span> 
+  <span class="dot" onclick="currentSlide(2)"></span> 
+  <span class="dot" onclick="currentSlide(3)"></span> 
+</div>
+            
+<script>
+var slideIndex = 0;
+showSlides();
+
+function showSlides() {
+    var i;
+    var slides = document.getElementsByClassName("mySlides");
+    var dots = document.getElementsByClassName("dot");
+    for (i = 0; i < slides.length; i++) {
+       slides[i].style.display = "none";  
+    }
+    slideIndex++;
+    if (slideIndex> slides.length) {slideIndex = 1}    
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";  
+    dots[slideIndex-1].className += " active";
+    setTimeout(showSlides, 12000); // Change image every 2 seconds
+}
+</script>
+-->

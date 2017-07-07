@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
+    <link rel="stylesheet" href="about_css.css">
+      
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      
+      <!-- Important Owl stylesheet -->
+<link rel="stylesheet" href="owl-carousel/owl.carousel.css">
+ 
+<!-- Default Theme -->
+<link rel="stylesheet" href="owl-carousel/owl.theme.css">
+ 
+<!--  jQuery 1.7+  -->
+<script src="jquery-1.9.1.min.js"></script>
+ 
+<!-- Include js plugin -->
+<script src="assets/owl-carousel/owl.carousel.js"></script>
+      
+      
+      
+      
+      <script>
+$(document).ready(function(){
+    $("#hide").click(function(){
+        $("p").hide();
+    });
+    $("#show").click(function(){
+        $("p").show();
+    });
+});
+</script>
+      
+      <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        //Detailed Info expand and collapse
+        $(".detailInfo").hide();
+             $(".sessionTitle").click(function(){
+            if($(this).next(".detailInfo").css("display")=="none"){
+                //$(this).next(".detailInfo").show();
+                 $(this).next(".detailInfo").fadeIn("slow");
+                $(this).find("img").attr("src","http://www3.telus.net/jianlu58/white_minus.gif");
+                
+            }
+            else{
+                 $(this).next(".detailInfo").fadeOut("slow");
+                //$(this).next(".detailInfo").hide();
+                $(this).find("img").attr("src","http://www3.telus.net/jianlu58/white_plus.gif");
+            }
+        });
+
+    });
+</script>  
+      
+      
+      
+      
+      
+      
+      
+       <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        //Detailed Info expand and collapse
+        $(".detailInfo2").hide();
+             $(".sessionTitle2").click(function(){
+            if($(this).next(".detailInfo2").css("display")=="none"){
+                //$(this).next(".detailInfo").show();
+                 $(this).next(".detailInfo2").fadeIn("slow");
+                $(this).find("img").attr("src","http://www3.telus.net/jianlu58/white_minus.gif");
+                
+            }
+            else{
+                 $(this).next(".detailInfo2").fadeOut("slow");
+                //$(this).next(".detailInfo").hide();
+                $(this).find("img").attr("src","http://www3.telus.net/jianlu58/white_plus.gif");
+            }
+        });
+
+    });
+</script>  
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   
+      <script src="jquery.min.js"></script>
+      	<script>
+	$(function() {
+	  $('a[href*=#]:not([href=#])').click(function() {
+	    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+
+	      var target = $(this.hash);
+	      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+	      if (target.length) {
+	        $('html,body').animate({
+	          scrollTop: target.offset().top
+	        }, 880);
+	        return false;
+	      }
+	    }
+	  });
+	});
+	</script>
+    
+  </head>
+
+  <body>
+      
+      
+     
+     
+      
+      
+      
+    <div class="nav">
+      <div class="container">
+        <ul class="pull-left"/>
+          <li><a href="https://catlife.ucmerced.edu/organization/q/about">Q project</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+        
+       
+        
+        <ul class="pull-right"/>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Supporters</a></li>
+          <li><a href="#">Help</a></li>
+        </ul>
+      </div>
+    </div>
+
+
+ 
+
+
+    
+    <div class="about">
+      <div class="container">
+          
+          <div class="bar">
+      <div class="container">
+         <h3> The Quantitative Project at UC Merced</h3>
+  
+      </div>
+    </div>
+     
+
+<p>
+    The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods; to discover big data analytics of complex questions; and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics. The Q Project (“Q”) is a graduate student run organization furthering the diversity and advancement of the analyses of very large data sets in the sciences, with the collaborative assistance of the community and all interested students and faculty of the University of California, Merced. The Q promotes outreach to the community and university by hosting workshops that inform individuals of the opportunities available to them in the sciences. We also seek to aid students in the advancement of both professional and graduate school development goals by providing them with the resources, education, and mentorship opportunities from professionals in the scientific field while creating an inviting and enjoyable atmosphere for all.  Q members are ambitious and seek to educate themselves and support each other in the development of innovative solutions in big data analytics in a fun environment that fosters learning.  
+</p>
+
+        
+       
+      
+      </div>
+    </div>
+
+
+
+
+
+
+</body>
+
+
+ 
+</html>

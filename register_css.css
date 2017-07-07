@@ -1,0 +1,475 @@
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@font-face {
+    font-family: LemonMilk;
+    src: url('LemonMilk.otf');
+}
+
+.ProjectCard {
+    font-family: LemonMilk;
+    font-size: 20px;
+    margin-left: -1400px;
+    width: 500px;
+    height: 80px;
+    margin-top: -15px;
+    color: white;
+    border-radius: 3px;
+}
+
+.loginUI {
+    background-color: #e3e3e3;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6px;
+    opacity: 0.95;
+    height: 400px;
+}
+
+span {}
+
+.loginUI .logImg {
+    background-color: white;
+    border-radius: 100px;
+    margin-left: -120px;
+    margin-top: -20px;
+}
+
+.loginUI log {
+    font-family: LemonMilk;
+    font-size: 40px;
+    text-align: center;
+    margin-left: 50px;
+    margin-right: -40px;
+    height: 50px;
+    color: white;
+}
+
+.loginText {
+    background-color: #484848;
+}
+
+.loginUI a {
+    font-size: 15px;
+}
+
+input[type="text"],
+input[type="password"] {
+    outline: none;
+    padding: 10px;
+    display: block;
+    width: 300px;
+    border-radius: 3px;
+    border: 1px solid #eee;
+    margin-top: 13px;
+}
+
+input[name="firstName"] {
+    margin-top: -30px;
+    width: 150px;
+    display: inline;
+}
+
+input[name="lastName"] {
+    width: 150px;
+    display: inline;
+}
+
+input[type="submit"] {
+    padding: 10px;
+    margin-top: 10px;
+    color: #fff;
+    background: #0098cb;
+    width: 320px;
+    margin: 20px auto;
+    margin-top: 0px;
+    border: 0px;
+    border-radius: 3px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background: #00b8eb;
+}
+
+.infoPanel {
+    margin-top: 110px;
+    width: 100%;
+    height: 250px;
+    background-color: white;
+}
+
+txt {
+    color: #004a65;
+    font-size: 16px;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+.dbIcon {
+    margin-left: -1500px;
+    margin-top: 35px;
+}
+
+.dbTitle {
+    margin-left: -1500px;
+    padding-top: 10px;
+    width: 200px;
+    height: 40px;
+    font-style: italic;
+    font-weight: bolder;
+    font-size: 16px;
+}
+
+.dbInfo {
+    width: 500px;
+    margin-left: -1450px;
+    margin-top: px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    padding-top: 10px;
+}
+
+.linuxIcon {
+    margin-left: -150px;
+    margin-top: -180px;
+}
+
+.linuxTitle {
+    margin-left: -145px;
+    margin-top: -70px;
+    width: 200px;
+    height: 40px;
+    font-style: italic;
+    font-weight: bolder;
+    font-size: 16px;
+}
+
+.linuxInfo {
+    width: 450px;
+    margin-left: -150px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+}
+
+.cloudIcon {
+    margin-left: 800px;
+    margin-top: -285px;
+}
+
+.cloudTitle {
+    margin-left: 800px;
+    margin-top: -125px;
+    width: 200px;
+}
+
+.cloudInfo {
+    width: 450px;
+    margin-left: 800px;
+    margin-top: 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+}
+
+.navDots {
+    margin-left: 20px;
+    margin-top: 450px;
+    position: fixed;
+}
+
+.navDots li a {
+    margin: 0 0 8px 0;
+}
+
+.navDots li {
+    list-style-type: none;
+    margin: 0 0 10px 0;
+}
+
+.navDots .dots {}
+
+.nav a {
+    color: #5a5a5a;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 14px 10px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.nav {
+    position: fixed;
+    width: 2000px;
+    background-color: white;
+    text-align: center;
+    height: 50px;
+}
+
+.nav li {
+    display: inline;
+}
+
+.nav liQ {
+    display: inline;
+    margin-left: -500px;
+}
+
+.rna-explanation li {
+    display: inline;
+    padding-right: 15em;
+    text-decoration: underline;
+    font-size: 20px;
+}
+
+.rna-explanation a {
+    width: 1500;
+    text-decoration: none;
+    color: #5a5a5a;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 14px 10px;
+}
+
+.rna-explanation p {
+    width: 1500;
+    text-align: center;
+    text-decoration: none;
+    color: #5a5a5a;
+    font-size: 11px;
+    font-weight: bold;
+    margin: auto;
+    margin-bottom: 50px;
+}
+
+rna-explanation {
+    width: 1500;
+    height: 1000px;
+    text-decoration: none;
+    height: 300px;
+    margin-top: 140px;
+    text-align: center;
+    width: 2000px;
+    background-color: white;
+    text-align: center;
+}
+
+.rna-explanation p {
+    position: center;
+    font-family: LemonMilk;
+    font-size: 20px;
+    position: relative;
+    text-align: center;
+}
+
+.jumbotron {
+    background-image: url(Pages/lab.png);
+    height: 1000px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.button {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 3px;
+    font-family: LemonMilk;
+    font-size: 10px;
+    background: #ffffff;
+    padding: 10px 15px 10px 15px;
+    text-decoration: none;
+    top: 90%;
+}
+
+.button:hover {
+    background: #cccccc;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+}
+
+.container .button {
+    color: black;
+    font-size: 15px;
+}
+
+.jumbotron .container {
+    position: relative;
+    color: #000000;
+    top: 90%;
+}
+
+.jumbotron h1 {
+    color: #fff;
+    font-size: 48px;
+    font-family: 'Shift', sans-serif;
+    font-weight: bold;
+}
+
+.jumbotron p {
+    font-family: LemonMilk;
+    font-size: 20px;
+    color: #fff;
+}
+
+.learn-more {
+    background-color: #f7f7f7;
+}
+
+.learn-more h3 {
+    font-family: 'Shift', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.learn-more a {
+    color: #00b0ff;
+}
+
+.neighborhood-guides {
+    background-color: #efefef;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+#slide-Photos .item img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.neighborhood-guides h2 {
+    color: #393c3d;
+    font-size: 24px;
+}
+
+.neighborhood-guides p {
+    font-size: 15px;
+    margin-bottom: 13px;
+}
+
+.rna-img {
+    background-image: url(Resources/rna.jpg);
+    height: 500px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-top: 250px;
+}
+
+.rna-explanation img {
+    margin: auto;
+    margin-left: 50px;
+    margin-bottom: 10px;
+    max-width: 900px;
+    align-content: center;
+}
+
+.sessionTitle {
+    margin: auto;
+    width: 250px;
+    height: 43px;
+    background: #2a2a2a;
+    border: 1px solid #ffffff;
+    display: block;
+    text-align: center;
+    border-radius: 0px;
+    margin-bottom: 50px;
+}
+
+.sessionTitle:hover {
+    background: #4b4b4b;
+}
+
+.sessionTitle img {
+    float: left;
+    padding-left: 18px;
+    padding-top: 17px;
+}
+
+.detailInfo {
+    display: none;
+    margin: auto;
+    display: block;
+    width: 1000px;
+    padding: 20px 0;
+    // background:  #000000;
+    background-image: url(Resources/blur.jpg);
+    background-size: cover;
+    border-radius: 5px;
+}
+
+.detailInfo p {
+    color: white;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.sessionTitle .white_detail {
+    display: block;
+    color: #FFF;
+    font-size: 15px;
+    font-weight: bold;
+    padding-left: 40px;
+    margin-top: 10px;
+}
+
+.sessionTitle2 {
+    margin: auto;
+    width: 250px;
+    height: 43px;
+    background: #2a2a2a;
+    border: 1px solid #ffffff;
+    display: block;
+    text-align: center;
+    border-radius: 0px;
+    margin-bottom: 50px;
+}
+
+.sessionTitle2:hover {
+    background: #4b4b4b;
+}
+
+.sessionTitle2 img {
+    float: left;
+    padding-left: 18px;
+    padding-top: 15px;
+}
+
+.detailInfo2 {
+    display: none;
+    margin: auto;
+    display: block;
+    width: 1000px;
+    padding: 20px 0;
+    background-image: url(Resources/blur.jpg);
+    background-size: cover;
+    border-radius: 5px;
+}
+
+.detailInfo2 p {
+    color: white;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.sessionTitle2 .white_detail {
+    display: block;
+    font-size: 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding-left: 40px;
+    margin-top: 10px;
+}
+
+.sessionTitle2 img {
+    float: ;
+    left;
+    padding-left: 18px;
+    padding-top: 17px;
+}
