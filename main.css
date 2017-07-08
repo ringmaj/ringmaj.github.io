@@ -425,7 +425,7 @@ body {
 
 
 .infoPanel {
-    margin-top: 200px;
+    margin-top: 600px;
     width: 50%;
     height: 800px;
 /*    background-color: #f0f0f0;*/
@@ -564,13 +564,19 @@ font-family: 'Roboto', sans-serif;
     text-decoration: none;
 }
 
+.nav .container {
+     height: 40px;
+    z-index: 999;
+    display: flex;
+}
 .nav {
     position: fixed;
     width: 2000px;
-    background-color: white;
+    background-color: #ff0000;
     text-align: center;
-    height: 50px;
+    height: 40px;
     z-index: 999;
+    margin-top: -8px;
 }
 
 .nav li {
@@ -635,6 +641,7 @@ rna-explanation {
     background-image: url(Resources/pattern5.png);
     background-repeat:repeat;
     height: 995px;
+    margin-top: -558px;
     
  
 /*    background-color: rgba(111, 97, 88, 0.98); */
