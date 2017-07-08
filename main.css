@@ -400,6 +400,7 @@ body {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
+    margin: 0px;
 }
 
 @font-face {
@@ -637,6 +638,7 @@ rna-explanation {
     background-image: url(Resources/pattern5.png);
     background-repeat:repeat;
     height: 995px;
+    padding: 20px;
     
  
 /*    background-color: rgba(111, 97, 88, 0.98); */
