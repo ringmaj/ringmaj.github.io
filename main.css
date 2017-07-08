@@ -571,6 +571,7 @@ font-family: 'Roboto', sans-serif;
     text-align: center;
     height: 50px;
     z-index: 999;
+    margin-top: -8px;
 }
 
 .nav li {
@@ -635,6 +636,7 @@ rna-explanation {
     background-image: url(Resources/pattern5.png);
     background-repeat:repeat;
     height: 995px;
+    margin-top: -558px;
     
  
 /*    background-color: rgba(111, 97, 88, 0.98); */
