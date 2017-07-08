@@ -564,10 +564,14 @@ font-family: 'Roboto', sans-serif;
     text-decoration: none;
 }
 
+.nav .container {
+     height: 40px;
+    z-index: 999;
+}
 .nav {
     position: fixed;
     width: 2000px;
-    background-color: white;
+    background-color: #ff0000;
     text-align: center;
     height: 40px;
     z-index: 999;
