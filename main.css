@@ -567,6 +567,7 @@ font-family: 'Roboto', sans-serif;
 .nav .container {
      height: 40px;
     z-index: 999;
+    display: flex;
 }
 .nav {
     position: fixed;
