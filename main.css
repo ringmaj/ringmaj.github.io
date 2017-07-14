@@ -448,13 +448,22 @@ username {
     margin-right: 10px;
 }
 
+.profilePhoto {
+    height: 20%;
+    width: 20%;
+    background-image: url(Resources/profile.png);
+    background-repeat: no-repeat;
+    border-radius: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .skillsSection {
     padding: 10px;
     width: 400px;
     height: 240px;
     padding: 20px;
-    margin-left: -85px;
-    margin-top: 390px;
+    width: 100%;
 }
 
 .skillsTitle {
@@ -463,7 +472,7 @@ username {
 }
 
 txt {
-    color: #ffffff;
+    color: #2a2727;
     font-size: 20px;
     font-weight: bolder;
     font-family: 'Roboto', sans-serif;
@@ -522,6 +531,7 @@ width: 100%;
      display: block;
   margin-right: auto;
   margin-left: auto;
+    padding: 20px;
 }
 
 .jumbotron {
@@ -615,6 +625,22 @@ width: 100%;
     display: inline;
 }
 
+
+    .profilePhoto {
+    height: 190px;
+    width: 190px;
+    background-image: url(Resources/profile.png);
+    background-repeat: no-repeat;
+    border-radius: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    .userCard {
+
+    width: 90%;
+
+}
 
 }
 
