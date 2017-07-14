@@ -1,7 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Bootstrap 101 Template</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300italic' rel='stylesheet' type='text/css'>
     <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
     <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
@@ -16,24 +23,27 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
+
+
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">Project name</a> </div>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">Majok Ring</a> </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <li><a href="#about">About Me </a></li>
+                    <li><a href="#contact">Experience</a></li>
+                    <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resume <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
+                            <li><a href="#">Resume</a></li>
+                            <li><a href="#">Cover Letter</a></li>
+                            <li><a href="#">Github</a></li>
                             <li role="separator" class="divider"></li>
                             <li class="dropdown-header">Nav header</li>
                             <li><a href="#">Separated link</a></li>
@@ -42,16 +52,20 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="../navbar/">Default</a></li>
-                    <li><a href="../navbar-static-top/">Static top</a></li>
-                    <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+                    <li><a href="../navbar/">Timeline</a></li>
+                    <li><a href="../navbar-static-top/">Projects</a></li>
+                    <li class="active"><a href="./">Future <span class="sr-only">(current)</span></a></li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
         </div>
     </nav>
-    <a name="top">
-        <div class="jumbotron" align="center">
+
+
+
+<div class="container-fluid" style="
+    padding: 0;">
+<div class="jumbotron" align="center">
             <!--            Holds terminal info page-->
             <div class="infoPanel" align="center">
                 <div class="line" align="center"> </div>
@@ -77,7 +91,7 @@
                     <p id="graduation_card">
                         <br> Graduating:
                         <br> > </p>
-                    <p id="graduation_card_answer"> May 2018</p>
+                    <p id="graduation_card_answer"> May 2018<br></p>
                     <p id="username3"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
                     <p id="cat_command1">cat skills.txt
                         <br> </p>
@@ -92,54 +106,40 @@
                         <br>Git
                         <br>Java
                         <br>MIPS Assembly
-                        <br>Algorithms</p>
+                        <br>Algorithms<br></p>
+
+                     <p id="username4"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
+
+                     <p id="cat_command2">cat projects.txt
+                        <br> </p>
+
+                    <p id="cat_card_answer2">
+                        Recursive Tree Analysis Tool
+                        <br>RNA-Seq Pipeline
+                        <br>Parking Analytics
+                        <br>UAV Crop Analysis Tool
+                        <br>Skateboarding Physics Simulator
+                        <br></p>
+
                 </div>
-                <div class="skillsSection" align="center">
-                    <div class="skillsTitle" align="center">
-                        <txt>Skills</txt>
-                    </div>
-                    <div class="skillsTable" align="center">
-                        <table width="400">
-                            <tr>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C++</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Python</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">HTML</td>
-                            </tr>
-                            <tr>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">SQL</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">CSS</td>
-                            </tr>
-                            <tr>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">OpenGl</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Android</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Git</td>
-                            </tr>
-                            <tr>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Java</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Assembley</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Algorithms</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+
             </div>
             <script>
                 //                Hide all elements
-                $('#fileList').hide();
-                $('#username2').hide();
-                $('#intro_script').hide();
-                $('#name_card').hide();
-                $('#name_card_answer').hide();
-                $('#university_card').hide();
-                $('#university_card_answer').hide();
-                $('#major_card').hide();
-                $('#major_card_answer').hide();
-                $('#graduation_card').hide();
-                $('#graduation_card_answer').hide();
-                $('#username3').hide();
-                $('#cat_command1').hide();
-                $('#cat_card_answer1').hide();
+//                $('#fileList').hide();
+//                $('#username2').hide();
+//                $('#intro_script').hide();
+//                $('#name_card').hide();
+//                $('#name_card_answer').hide();
+//                $('#university_card').hide();
+//                $('#university_card_answer').hide();
+//                $('#major_card').hide();
+//                $('#major_card_answer').hide();
+//                $('#graduation_card').hide();
+//                $('#graduation_card_answer').hide();
+//                $('#username3').hide();
+//                $('#cat_command1').hide();
+//                $('#cat_card_answer1').hide();
                 $('#terminal_ls').typeIt({
                     strings: ['This is my string!']
                     , startDelay: 3500
@@ -225,9 +225,57 @@
                 //
                 //                                                                                                });
             </script>
+</div>
+    </div>
+
+
+
+
+
+
+
+    <div class="container-fluid">
+        <div class="bioPanel">
+            <div class="userCard">
+                   <div class="skillsSection" align="center">
+                    <div class="skillsTitle" align="center">
+                        <txt>Skills</txt>
+                    </div>
+                    <div class="skillsTable" align="center">
+                        <table width="400">
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C++</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Python</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">HTML</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">SQL</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">CSS</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">OpenGl</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Android</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Git</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Java</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Assembley</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Algorithms</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </a>
-    <div class="row example-centered">
+    </div>
+
+
+
+
+    <div class="container-fluid">
+
+     <div class="row example-centered">
         <div class="col-md-12 example-title">
             <h2>Journey</h2> <span class="type-it"></span>
             <p>Welcome! Let's take a look at where I've been, and where I'm going.</p>
@@ -297,59 +345,16 @@
             </ul>
         </div>
     </div>
+    </div>
+
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
 </body>
 
 </html>
-<!--
-        <div class="slideshow-container">
-  <div class="mySlides fade">
-    <div class="numbertext">1 / 3</div>
-    <img src="Resources/ucm.jpg" style="width:100%" height="480">
-    <div class="text">Caption Text</div>
-  </div>
-
-  <div class="mySlides fade">
-    <div class="numbertext">2 / 3</div>
-    <img src="Resources/recursiveTree.PNG" style="width:100%" height="480">
-    <div class="text">Caption Two</div>
-  </div>
-
-  <div class="mySlides fade">
-    <div class="numbertext">3 / 3</div>
-    <img src="Resources/gameplay.gif" style="width:100%" height="480">
-    <div class="text">Caption Three</div>
-  </div>
-
-  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-  <a class="next" onclick="plusSlides(1)">&#10095;</a>
-</div>
-<br>
-
-<div style="text-align:center">
-  <span class="dot" onclick="currentSlide(1)"></span>
-  <span class="dot" onclick="currentSlide(2)"></span>
-  <span class="dot" onclick="currentSlide(3)"></span>
-</div>
-
-<script>
-var slideIndex = 0;
-showSlides();
-
-function showSlides() {
-    var i;
-    var slides = document.getElementsByClassName("mySlides");
-    var dots = document.getElementsByClassName("dot");
-    for (i = 0; i < slides.length; i++) {
-       slides[i].style.display = "none";
-    }
-    slideIndex++;
-    if (slideIndex> slides.length) {slideIndex = 1}
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-    slides[slideIndex-1].style.display = "block";
-    dots[slideIndex-1].className += " active";
-    setTimeout(showSlides, 12000); // Change image every 2 seconds
-}
-</script>
--->

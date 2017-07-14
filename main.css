@@ -10,6 +10,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+
 h1,
 h2,
 h3,
@@ -362,17 +363,6 @@ body {
 }
 
 
-/*
-.text {
-    background-color: white;
-    color:black;
-    width: 200px;
-    margin-left: -435px;
-    margin-bottom: -10px;
-    width: 400px;
-    height: 500px;
-}
-*/
 
 .infoPanel {
     margin-top: 200px;
@@ -420,6 +410,8 @@ body {
 
 #username1,
 #username2,
+#username3,
+#username4,
 #intro_script,
 #name_card,
 #name_card_answer,
@@ -428,7 +420,11 @@ body {
 #major_card,
 #major_card_answer,
 #graduation_card,
-#graduation_card_answer {
+#graduation_card_answer,
+#cat_command1,
+#cat_card_answer1,
+#cat_command2,
+#cat_card_answer2{
     color: white;
     font-family: monospace;
     font-size: 14px;
@@ -441,7 +437,7 @@ username {
 }
 
 .line {
-    height: 10px;
+    height: 15px;
     width: 100%;
     margin-top: -130px;
     background-color: #f0f0f0;
@@ -486,17 +482,60 @@ txt {
     font-family: 'Roboto', sans-serif;
 }
 
+
+
+
+.container-fluid .jumbotron {
+height: 1050px;
+    background-color: red;
+    margin-bottom: 0px;
+
+}
+
+.container-fluid .bioPanel {
+height: 1050px;
+    width: inherit
+    background-color: red;
+    border-radius: 0px;
+    margin-bottom: 0px;
+    width: 100%;
+
+}
+
+
+
+.bioPanel {
+    background-color: #ebe5e5;
+    align-content: center;
+    align-items: center;
+
+    padding-top: 70px;
+width: 100%;
+
+  }
+
+.userCard {
+
+    width: 50%;
+    height: 900px;
+    background-color: #ffffff;
+     display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .jumbotron {
-    /*    background-image: url(Pages/lab.png);*/
-    /*    background-color: #ff5800;*/
-    background-image: url(Resources/wild-sea.png);
-    background-repeat: repeat;
-    height: 995px;
+
+    background-image: url(Resources/wall.png);
+/*    background-repeat: repeat-y;*/
+    height: 100%;
     padding: 20px;
     /*    background-color: rgba(111, 97, 88, 0.98); */
     /*        background-color: rgba(111, 97, 88, 0.98); */
     /*  background-blend-mode:lighten*/
-}
+    border-radius: 0px;}
+
+
 
 .button {
     -webkit-border-radius: 0;
@@ -525,42 +564,77 @@ txt {
     font-size: 15px;
 }
 
-.jumbotron .container {
-    position: relative;
-    color: #000000;
-    top: 90%;
-}
 
-.jumbotron h1 {
-    color: #fff;
-    font-size: 48px;
-    font-family: 'Shift', sans-serif;
-    font-weight: bold;
-}
 
-.jumbotron p {
-    font-family: LemonMilk;
-    font-size: 20px;
-    color: #fff;
-}
+
+
+
+
+
 
 @media only screen and (max-width: 500px) {
     .infoPanel {
         width: 90%;
     }
-    body {
-        font-size: 14px;
-    }
+
+
+.jumbotron {
+    height: 100%;
+    padding: 20px;
+    background-color: yellow;
+}
+
+#username1,
+#username2,
+#username3,
+#username4,
+#intro_script,
+#name_card,
+#name_card_answer,
+#university_card,
+#university_card_answer,
+#major_card,
+#major_card_answer,
+#graduation_card,
+#graduation_card_answer,
+#cat_command1,
+#cat_card_answer1,
+#cat_command2,
+#cat_card_answer2{
+    color: white;
+    font-family: monospace;
+    font-size: 10px;
+    display: inline;
+}
+
+    #terminal_ls {
+    color: white;
+    font-family: monospace;
+    font-size: 10px;
+}
+
+#fileList {
+    color: white;
+    font-family: monospace;
+    font-size: 10px;
+    display: inline;
+}
+
+
 }
 
 @media (max-width: @screen-xs) {
-    body {
-        font-size: 10px;
-    }
+.jumbotron {
+    height: 100%;
+    padding: 20px;
+    background-color: yellow;
+}
 }
 
 @media (max-width: @screen-sm) {
-    body {
-        font-size: 5%;
-    }
+.jumbotron {
+    height: 100%;
+    padding: 20px;
+    background-color: yellow;
+}
 }
