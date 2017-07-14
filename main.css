@@ -493,11 +493,11 @@ txt {
 
 
 
-
 .container-fluid .jumbotron {
 height: 1050px;
     background-color: red;
     margin-bottom: 0px;
+    border-radius: 0px;
 
 }
 
