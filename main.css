@@ -578,11 +578,6 @@ width: 100%;
     }
 
 
-.jumbotron {
-    height: 100%;
-    padding: 20px;
-    background-color: yellow;
-}
 
 #username1,
 #username2,
@@ -624,17 +619,13 @@ width: 100%;
 }
 
 @media (max-width: @screen-xs) {
-.jumbotron {
-    height: 100%;
-    padding: 20px;
-    background-color: yellow;
-}
+  .infoPanel {
+        width: 90%;
+    }
 }
 
 @media (max-width: @screen-sm) {
-.jumbotron {
-    height: 100%;
-    padding: 20px;
-    background-color: yellow;
-}
+  .infoPanel {
+        width: 90%;
+    }
 }
