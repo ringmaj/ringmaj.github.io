@@ -449,6 +449,7 @@ username {
 }
 
 .profilePhoto {
+    margin-top: 25px;
     height: 20%;
     width: 20%;
     background-image: url(Resources/profile.png);
@@ -456,6 +457,7 @@ username {
     border-radius: 200px;
     margin-left: auto;
     margin-right: auto;
+    border: 1px solid rgba(51, 40, 40, 0.37);
 }
 
 .skillsSection {
