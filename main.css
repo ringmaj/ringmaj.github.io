@@ -473,6 +473,27 @@ username {
     margin-bottom: 10px;
 }
 
+.name {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    text-align: center;
+      color: #2a2727;
+    font-size: 20px;
+    font-weight: bolder;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+#userCardInfo{
+    margin-top: 25px;
+    text-align:left;
+}
+
+.col {
+display: inline-flex;
+    margin-bottom: 10px;
+}
+
 txt {
     color: #2a2727;
     font-size: 20px;
@@ -497,7 +518,6 @@ txt {
 
 .container-fluid .jumbotron {
 height: 1050px;
-    background-color: red;
     margin-bottom: 0px;
     border-radius: 0px;
 
@@ -506,7 +526,6 @@ height: 1050px;
 .container-fluid .bioPanel {
 height: 1050px;
     width: inherit
-    background-color: red;
     border-radius: 0px;
     margin-bottom: 0px;
     width: 100%;
@@ -514,9 +533,36 @@ height: 1050px;
 }
 
 
+#timeline-container{
+    background-image:url(https://static.pexels.com/photos/423086/pexels-photo-423086.jpeg);
+     background-size: cover;
+    background-repeat: no-repeat;
+
+}
+
+#timeline-background {
+    background-color: white;
+}
+
+#journey-background {
+    background-color: white;
+/*
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  align-content: center;
+*/
+
+
+}
+
 
 .bioPanel {
-    background-color: #ebe5e5;
+/*    background-color: #0e8a9b;*/
+/*background-image:url(https://static.pexels.com/photos/481690/pexels-photo-481690.jpeg);*/
+    background-image: url(https://static.pexels.com/photos/419784/pexels-photo-419784.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
     align-content: center;
     align-items: center;
 
@@ -537,8 +583,8 @@ width: 100%;
 }
 
 .jumbotron {
-
-    background-image: url(Resources/wall.png);
+border-radius: 0px;
+    background-image: url(https://static.pexels.com/photos/481690/pexels-photo-481690.jpeg);
 /*    background-repeat: repeat-y;*/
     height: 100%;
     padding: 20px;
@@ -586,10 +632,32 @@ width: 100%;
 
 @media only screen and (max-width: 768px) {
     .infoPanel {
-        width: 90%;
+        width: 95%;
+        height: 770px;
     }
 
+   .container-fluid .jumbotron {
+height: 950px;
+    margin-bottom: 0px;
+    border-radius: 0px;
 
+}
+
+
+
+
+
+    button.navbar-toggle.collapsed {
+        border: none;
+    }
+
+    .navbar-header {
+height: 10px;
+    }
+
+    navbar.navbar-defailt.navbar-fixed-top {
+
+    }
 
 #username1,
 #username2,
@@ -640,8 +708,24 @@ width: 100%;
 
     .userCard {
 
-    width: 90%;
+    width: 100%;
+        height: 100%;
+        margin-top: 0px;
 
+}
+
+
+    .bioPanel {
+
+    padding-top: 0px;
+
+
+  }
+
+    #userCardInfo{
+    margin-top: 25px;
+    text-align:left;
+        padding-left: 30px;
 }
 
 }

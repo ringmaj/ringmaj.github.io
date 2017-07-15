@@ -29,15 +29,18 @@
 <body>
 
 
+
+
+
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">Majok Ring</a> </div>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#"></a> </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#about">About Me </a></li>
+                    <li class="active"><a href="#"  >Home</a></li>
+                    <li id="aboutButton"><a href="#">About Me </a></li>
                     <li><a href="#contact">Experience</a></li>
                     <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resume <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -63,9 +66,19 @@
 
 
 
+    <script>
+
+        $('#aboutButton').click(function() {
+    $('html, body').animate({
+        scrollTop: $("#jumbotron").offset().top
+    }, 5000);
+});
+    </script>
+
+
 <div class="container-fluid" style="
     padding: 0;">
-<div class="jumbotron" align="center">
+<div class="jumbotron" align="center" style="border-radius:0px;">
             <!--            Holds terminal info page-->
             <div class="infoPanel" align="center">
                 <div class="line" align="center"> </div>
@@ -126,20 +139,256 @@
             </div>
             <script>
                 //                Hide all elements
-//                $('#fileList').hide();
-//                $('#username2').hide();
+                $('#fileList').hide();
+                $('#username2').hide();
+                $('#username3').hide();
+                $('#username4').hide();
 //                $('#intro_script').hide();
-//                $('#name_card').hide();
-//                $('#name_card_answer').hide();
-//                $('#university_card').hide();
-//                $('#university_card_answer').hide();
-//                $('#major_card').hide();
-//                $('#major_card_answer').hide();
-//                $('#graduation_card').hide();
-//                $('#graduation_card_answer').hide();
-//                $('#username3').hide();
-//                $('#cat_command1').hide();
-//                $('#cat_card_answer1').hide();
+                $('#name_card').hide();
+                $('#name_card_answer').hide();
+                $('#university_card').hide();
+                $('#university_card_answer').hide();
+                $('#major_card').hide();
+                $('#major_card_answer').hide();
+                $('#graduation_card').hide();
+                $('#graduation_card_answer').hide();
+                $('#username3').hide();
+                $('#cat_command1').hide();
+                $('#cat_card_answer1').hide();
+                  $('#cat_command2').hide();
+                $('#cat_card_answer2').hide();
+                $('#terminal_ls').typeIt({
+                      startDelay: 3500
+                    , speed: 350
+
+                });
+
+
+                   $('#intro_script').typeIt({
+                      startDelay: 3500
+                    , speed: 350
+
+                });
+
+
+                //
+                //                                                                                                        $('#terminal_ls').typeIt({
+                //                                                                                                    strings: ['This is my string!'],
+                //                                                                                                    startDelay: 1500,
+                //                                                                                                    callback: function() {
+                //
+                //
+                //                                                                                                    }
+                //
+                //                                                                                                });
+            </script>
+</div>
+    </div>
+
+
+
+
+
+
+<div id="aboutMe"></div>
+    <div class="container-fluid" style="
+    padding: 0;">
+        <div class="bioPanel">
+            <div class="userCard">
+                <div class="profilePhoto">
+                </div>
+                <div class="name">
+                    Majok Francis Ring
+                </div>
+
+
+
+                <div class="container-fluid" id="userCardInfo">
+                <div class="row">
+                    <div class="col"><strong>College:</strong>
+                    </div>
+                    <div class="col">University of California, Merced
+                    </div>
+                    <br>
+                     <div class="col"><strong>Major:</strong>
+                    </div>
+                    <div class="col">Computer Science and Engineering 2014-2018
+                    </div>
+
+                     <br>
+                     <div class="col"><strong>Graduate:</strong>
+                    </div>
+                    <div class="col">May 2018
+                    </div>
+
+                      <br>
+                     <div class="col"><strong>Email:</strong>
+                    </div>
+                    <div class="col">mring3@ucmerced.edu
+                    </div>
+
+                                          <br>
+                     <div class="col"><strong>Phone:</strong>
+                    </div>
+                    <div class="col">(858) 925-3768
+                    </div>
+
+
+
+
+
+
+
+                </div>
+                </div>
+
+
+
+
+                   <div class="skillsSection" align="center">
+                    <div class="skillsTitle" align="center">
+                        <txt>Skills</txt>
+                    </div>
+                    <div class="skillsTable" align="center">
+                        <table width="400">
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C++</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Python</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">HTML</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">SQL</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">CSS</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">OpenGl</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Android</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Git</td>
+                            </tr>
+                            <tr>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Java</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Assembley</td>
+                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Algorithms</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="container-fluid" id="timeline-container">
+
+     <div class="row example-centered">
+        <div class="col-md-12 example-title" id="journey-background">
+            <h2>Journey</h2> <span class="type-it"></span>
+            <p>Welcome! Let's take a look at where I've been, and where I'm going.</p>
+        </div>
+        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2" id="timeline-background">
+            <ul class="timeline timeline-centered">
+                <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                <li class="timeline-item period">
+                    <div class="timeline-info"></div>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h2 class="timeline-title">September 2014</h2> </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="timeline-info"> <span>September 2014 - May 2018</span> </div>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
+                        <p><strong>Secretary</strong>
+                            <br>
+                            <br> The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods; to discover big data analytics of complex questions; and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics. The Q Project (“Q”) is a graduate student run organization furthering the diversity and advancement of the analyses of very large data sets in the sciences</p>
+                    </div>
+                </li>
+                <!--    August 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                <li class="timeline-item period">
+                    <div class="timeline-info"></div>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h2 class="timeline-title">August 2014</h2> </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="timeline-info"> <span>August 2014 - May 2018</span> </div>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">University of California, Merced</h3>
+                        <p>Bachelor’s Degree, Computer Science and Engineering</p>
+                    </div>
+                </li>
+                <!--    June 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                <li class="timeline-item period">
+                    <div class="timeline-info"></div>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h2 class="timeline-title">June 2014</h2> </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="timeline-info"> <span>June 13, 2014</span> </div>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Canyon Crest Academy High School</h3>
+                        <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="timeline-info"> <span>April 2013 - January 2014</span> </div>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">TEDxYouth@SanDiego</h3>
+                        <p>• Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area.
+                            <br>
+                            <br> • As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.
+                            <br>
+                            <br> • Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</p>
+                    </div>
+                </li>
+                <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+            </ul>
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+<!--
+ <script>
+                //                Hide all elements
+                $('#fileList').hide();
+                $('#username2').hide();
+                $('#intro_script').hide();
+                $('#name_card').hide();
+                $('#name_card_answer').hide();
+                $('#university_card').hide();
+                $('#university_card_answer').hide();
+                $('#major_card').hide();
+                $('#major_card_answer').hide();
+                $('#graduation_card').hide();
+                $('#graduation_card_answer').hide();
+                $('#username3').hide();
+                $('#cat_command1').hide();
+                $('#cat_card_answer1').hide();
                 $('#terminal_ls').typeIt({
                     strings: ['This is my string!']
                     , startDelay: 3500
@@ -224,140 +473,4 @@
                 //                                                                                                    }
                 //
                 //                                                                                                });
-            </script>
-</div>
-    </div>
-
-
-
-
-
-
-
-    <div class="container-fluid" style="
-    padding: 0;">
-        <div class="bioPanel">
-            <div class="userCard">
-                <div class="profilePhoto">
-                </div>
-                   <div class="skillsSection" align="center">
-                    <div class="skillsTitle" align="center">
-                        <txt>Skills</txt>
-                    </div>
-                    <div class="skillsTable" align="center">
-                        <table width="400">
-                            <tr>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C++</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Python</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">HTML</td>
-                            </tr>
-                            <tr>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">SQL</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">CSS</td>
-                            </tr>
-                            <tr>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">OpenGl</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Android</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Git</td>
-                            </tr>
-                            <tr>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Java</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Assembley</td>
-                                <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Algorithms</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-    <div class="container-fluid">
-
-     <div class="row example-centered">
-        <div class="col-md-12 example-title">
-            <h2>Journey</h2> <span class="type-it"></span>
-            <p>Welcome! Let's take a look at where I've been, and where I'm going.</p>
-        </div>
-        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
-            <ul class="timeline timeline-centered">
-                <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                <li class="timeline-item period">
-                    <div class="timeline-info"></div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h2 class="timeline-title">September 2014</h2> </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-info"> <span>September 2014 - May 2018</span> </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
-                        <p><strong>Secretary</strong>
-                            <br>
-                            <br> The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods; to discover big data analytics of complex questions; and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics. The Q Project (“Q”) is a graduate student run organization furthering the diversity and advancement of the analyses of very large data sets in the sciences</p>
-                    </div>
-                </li>
-                <!--    August 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                <li class="timeline-item period">
-                    <div class="timeline-info"></div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h2 class="timeline-title">August 2014</h2> </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-info"> <span>August 2014 - May 2018</span> </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">University of California, Merced</h3>
-                        <p>Bachelor’s Degree, Computer Science and Engineering</p>
-                    </div>
-                </li>
-                <!--    June 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                <li class="timeline-item period">
-                    <div class="timeline-info"></div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h2 class="timeline-title">June 2014</h2> </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-info"> <span>June 13, 2014</span> </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">Canyon Crest Academy High School</h3>
-                        <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
-                    </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-info"> <span>April 2013 - January 2014</span> </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">TEDxYouth@SanDiego</h3>
-                        <p>• Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area.
-                            <br>
-                            <br> • As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.
-                            <br>
-                            <br> • Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</p>
-                    </div>
-                </li>
-                <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-            </ul>
-        </div>
-    </div>
-    </div>
-
-
-
-
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-</body>
-
-</html>
+            </script>-->
