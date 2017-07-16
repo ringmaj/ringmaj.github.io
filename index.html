@@ -23,61 +23,20 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-
-    <script>
-$(document).ready(function(){
-  // Add smooth scrolling to all links
-  $("a").on('click', function(event) {
-
-    // Make sure this.hash has a value before overriding default behavior
-    if (this.hash !== "") {
-      // Prevent default anchor click behavior
-      event.preventDefault();
-
-      // Store hash
-      var hash = this.hash;
-
-      // Using jQuery's animate() method to add smooth page scroll
-      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top
-      }, 800, function(){
-
-        // Add hash (#) to URL when done scrolling (default click behavior)
-        window.location.hash = hash;
-      });
-    } // End if
-  });
-});
-</script>
-
-     <style>
-body, html, .main {
-    height: 100%;
-}
-
-section {
-    min-height: 100%;
-}
-</style>
-
+    <!--    scrolling-->
 </head>
 
 <body>
-
-
-
-
-
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container" id="navc">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#"></a> </div>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                <a class="navbar-brand" href="#"></a>
+            </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#"  >Home</a></li>
+                    <li class="active"><a href="#">Home</a></li>
                     <li id="aboutButton"><a href="#aboutMe">About Me </a></li>
                     <li><a href="#contact">Experience</a></li>
                     <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resume <span class="caret"></span></a>
@@ -101,15 +60,9 @@ section {
             <!--/.nav-collapse -->
         </div>
     </nav>
-
-
-
-
-
-
-<div class="container-fluid" style="
+    <div class="container-fluid" style="
     padding: 0;">
-<div class="jumbotron" align="center" style="border-radius:0px;">
+        <div class="jumbotron" align="center" style="border-radius:0px;">
             <!--            Holds terminal info page-->
             <div class="infoPanel" align="center">
                 <div class="line" align="center"> </div>
@@ -135,9 +88,11 @@ section {
                     <p id="graduation_card">
                         <br> Graduating:
                         <br> > </p>
-                    <p id="graduation_card_answer"> May 2018</p><p id="username3"><span style="color:#adf447"><br>ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
+                    <p id="graduation_card_answer"> May 2018</p>
+                    <p id="username3"><span style="color:#adf447"><br>ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
                     <p id="cat_command1">cat skills.txt</p>
-                    <p id="cat_card_answer1"><br>C++
+                    <p id="cat_card_answer1">
+                        <br>C++
                         <br>Python
                         <br>HTML
                         <br>C
@@ -148,26 +103,21 @@ section {
                         <br>Git
                         <br>Java
                         <br>MIPS Assembly
-                        <br>Algorithms<br></p>
-
-                     <p id="username4"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
-
-                     <p id="cat_command2">cat projects.txt</p>
-
-                    <p id="cat_card_answer2"><br>Recursive Tree Analysis Tool
+                        <br>Algorithms
+                        <br> </p>
+                    <p id="username4"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
+                    <p id="cat_command2">cat projects.txt</p>
+                    <p id="cat_card_answer2">
+                        <br>Recursive Tree Analysis Tool
                         <br>RNA-Seq Pipeline
                         <br>Parking Analytics
                         <br>UAV Crop Analysis Tool
                         <br>Skateboarding Physics Simulator
-                        <br></p>
-                                         <p id="username5"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
-
-
+                        <br> </p>
+                    <p id="username5"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
                 </div>
-
             </div>
-
- <script>
+            <script>
                 //                Hide all elements
                 $('#fileList').hide();
                 $('#username2').hide();
@@ -247,72 +197,46 @@ section {
                                                         setTimeout(function () {
                                                             $('#graduation_card_answer').show();
                                                         }, 650);
-
-
                                                         $('#graduation_card_answer').typeIt({
                                                             strings: ['This is my string!']
                                                             , startDelay: 1500
                                                             , callback: function () {
-
-                                                                  setTimeout(function () {
-                                                            $('#username3').show();
-                                                        }, 500);
-                                                        $('#graduation_card_answer').find('.ti-cursor').css("visibility", "hidden");
-                                                        setTimeout(function () {
-                                                            $('#cat_command1').show();
-                                                        }, 650);
-
-
-
-                                                                       $('#cat_command1').typeIt({
-                                                                        strings: ['This is my string!'],
-                                                                        startDelay: 1500,
-                                                                         callback: function() {
-
-                                                    setTimeout(function () {
-                                                    $('#cat_card_answer1').show();
-                                                }, 500);
-                                                $('#cat_command1').find('.ti-cursor').css("visibility", "hidden");
-                                                setTimeout(function () {
-                                                    $('#username4').show();
-                                                }, 500);
-
-                                                                               setTimeout(function () {
-                                                            $('#cat_command2').show();
-                                                        }, 650);
-
-
-
-                                                                                       $('#cat_command2').typeIt({
-                                                                                                                    strings: ['This is my string!'],
-                                                                                                                    startDelay: 1500,
-                                                                                                                    callback: function() {
-
-                                                                                                                          setTimeout(function () {
-                                                    $('#cat_card_answer2').show();
-                                                }, 500);
-
-                                                                                                                          setTimeout(function () {
-                                                    $('#username5').show();
-                                                }, 500);
-
-
-
-
-                                                                                                                                                                        $('#cat_command2').find('.ti-cursor').css("visibility", "hidden");
-
-
-                                                                                                                    }
-
-                                                                                                                });
-
-
-                                                                                  }
-
-                                                                  });
-
-
-
+                                                                setTimeout(function () {
+                                                                    $('#username3').show();
+                                                                }, 500);
+                                                                $('#graduation_card_answer').find('.ti-cursor').css("visibility", "hidden");
+                                                                setTimeout(function () {
+                                                                    $('#cat_command1').show();
+                                                                }, 650);
+                                                                $('#cat_command1').typeIt({
+                                                                    strings: ['This is my string!']
+                                                                    , startDelay: 1500
+                                                                    , callback: function () {
+                                                                        setTimeout(function () {
+                                                                            $('#cat_card_answer1').show();
+                                                                        }, 500);
+                                                                        $('#cat_command1').find('.ti-cursor').css("visibility", "hidden");
+                                                                        setTimeout(function () {
+                                                                            $('#username4').show();
+                                                                        }, 500);
+                                                                        setTimeout(function () {
+                                                                            $('#cat_command2').show();
+                                                                        }, 650);
+                                                                        $('#cat_command2').typeIt({
+                                                                            strings: ['This is my string!']
+                                                                            , startDelay: 1500
+                                                                            , callback: function () {
+                                                                                setTimeout(function () {
+                                                                                    $('#cat_card_answer2').show();
+                                                                                }, 500);
+                                                                                setTimeout(function () {
+                                                                                    $('#username5').show();
+                                                                                }, 500);
+                                                                                $('#cat_command2').find('.ti-cursor').css("visibility", "hidden");
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
                                                             }
                                                         });
                                                     }
@@ -326,80 +250,53 @@ section {
                     }
                 });
                 //
-//                                                                                                                        $('#terminal_ls').typeIt({
-//                                                                                                                    strings: ['This is my string!'],
-//                                                                                                                    startDelay: 1500,
-//                                                                                                                    callback: function() {
-//
-//
-//                                                                                                                    }
-//
-//                                                                                                                });
+                //                                                                                                                        $('#terminal_ls').typeIt({
+                //                                                                                                                    strings: ['This is my string!'],
+                //                                                                                                                    startDelay: 1500,
+                //                                                                                                                    callback: function() {
+                //
+                //
+                //                                                                                                                    }
+                //
+                //                                                                                                                });
             </script>
-</div>
+        </div>
     </div>
-
-
-
-
-
-
-<!--<div id="aboutMe"></div>-->
+    <!--<div id="aboutMe"></div>-->
     <div class="container-fluid" style="
     padding: 0;" id="aboutMe">
         <div class="bioPanel">
             <div class="userCard">
-                <div class="profilePhoto">
-                </div>
-                <div class="name">
-                    Majok Francis Ring
-                </div>
-
-
-
+                <div class="profilePhoto"> </div>
+                <div class="name"> Majok Francis Ring </div>
                 <div class="container-fluid" id="userCardInfo">
-                <div class="row">
-                    <div class="col"><strong>College:</strong>
+                    <div class="row">
+                        <div class="col"><strong>College:</strong> </div>
+                        <div class="col">University of California, Merced </div>
+                        <br>
+                        <div class="col"><strong>Major:</strong> </div>
+                        <div class="col">Computer Science and Engineering 2014-2018 </div>
+                        <br>
+                        <div class="col"><strong>Graduate:</strong> </div>
+                        <div class="col">May 2018 </div>
+                        <br>
+                        <div class="col"><strong>Email:</strong> </div>
+                        <div class="col">mring3@ucmerced.edu </div>
+                        <br>
+                        <div class="col"><strong>Phone:</strong> </div>
+                        <div class="col">(858) 925-3768 </div>
                     </div>
-                    <div class="col">University of California, Merced
-                    </div>
-                    <br>
-                     <div class="col"><strong>Major:</strong>
-                    </div>
-                    <div class="col">Computer Science and Engineering 2014-2018
-                    </div>
-
-                     <br>
-                     <div class="col"><strong>Graduate:</strong>
-                    </div>
-                    <div class="col">May 2018
-                    </div>
-
-                      <br>
-                     <div class="col"><strong>Email:</strong>
-                    </div>
-                    <div class="col">mring3@ucmerced.edu
-                    </div>
-
-                                          <br>
-                     <div class="col"><strong>Phone:</strong>
-                    </div>
-                    <div class="col">(858) 925-3768
-                    </div>
-
-
-
-
-
-
-
                 </div>
+                <div class="container-fluid" id="bioParagraphs">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus maximus, dolor et gravida laoreet, odio sem efficitur velit, eu viverra risus sapien lobortis purus. Nunc nunc justo, imperdiet sit amet neque fringilla, bibendum ullamcorper metus. Donec placerat magna sit amet semper sodales. Etiam dolor leo, gravida quis velit sit amet, maximus volutpat turpis. Aliquam lobortis diam in pulvinar posuere. Sed nunc massa, consequat a ante eu, faucibus iaculis ex. Donec scelerisque velit vitae turpis finibus, vel lacinia quam viverra. Vivamus hendrerit nec metus eu mollis. Pellentesque blandit sapien a dolor tristique, molestie facilisis felis bibendum. Phasellus porttitor, magna sed consequat varius, eros quam efficitur nisi, id ultrices tellus felis a diam. Nulla hendrerit lacinia sem, sed mattis sem maximus in. Duis pulvinar justo eu metus venenatis rutrum. Proin eu sapien tincidunt, gravida elit nec, euismod augue. Pellentesque tincidunt venenatis massa in semper. Suspendisse potenti. Etiam consequat nibh nulla, nec sollicitudin sem cursus sit amet.
+                        <br>
+                        <br> Phasellus imperdiet nibh in efficitur vulputate. Aliquam hendrerit et leo vel rutrum. In tincidunt in sapien at eleifend. Vivamus commodo mollis purus ut eleifend. Aliquam erat volutpat. Quisque libero arcu, pharetra in vestibulum id, mattis nec enim. Praesent quis purus hendrerit, varius urna vitae, venenatis nunc. Donec tincidunt efficitur ligula id interdum. Sed a felis ipsum. Quisque elit massa, sagittis vitae placerat quis, molestie nec erat. Mauris lorem neque, pretium non luctus vel, ullamcorper et justo. Morbi condimentum quam semper faucibus efficitur.
+                        <br>
+                        <br> Aliquam sagittis posuere neque, vitae lobortis nulla tristique sed. Pellentesque eget egestas risus. Aliquam bibendum consequat orci, et porttitor felis posuere ut. Vestibulum elementum pretium libero, non fermentum arcu porttitor in. Nulla a lorem a enim scelerisque aliquam id in lacus. Curabitur ultricies enim et porttitor pharetra. Donec fringilla nibh nec eros cursus, sed interdum diam faucibus.
+                        <br>
+                        <br> Etiam dignissim ac turpis ut feugiat. Ut eleifend aliquet viverra. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam interdum purus ac vulputate cursus. Sed ullamcorper nec sem sed pretium. Curabitur convallis egestas enim id commodo. Pellentesque ut velit in arcu maximus vehicula. Pellentesque aliquam porta magna, eu pellentesque magna accumsan non. Nullam non fringilla felis, non condimentum ligula. Morbi sed euismod neque. </p>
                 </div>
-
-
-
-
-                   <div class="skillsSection" align="center">
+                <div class="skillsSection" align="center">
                     <div class="skillsTitle" align="center">
                         <txt>Skills</txt>
                     </div>
@@ -431,104 +328,87 @@ section {
             </div>
         </div>
     </div>
-
-
-
-
     <div class="container-fluid" id="timeline-container">
-
-     <div class="row example-centered">
-         <div id="journey_container">
-          <div class="col-md-12 example-title" id="journey-background">
-            <h2>Journey</h2> <span class="type-it"></span>
-            <p>Welcome! Let's take a look at where I've been, and where I'm going.</p>
-        </div>
-         </div>
-
-        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2" id="timeline-background">
-            <ul class="timeline timeline-centered">
-                <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                <li class="timeline-item period">
-                    <div class="timeline-info"></div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h2 class="timeline-title">September 2014</h2> </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-info"> <span>September 2014 - May 2018</span> </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
-                        <p><strong>Secretary</strong>
-                            <br>
-                            <br> The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods; to discover big data analytics of complex questions; and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics. The Q Project (“Q”) is a graduate student run organization furthering the diversity and advancement of the analyses of very large data sets in the sciences</p>
-                    </div>
-                </li>
-                <!--    August 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                <li class="timeline-item period">
-                    <div class="timeline-info"></div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h2 class="timeline-title">August 2014</h2> </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-info"> <span>August 2014 - May 2018</span> </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">University of California, Merced</h3>
-                        <p>Bachelor’s Degree, Computer Science and Engineering</p>
-                    </div>
-                </li>
-                <!--    June 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                <li class="timeline-item period">
-                    <div class="timeline-info"></div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h2 class="timeline-title">June 2014</h2> </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-info"> <span>June 13, 2014</span> </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">Canyon Crest Academy High School</h3>
-                        <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
-                    </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-info"> <span>April 2013 - January 2014</span> </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">TEDxYouth@SanDiego</h3>
-                        <p>• Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area.
-                            <br>
-                            <br> • As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.
-                            <br>
-                            <br> • Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</p>
-                    </div>
-                </li>
-                <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-            </ul>
+        <div class="row example-centered">
+            <div id="journey_container">
+                <div class="col-md-12 example-title" id="journey-background">
+                    <h2>Journey</h2> <span class="type-it"></span>
+                    <p>Welcome! Let's take a look at where I've been, and where I'm going.</p>
+                </div>
+            </div>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2" id="timeline-background">
+                <ul class="timeline timeline-centered">
+                    <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                    <li class="timeline-item period">
+                        <div class="timeline-info"></div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h2 class="timeline-title">September 2014</h2> </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-info"> <span>September 2014 - May 2018</span> </div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
+                            <p><strong>Secretary</strong>
+                                <br>
+                                <br> The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods; to discover big data analytics of complex questions; and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics. The Q Project (“Q”) is a graduate student run organization furthering the diversity and advancement of the analyses of very large data sets in the sciences</p>
+                        </div>
+                    </li>
+                    <!--    August 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                    <li class="timeline-item period">
+                        <div class="timeline-info"></div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h2 class="timeline-title">August 2014</h2> </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-info"> <span>August 2014 - May 2018</span> </div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">University of California, Merced</h3>
+                            <p>Bachelor’s Degree, Computer Science and Engineering</p>
+                        </div>
+                    </li>
+                    <!--    June 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                    <li class="timeline-item period">
+                        <div class="timeline-info"></div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h2 class="timeline-title">June 2014</h2> </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-info"> <span>June 13, 2014</span> </div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Canyon Crest Academy High School</h3>
+                            <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-info"> <span>April 2013 - January 2014</span> </div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">TEDxYouth@SanDiego</h3>
+                            <p>• Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area.
+                                <br>
+                                <br> • As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.
+                                <br>
+                                <br> • Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</p>
+                        </div>
+                    </li>
+                    <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                </ul>
+            </div>
         </div>
     </div>
-    </div>
-
-
-
-
-
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+    <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
 </body>
 
 </html>
-
-
-
-
-
-
 <!--
 
  <script>

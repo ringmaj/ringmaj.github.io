@@ -11,7 +11,6 @@ body {
     width: 100%;
 }
 
-
 h1,
 h2,
 h3,
@@ -355,8 +354,7 @@ body {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
-    overflow-y:auto;
-
+    /*    overflow-y: scroll;*/
     margin: 0px;
 }
 
@@ -364,8 +362,6 @@ body {
     font-family: LemonMilk;
     src: url('LemonMilk.otf');
 }
-
-
 
 .infoPanel {
     margin-top: 200px;
@@ -385,7 +381,7 @@ body {
     text-align: left;
     font-size: 14px;
     width: 100%;
-    padding-left: 15px;
+    padding-left: 16px;
 }
 
 #terminal_ls {
@@ -428,7 +424,7 @@ body {
 #cat_command1,
 #cat_card_answer1,
 #cat_command2,
-#cat_card_answer2{
+#cat_card_answer2 {
     color: white;
     font-family: monospace;
     font-size: 14px;
@@ -454,8 +450,8 @@ username {
 
 .profilePhoto {
     margin-top: 25px;
-    height: 20%;
-    width: 20%;
+    height: 190px;
+    width: 190px;
     background-image: url(Resources/profile.png);
     background-repeat: no-repeat;
     border-radius: 200px;
@@ -481,20 +477,20 @@ username {
     margin-top: 25px;
     margin-bottom: 10px;
     text-align: center;
-      color: #2a2727;
+    color: #2a2727;
     font-size: 20px;
     font-weight: bolder;
     font-family: 'Roboto', sans-serif;
-
 }
 
-#userCardInfo{
+#userCardInfo {
     margin-top: 25px;
-    text-align:left;
+    text-align: left;
+    padding-left: 30px;
 }
 
 .col {
-display: inline-flex;
+    display: inline-flex;
     margin-bottom: 10px;
 }
 
@@ -518,38 +514,35 @@ txt {
     font-family: 'Roboto', sans-serif;
 }
 
-
-
 .container-fluid .jumbotron {
-height: 1050px;
+    height: 1050px;
     margin-bottom: 0px;
     border-radius: 0px;
-
 }
 
 .container-fluid .bioPanel {
-height: 1050px;
-    width: inherit
-    border-radius: 0px;
+    height: 1500px;
+    width: inherit border-radius: 0px;
     margin-bottom: 0px;
     width: 100%;
-
 }
 
-
-#timeline-container{
-    background-image:url(https://static.pexels.com/photos/423086/pexels-photo-423086.jpeg);
-     background-size: cover;
+#timeline-container {
+    background-image: url(https://static.pexels.com/photos/423086/pexels-photo-423086.jpeg);
+    background-size: cover;
     background-repeat: no-repeat;
-
 }
 
+
+/*
 #journey_container {
     width: 100%;
     height:212px;
     width: 50%;
   margin: 0 auto;
 }
+*/
+
 #timeline-background {
     background-color: white;
     padding-left: 40px;
@@ -557,53 +550,47 @@ height: 1050px;
 }
 
 #journey-background {
-
     background-color: white;
     width: 50%;
-  margin: 0 auto;
+    margin: 0 auto;
     margin-top: 40px;
-     margin-bottom: 40px;
+    margin-bottom: 40px;
     margin-left: 230px
 }
 
-
 .bioPanel {
-/*    background-color: #0e8a9b;*/
-/*background-image:url(https://static.pexels.com/photos/481690/pexels-photo-481690.jpeg);*/
+    /*    background-color: #0e8a9b;*/
+    /*background-image:url(https://static.pexels.com/photos/481690/pexels-photo-481690.jpeg);*/
     background-image: url(https://static.pexels.com/photos/419784/pexels-photo-419784.jpeg);
     background-size: cover;
     background-repeat: no-repeat;
     align-content: center;
     align-items: center;
-
     padding-top: 70px;
-width: 100%;
-
-  }
+    width: 100%;
+}
 
 .userCard {
-
     width: 50%;
-    height: 900px;
+    height: 1300px;
     background-color: #ffffff;
-     display: block;
-  margin-right: auto;
-  margin-left: auto;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
     padding: 20px;
 }
 
 .jumbotron {
-border-radius: 0px;
+    border-radius: 0px;
     background-image: url(https://static.pexels.com/photos/481690/pexels-photo-481690.jpeg);
-/*    background-repeat: repeat-y;*/
+    /*    background-repeat: repeat-y;*/
     height: 100%;
     padding: 20px;
     /*    background-color: rgba(111, 97, 88, 0.98); */
     /*        background-color: rgba(111, 97, 88, 0.98); */
     /*  background-blend-mode:lighten*/
-    border-radius: 0px;}
-
-
+    border-radius: 0px;
+}
 
 .button {
     -webkit-border-radius: 0;
@@ -632,123 +619,105 @@ border-radius: 0px;
     font-size: 15px;
 }
 
-
-
-
-
-
-
-
-
 @media only screen and (max-width: 768px) {
     .infoPanel {
         width: 95%;
         height: 770px;
     }
-
-   .container-fluid .jumbotron {
-height: 950px;
-    margin-bottom: 0px;
-    border-radius: 0px;
-
-}
-
-
-
-
-
+    .container-fluid .jumbotron {
+        height: 950px;
+        margin-bottom: 0px;
+        border-radius: 0px;
+    }
     button.navbar-toggle.collapsed {
         border: none;
     }
-
     .navbar-header {
-height: 10px;
+        height: 10px;
     }
-
-    navbar.navbar-defailt.navbar-fixed-top {
-
+    navbar.navbar-defailt.navbar-fixed-top {}
+    #username1,
+    #username2,
+    #username3,
+    #username4,
+    #username5,
+    #intro_script,
+    #name_card,
+    #name_card_answer,
+    #university_card,
+    #university_card_answer,
+    #major_card,
+    #major_card_answer,
+    #graduation_card,
+    #graduation_card_answer,
+    #cat_command1,
+    #cat_card_answer1,
+    #cat_command2,
+    #cat_card_answer2 {
+        color: white;
+        font-family: monospace;
+        font-size: 10px;
+        display: inline;
     }
-
-#username1,
-#username2,
-#username3,
-#username4,
-#username5,
-#intro_script,
-#name_card,
-#name_card_answer,
-#university_card,
-#university_card_answer,
-#major_card,
-#major_card_answer,
-#graduation_card,
-#graduation_card_answer,
-#cat_command1,
-#cat_card_answer1,
-#cat_command2,
-#cat_card_answer2{
-    color: white;
-    font-family: monospace;
-    font-size: 12px;
-    display: inline;
-}
-
     #terminal_ls {
-    color: white;
-    font-family: monospace;
-    font-size: 12px;
-}
-
-#fileList {
-    color: white;
-    font-family: monospace;
-    font-size: 12px;
-    display: inline;
-}
-
-
+        color: white;
+        font-family: monospace;
+        font-size: 10px;
+    }
+    #fileList {
+        color: white;
+        font-family: monospace;
+        font-size: 10px;
+        display: inline;
+    }
     .profilePhoto {
-    height: 190px;
-    width: 190px;
-    background-image: url(Resources/profile.png);
-    background-repeat: no-repeat;
-    border-radius: 200px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
+        height: 190px;
+        width: 190px;
+        background-image: url(Resources/profile.png);
+        background-repeat: no-repeat;
+        border-radius: 200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
     .userCard {
-
-    width: 100%;
+        width: 100%;
         height: 100%;
         margin-top: 0px;
-
-}
-
-
+    }
     .bioPanel {
-
-    padding-top: 0px;
-
-
-  }
-
-    #userCardInfo{
-    margin-top: 25px;
-    text-align:left;
+        padding-top: 0px;
+    }
+    #userCardInfo {
+        margin-top: 25px;
+        text-align: left;
         padding-left: 30px;
-}
-
+    }
+    #timeline-container {
+        background-image: none;
+    }
+    #timeline-background {
+        background-color: white;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .bioPanel {
+        border-bottom: 2px solid #968b8b;
+    }
+    #userCardInfo {
+        margin-top: 25px;
+        text-align: left;
+        padding-left: 30px;
+    }
 }
 
 @media (max-width: @screen-xs) {
-  .infoPanel {
+    .infoPanel {
         width: 90%;
     }
 }
 
 @media (max-width: @screen-sm) {
-  .infoPanel {
+    .infoPanel {
         width: 90%;
     }
 }
