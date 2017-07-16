@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>Majok Francis Ring</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300italic' rel='stylesheet' type='text/css'>
@@ -24,6 +24,44 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+
+    <script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 800, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+});
+</script>
+
+     <style>
+body, html, .main {
+    height: 100%;
+}
+
+section {
+    min-height: 100%;
+}
+</style>
+
 </head>
 
 <body>
@@ -34,13 +72,13 @@
 
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
+        <div class="container" id="navc">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#"></a> </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#"  >Home</a></li>
-                    <li id="aboutButton"><a href="#">About Me </a></li>
+                    <li id="aboutButton"><a href="#aboutMe">About Me </a></li>
                     <li><a href="#contact">Experience</a></li>
                     <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resume <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -66,14 +104,7 @@
 
 
 
-    <script>
 
-        $('#aboutButton').click(function() {
-    $('html, body').animate({
-        scrollTop: $("#jumbotron").offset().top
-    }, 5000);
-});
-    </script>
 
 
 <div class="container-fluid" style="
@@ -104,11 +135,9 @@
                     <p id="graduation_card">
                         <br> Graduating:
                         <br> > </p>
-                    <p id="graduation_card_answer"> May 2018<br></p>
-                    <p id="username3"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
-                    <p id="cat_command1">cat skills.txt
-                        <br> </p>
-                    <p id="cat_card_answer1">C++
+                    <p id="graduation_card_answer"> May 2018</p><p id="username3"><span style="color:#adf447"><br>ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
+                    <p id="cat_command1">cat skills.txt</p>
+                    <p id="cat_card_answer1"><br>C++
                         <br>Python
                         <br>HTML
                         <br>C
@@ -123,27 +152,29 @@
 
                      <p id="username4"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
 
-                     <p id="cat_command2">cat projects.txt
-                        <br> </p>
+                     <p id="cat_command2">cat projects.txt</p>
 
-                    <p id="cat_card_answer2">
-                        Recursive Tree Analysis Tool
+                    <p id="cat_card_answer2"><br>Recursive Tree Analysis Tool
                         <br>RNA-Seq Pipeline
                         <br>Parking Analytics
                         <br>UAV Crop Analysis Tool
                         <br>Skateboarding Physics Simulator
                         <br></p>
+                                         <p id="username5"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
+
 
                 </div>
 
             </div>
-            <script>
+
+ <script>
                 //                Hide all elements
                 $('#fileList').hide();
                 $('#username2').hide();
                 $('#username3').hide();
                 $('#username4').hide();
-//                $('#intro_script').hide();
+                $('#username5').hide();
+                $('#intro_script').hide();
                 $('#name_card').hide();
                 $('#name_card_answer').hide();
                 $('#university_card').hide();
@@ -155,32 +186,155 @@
                 $('#username3').hide();
                 $('#cat_command1').hide();
                 $('#cat_card_answer1').hide();
-                  $('#cat_command2').hide();
+                $('#cat_command2').hide();
                 $('#cat_card_answer2').hide();
                 $('#terminal_ls').typeIt({
-                      startDelay: 3500
+                    strings: ['This is my string!']
+                    , startDelay: 3500
                     , speed: 350
+                    , callback: function () {
+                        setTimeout(function () {
+                            $('#fileList').show();
+                        }, 500);
+                        setTimeout(function () {
+                            $('#username2').show();
+                        }, 500);
+                        $('#terminal_ls').find('.ti-cursor').css("visibility", "hidden");
+                        setTimeout(function () {
+                            $('#intro_script').show();
+                        }, 650);
+                        $('#intro_script').typeIt({
+                            strings: ['This is my string!']
+                            , startDelay: 1500
+                            , callback: function () {
+                                setTimeout(function () {
+                                    $('#name_card').show();
+                                }, 500);
+                                $('#intro_script').find('.ti-cursor').css("visibility", "hidden");
+                                setTimeout(function () {
+                                    $('#name_card_answer').show();
+                                }, 650);
+                                $('#name_card_answer').typeIt({
+                                    strings: ['This is my string!']
+                                    , startDelay: 1500
+                                    , callback: function () {
+                                        setTimeout(function () {
+                                            $('#university_card').show();
+                                        }, 500);
+                                        $('#name_card_answer').find('.ti-cursor').css("visibility", "hidden");
+                                        setTimeout(function () {
+                                            $('#university_card_answer').show();
+                                        }, 650);
+                                        $('#university_card_answer').typeIt({
+                                            strings: ['This is my string!']
+                                            , startDelay: 1500
+                                            , callback: function () {
+                                                setTimeout(function () {
+                                                    $('#major_card').show();
+                                                }, 500);
+                                                $('#university_card_answer').find('.ti-cursor').css("visibility", "hidden");
+                                                setTimeout(function () {
+                                                    $('#major_card_answer').show();
+                                                }, 650);
+                                                $('#major_card_answer').typeIt({
+                                                    strings: ['This is my string!']
+                                                    , startDelay: 1500
+                                                    , callback: function () {
+                                                        setTimeout(function () {
+                                                            $('#graduation_card').show();
+                                                        }, 500);
+                                                        $('#major_card_answer').find('.ti-cursor').css("visibility", "hidden");
+                                                        setTimeout(function () {
+                                                            $('#graduation_card_answer').show();
+                                                        }, 650);
 
+
+                                                        $('#graduation_card_answer').typeIt({
+                                                            strings: ['This is my string!']
+                                                            , startDelay: 1500
+                                                            , callback: function () {
+
+                                                                  setTimeout(function () {
+                                                            $('#username3').show();
+                                                        }, 500);
+                                                        $('#graduation_card_answer').find('.ti-cursor').css("visibility", "hidden");
+                                                        setTimeout(function () {
+                                                            $('#cat_command1').show();
+                                                        }, 650);
+
+
+
+                                                                       $('#cat_command1').typeIt({
+                                                                        strings: ['This is my string!'],
+                                                                        startDelay: 1500,
+                                                                         callback: function() {
+
+                                                    setTimeout(function () {
+                                                    $('#cat_card_answer1').show();
+                                                }, 500);
+                                                $('#cat_command1').find('.ti-cursor').css("visibility", "hidden");
+                                                setTimeout(function () {
+                                                    $('#username4').show();
+                                                }, 500);
+
+                                                                               setTimeout(function () {
+                                                            $('#cat_command2').show();
+                                                        }, 650);
+
+
+
+                                                                                       $('#cat_command2').typeIt({
+                                                                                                                    strings: ['This is my string!'],
+                                                                                                                    startDelay: 1500,
+                                                                                                                    callback: function() {
+
+                                                                                                                          setTimeout(function () {
+                                                    $('#cat_card_answer2').show();
+                                                }, 500);
+
+                                                                                                                          setTimeout(function () {
+                                                    $('#username5').show();
+                                                }, 500);
+
+
+
+
+                                                                                                                                                                        $('#cat_command2').find('.ti-cursor').css("visibility", "hidden");
+
+
+                                                                                                                    }
+
+                                                                                                                });
+
+
+                                                                                  }
+
+                                                                  });
+
+
+
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
-
-
-                   $('#intro_script').typeIt({
-                      startDelay: 3500
-                    , speed: 350
-
-                });
-
-
                 //
-                //                                                                                                        $('#terminal_ls').typeIt({
-                //                                                                                                    strings: ['This is my string!'],
-                //                                                                                                    startDelay: 1500,
-                //                                                                                                    callback: function() {
-                //
-                //
-                //                                                                                                    }
-                //
-                //                                                                                                });
+//                                                                                                                        $('#terminal_ls').typeIt({
+//                                                                                                                    strings: ['This is my string!'],
+//                                                                                                                    startDelay: 1500,
+//                                                                                                                    callback: function() {
+//
+//
+//                                                                                                                    }
+//
+//                                                                                                                });
             </script>
 </div>
     </div>
@@ -190,9 +344,9 @@
 
 
 
-<div id="aboutMe"></div>
+<!--<div id="aboutMe"></div>-->
     <div class="container-fluid" style="
-    padding: 0;">
+    padding: 0;" id="aboutMe">
         <div class="bioPanel">
             <div class="userCard">
                 <div class="profilePhoto">
@@ -284,10 +438,13 @@
     <div class="container-fluid" id="timeline-container">
 
      <div class="row example-centered">
-        <div class="col-md-12 example-title" id="journey-background">
+         <div id="journey_container">
+          <div class="col-md-12 example-title" id="journey-background">
             <h2>Journey</h2> <span class="type-it"></span>
             <p>Welcome! Let's take a look at where I've been, and where I'm going.</p>
         </div>
+         </div>
+
         <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2" id="timeline-background">
             <ul class="timeline timeline-centered">
                 <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -360,7 +517,7 @@
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
 </body>
@@ -373,6 +530,7 @@
 
 
 <!--
+
  <script>
                 //                Hide all elements
                 $('#fileList').hide();
@@ -473,4 +631,5 @@
                 //                                                                                                    }
                 //
                 //                                                                                                });
-            </script>-->
+            </script>
+-->
