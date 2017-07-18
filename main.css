@@ -363,6 +363,11 @@ body {
     src: url('LemonMilk.otf');
 }
 
+#navB {
+    border: none;
+    box-shadow: none;
+}
+
 .infoPanel {
     margin-top: 200px;
     width: 50%;
@@ -371,6 +376,12 @@ body {
     background-color: #393939;
     color: black;
     align-content: center;
+    box-shadow: 10px 10px 30px rgba(29, 29, 29, 0.57);
+}
+
+#enterButton {
+    margin-top: 25px;
+    width: 100px;
 }
 
 .terminal {
@@ -444,10 +455,6 @@ username {
     z-index: -999;
 }
 
-.checkmark {
-    margin-right: 10px;
-}
-
 .profilePhoto {
     margin-top: 25px;
     height: 190px;
@@ -458,6 +465,7 @@ username {
     margin-left: auto;
     margin-right: auto;
     border: 1px solid rgba(51, 40, 40, 0.37);
+    border: 4px solid white;
 }
 
 .skillsSection {
@@ -469,15 +477,23 @@ username {
 }
 
 .skillsTitle {
-    margin-top: 5px;
-    margin-bottom: 10px;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+txt {
+    color: #2a2727;
+    font-size: 15px;
+    font-weight: bolder;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: -200x;
 }
 
 .name {
     margin-top: 25px;
     margin-bottom: 10px;
     text-align: center;
-    color: #2a2727;
+    color: #ffffff;
     font-size: 20px;
     font-weight: bolder;
     font-family: 'Roboto', sans-serif;
@@ -487,6 +503,18 @@ username {
     margin-top: 25px;
     text-align: left;
     padding-left: 30px;
+    background-color: white;
+    padding-top: 25px;
+    height: 390px;
+    width: 100%;
+}
+
+#userCardInfo .row {
+    height: 1px;
+    margin: 0px;
+    padding-bottom: 25px;
+    background-color: white;
+    border-bottom: solid 2px #eee;
 }
 
 .col {
@@ -494,12 +522,8 @@ username {
     margin-bottom: 10px;
 }
 
-txt {
-    color: #2a2727;
-    font-size: 20px;
-    font-weight: bolder;
-    font-family: 'Roboto', sans-serif;
-    margin-bottom: -200x;
+.checkmark {
+    margin-right: 10px;
 }
 
 .skillsTable {
@@ -507,11 +531,19 @@ txt {
     /*        background-color: #5c5958;*/
     /*    background-color: #e6e4e4;*/
     padding: 20px;
+    padding-top: 0px;
     border-radius: 1px;
-    margin-top: 8px;
     width: 100%;
     color: #1f1e1e;
     font-family: 'Roboto', sans-serif;
+}
+
+.skillsTable tr {}
+
+.skillsTable td {
+    margin-top: 10px;
+    padding: 10px;
+    /*    background-color: #f8f4f4;*/
 }
 
 .container-fluid .jumbotron {
@@ -561,7 +593,8 @@ txt {
 .bioPanel {
     /*    background-color: #0e8a9b;*/
     /*background-image:url(https://static.pexels.com/photos/481690/pexels-photo-481690.jpeg);*/
-    background-image: url(https://static.pexels.com/photos/419784/pexels-photo-419784.jpeg);
+    /*    background-image: url(https://static.pexels.com/photos/419784/pexels-photo-419784.jpeg);*/
+    background-color: #eee;
     background-size: cover;
     background-repeat: no-repeat;
     align-content: center;
@@ -570,14 +603,30 @@ txt {
     width: 100%;
 }
 
+.user {
+    width: 40%;
+    height: 700px;
+    /*    background-color: #ed5a5a;*/
+    background-color: #ed5a5a;
+    display: block;
+    padding: 20px;
+    padding-left: 0px;
+    padding-right: 0px;
+    box-shadow: 10px 10px 50px #b5aaaa;
+    margin-left: 50px;
+}
+
 .userCard {
     width: 50%;
-    height: 1300px;
+    height: 700px;
     background-color: #ffffff;
     display: block;
-    margin-right: auto;
-    margin-left: auto;
     padding: 20px;
+    box-shadow: 10px 10px 50px #b5aaaa;
+    float: right;
+    margin-right: 50px;
+    margin-top: -700px;
+    padding-top: 70px;
 }
 
 .jumbotron {
@@ -618,6 +667,17 @@ txt {
     color: black;
     font-size: 15px;
 }
+
+
+/*
+#timelineObj p {
+    background-color: #f7f7f7;
+    padding: 10px;
+    border-radius: 5px;
+}
+*/
+
+.timeline-title {}
 
 @media only screen and (max-width: 768px) {
     .infoPanel {
@@ -707,6 +767,23 @@ txt {
         margin-top: 25px;
         text-align: left;
         padding-left: 30px;
+    }
+    .container-fluid .bioPanel {
+        height: 2000px;
+        width: inherit border-radius: 0px;
+        margin-bottom: 0px;
+        width: 100%;
+        padding-top: 10%;
+    }
+    .user {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .userCard {
+        margin-top: 5%;
+        width: 90%;
+        margin-right: 5%;
     }
 }
 
