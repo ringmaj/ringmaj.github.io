@@ -1,3 +1,56 @@
+#first {
+    -webkit-animation: bannermove 30s linear infinite;
+    -moz-animation: bannermove 30s linear infinite;
+    -ms-animation: bannermove 30s linear infinite;
+    -o-animation: bannermove 30s linear infinite;
+    animation: bannermove 30s linear infinite;
+}
+
+@keyframes "bannermove" {
+    0% {
+        margin-left: 0px;
+    }
+    100% {
+        margin-left: -2125px;
+    }
+}
+
+@-moz-keyframes bannermove {
+    0% {
+        margin-left: 0px;
+    }
+    100% {
+        margin-left: -2125px;
+    }
+}
+
+@-webkit-keyframes "bannermove" {
+    0% {
+        margin-left: 0px;
+    }
+    100% {
+        margin-left: -2125px;
+    }
+}
+
+@-ms-keyframes "bannermove" {
+    0% {
+        margin-left: 0px;
+    }
+    100% {
+        margin-left: -2125px;
+    }
+}
+
+@-o-keyframes "bannermove" {
+    0% {
+        margin-left: 0px;
+    }
+    100% {
+        margin-left: -2125px;
+    }
+}
+
 * {
     box-sizing: border-box
 }
@@ -181,6 +234,19 @@ a:hover {
 .timeline-content p:last-child {
     margin-bottom: 0;
     color: #646464;
+    padding: 15px;
+    /*    height: 180px;*/
+    display: inline-block;
+    background-color: #ff6363;
+    color: white;
+    border-radius: 5px;
+}
+
+.timeline-content p:last-child:hover {
+    margin-bottom: 0;
+    background-color: #ffa3a3;
+    color: #ffffff;
+    /*    background-color: #fafafa;*/
 }
 
 
@@ -563,7 +629,11 @@ txt {
 
 #timeline-container {
     /*    background-image: url(https://static.pexels.com/photos/423086/pexels-photo-423086.jpeg);*/
-    background-image: url(https://static.pexels.com/photos/103567/pexels-photo-103567.jpeg);
+    /*    background-image: url(https://static.pexels.com/photos/103567/pexels-photo-103567.jpeg);*/
+    /*    background-image: url(https://static.pexels.com/photos/506355/pexels-photo-506355.jpeg);*/
+    /*    background-image: url(https://static.pexels.com/photos/1526/dark-blur-blurred-gradient.jpg);*/
+    /*    background: linear-gradient(to bottom, #a90329 0%, #8f0222 60%, #6d0019 97%);*/
+    background: linear-gradient(to bottom, #7f2d2d 0%, #6c2626 44%, #531b1b 100%);
     background-size: cover;
     background-repeat: no-repeat;
     padding-top: 100px;
@@ -617,6 +687,10 @@ txt {
     float: none;
 }
 
+#timelineObj {
+    padding: 40px;
+}
+
 .bioPanel {
     /*    background-color: #0e8a9b;*/
     /*background-image:url(https://static.pexels.com/photos/481690/pexels-photo-481690.jpeg);*/
@@ -628,6 +702,8 @@ txt {
     align-items: center;
     padding-top: 70px;
     width: 100%;
+    /*    background: linear-gradient(to bottom, #eeeeee 0%, #cccccc 100%);*/
+    background-color: #EEEEEE;
 }
 
 .user {
@@ -662,23 +738,31 @@ txt {
     height: 40%;
     margin-left: auto;
     margin-right: auto;
-    background-color: #ed5a5a;
+    /*    background-color: #ffffff;*/
+    background-color: #a73e3e;
     padding-top: 3%;
     box-shadow: 10px 10px 50px #b5aaaa;
 }
 
 .imageContainer {
     display: inline-block;
+    display: flex;
     width: 100%;
     height: 90%;
     background-color: white;
+    overflow: hidden;
+    /*    overflow-x: auto*/
 }
 
 .galleryImages {
-    width: 20.05%;
+    width: 40%;
     height: 100%;
     margin-right: -5px;
     padding: 0px;
+    /*
+    height: 233px;
+    width: 350px;
+*/
 }
 
 .jumbotron {
