@@ -621,8 +621,9 @@ txt {
 }
 
 .container-fluid .bioPanel {
-    height: 1550px;
-    width: inherit border-radius: 0px;
+    height: 1400px;
+    width: inherit;
+    border-radius: 0px;
     margin-bottom: 0px;
     width: 100%;
 }
@@ -653,7 +654,6 @@ txt {
     padding-right: 0px;
     width: 100%;
     height: 150px;
-    ;
 }
 
 #journeyText {
@@ -691,6 +691,15 @@ txt {
     padding: 40px;
 }
 
+#bioTitle {
+    background-color: #EEEEEE;
+    text-align: center;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 40px;
+    margin-bottom: 85px;
+    background-color: #dedcdc;
+}
+
 .bioPanel {
     /*    background-color: #0e8a9b;*/
     /*background-image:url(https://static.pexels.com/photos/481690/pexels-photo-481690.jpeg);*/
@@ -700,8 +709,9 @@ txt {
     background-repeat: no-repeat;
     align-content: center;
     align-items: center;
-    padding-top: 70px;
-    width: 100%;
+    /*    padding-top: 70px;
+    */
+    animation-duration: width: 100%;
     /*    background: linear-gradient(to bottom, #eeeeee 0%, #cccccc 100%);*/
     background-color: #EEEEEE;
 }
@@ -733,14 +743,14 @@ txt {
 }
 
 .photoGallery {
-    margin-top: 100px;
+    margin-top: 125px;
     width: 95%;
-    height: 40%;
+    height: 15%;
     margin-left: auto;
     margin-right: auto;
     /*    background-color: #ffffff;*/
     background-color: #a73e3e;
-    padding-top: 3%;
+    padding-top: 1%;
     box-shadow: 10px 10px 50px #b5aaaa;
 }
 
@@ -755,7 +765,7 @@ txt {
 }
 
 .galleryImages {
-    width: 40%;
+    width: 10%;
     height: 100%;
     margin-right: -5px;
     padding: 0px;
@@ -764,6 +774,288 @@ txt {
     width: 350px;
 */
 }
+
+#experienceTitle {
+    background-color: #EEEEEE;
+    text-align: center;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 40px;
+    margin-bottom: 50px;
+    background-color: #dedcdc;
+}
+
+#experience-sub-title {
+    /*    background-color: #EEEEEE;*/
+    text-align: center;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 20px;
+    margin-bottom: 40px;
+    color: #1d1d1d;
+    /*    background-color: #dedcdc;*/
+}
+
+#experience-container {
+    width: 100%;
+    height: 1500px;
+    padding-left: 0px;
+    padding-right: 0px;
+    background-color: #6f4f57;
+}
+
+.job-experience {
+    width: 40%;
+    height: 990px;
+    /*    background-color: #ed5a5a;*/
+    /*    background-color: #ed5a5a;*/
+    /*    background-color: #895d5d;*/
+    background-color: white;
+    display: block;
+    padding: 20px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 110px;
+    margin-top: 120px;
+    padding: 40px;
+    color: black;
+}
+
+
+
+.experience-shape {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 1000px;
+    /*    background-color: white;*/
+    background-color: #7b5a62;
+    margin-top: 110px;
+    padding: 50px;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+.jobTitle {
+    font-weight: bold;
+}
+
+.company {
+    font-family: 'Roboto', sans-serif;
+}
+
+.date {
+    font-size: 14px;
+    /*    color: #5d5d5d;*/
+    color: #5d5d5d;
+    /*    color: #030c3e;*/
+}
+
+.location {
+    color: #5d5d5d;
+    /*
+    color: #d3d3d3;
+    color: #030c3e;
+*/
+}
+
+.summary {
+    margin-top: 10px;
+    padding-left: 0px;
+}
+
+.job {
+    border-bottom: 1px solid #968e8e;
+    padding: 20px;
+    display: inline-flex;
+    padding-top: 40px;
+}
+
+.job:last-child {
+    border-bottom: none;
+}
+
+.job:hover {
+/*    background-color: #f8ffa3;*/
+        background-color: #dedede;
+    border-radius: 5px;
+
+
+}
+
+.job:hover .languages {
+background-color: #f7f7f7;
+}
+
+.job_logo {
+    width: 100px;
+    height: 80px;
+    /*    background-color: #d8d8d8;*/
+    margin-right: 30px;
+    border-radius: 5px;
+}
+
+#hackmerced-logo {
+    /*    background-color: white;*/
+    background-image: url(Resources/hackmerced-logo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 0px;
+}
+
+#tedx-logo {
+    /*    background-color: white;*/
+    background-image: url(Resources/tedx-logo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 0px;
+}
+
+#QProject-logo {
+    background-color: white;
+    background-image: url(Resources/tedx-logo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 0px;
+}
+
+
+.languages {
+    color: #004c74;
+    padding: 8px;
+/*    background-color: #efefef;*/
+        background-color: #eae8e8;
+
+    display: inline-block;
+    border-radius: 5px;
+    margin-top: 7px;
+}
+
+.project-experience {
+    width: 50%;
+    height: 990px;
+/*    background-color: #ffffff;*/
+    display: block;
+    padding: 20px;
+/*    box-shadow: 10px 10px 50px #b5aaaa;
+    */    float: right;
+    margin-right: 50px;
+    margin-top: -990px;
+    padding-top: 70px;
+        padding: 40px;
+    padding-top: 0px;
+
+}
+
+.project {
+    display: inline-block;
+    margin: 20px;
+    margin-bottom: 45px;
+ margin-top: 0px;
+
+}
+
+.project-image {
+    height: 200px;
+    width: 350px;
+    background-color: #b6ccff;
+}
+
+#project-summary {
+    background-color: white;
+    width: 350px;
+    height: 100px;
+    display:inline-block;
+    padding: 0px;
+}
+
+.project-title {
+    width: 100%;
+    height: 50%;
+/*    font-family: 'Fjalla One', sans-serif;*/
+        font-family: 'Roboto', sans-serif;
+/*        font-family: 'Fjalla One', sans-serif;*/
+
+        font-weight: 400;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    padding-top: 20px;
+    color: black;
+
+}
+
+
+.project-language {
+/*     width: 100%;*/
+/*    font-family: 'Fjalla One', sans-serif;*/
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+    color: #0c6b72;
+    font-family: 'Roboto', sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+
+}
+
+.language-container {
+height: 50%;
+        display: flex;
+
+}
+
+.language-list {
+    display: inline-block;
+    list-style: none;
+    height: 100%;
+    padding: 0px;
+     margin-left: auto;
+    margin-right: auto;
+
+}
+
+.language-list li {
+    padding: 5px;
+    margin: 5px;
+    background-color: #ebebeb;
+    color: black;
+/*    border-radius: 5px;*/
+        border-radius: 4px;
+
+    border: 1px solid #bfbfbf;
+        display: inline-block;
+
+
+}
+
+#first-project, #second-project {
+    margin-top: 0px;
+}
+
+.project-image{
+/*    background-image: url(Resources/pattern10.png);*/
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.project:hover .project-image{
+    background-image: none;
+        background-color: rgba(111, 97, 88, 0.98);
+    background-color: rgba(111, 97, 88, 0.98);
+    background-blend-mode:lighten;
+}
+
+
+#first-project  .project-image{
+    background-image: url(https://raw.githubusercontent.com/ringmaj/Recursive-Tree-Analysis-Tool/master/program_image.PNG);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+
+
+
+
 
 .jumbotron {
     border-radius: 0px;
