@@ -424,6 +424,12 @@ body {
     margin: 0px;
 }
 
+html {
+        overflow-y: hidden;
+
+}
+
+
 @font-face {
     font-family: LemonMilk;
     src: url('LemonMilk.otf');
@@ -621,7 +627,7 @@ txt {
 }
 
 .container-fluid .bioPanel {
-    height: 1400px;
+    height: 1250px;
     width: inherit;
     border-radius: 0px;
     margin-bottom: 0px;
@@ -720,7 +726,8 @@ txt {
     width: 40%;
     height: 700px;
     /*    background-color: #ed5a5a;*/
-    background-color: #ed5a5a;
+/*    background-color: #ed5a5a;*/
+    background-color: #7a8799;
     display: block;
     padding: 20px;
     padding-left: 0px;
@@ -749,9 +756,11 @@ txt {
     margin-left: auto;
     margin-right: auto;
     /*    background-color: #ffffff;*/
-    background-color: #a73e3e;
+/*    background-color: #a73e3e;*/
+    background-color: #7a8799;
     padding-top: 1%;
-    box-shadow: 10px 10px 50px #b5aaaa;
+/*    box-shadow: 10px 10px 50px #b5aaaa;*/
+
 }
 
 .imageContainer {
@@ -799,7 +808,8 @@ txt {
     height: 1500px;
     padding-left: 0px;
     padding-right: 0px;
-    background-color: #6f4f57;
+/*    background-color: #6f4f57;*/
+    background-color: #7a8799;
 }
 
 .job-experience {
@@ -817,6 +827,10 @@ txt {
     margin-top: 120px;
     padding: 40px;
     color: black;
+/*        box-shadow: 10px 10px 50px #b5aaaa;*/
+        box-shadow: 10px 10px 0px #b5aaaa;
+
+
 }
 
 
@@ -950,6 +964,9 @@ background-color: #f7f7f7;
     margin: 20px;
     margin-bottom: 45px;
  margin-top: 0px;
+/*    box-shadow: 10px 10px 50px #b5aaaa;*/
+        box-shadow: 10px 10px 25px rgba(181, 170, 170, 0.5);
+
 
 }
 
@@ -1028,6 +1045,10 @@ height: 50%;
 
 }
 
+.language-list li:hover {
+    background-color: #d3ada8;
+}
+
 #first-project, #second-project {
     margin-top: 0px;
 }
@@ -1036,6 +1057,7 @@ height: 50%;
 /*    background-image: url(Resources/pattern10.png);*/
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    background-color: black;
 }
 
 .project:hover .project-image{
@@ -1043,7 +1065,15 @@ height: 50%;
         background-color: rgba(111, 97, 88, 0.98);
     background-color: rgba(111, 97, 88, 0.98);
     background-blend-mode:lighten;
+    cursor:pointer;
 }
+
+/*
+.project:hover #project-summary{
+            background-color: #d5e2f4;
+
+}
+*/
 
 
 #first-project  .project-image{
@@ -1052,9 +1082,34 @@ height: 50%;
     background-repeat: no-repeat;
 }
 
+#second-project  .project-image{
+    background-image:url(Resources/project_photos/parking.webm);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+#fifth-project  .project-image{
+    background-image: url(Resources/project_photos/GRE-App.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#sixth-project  .project-image{
+    background-image: url(Resources/project_photos/rna-seq.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
 
 
+#proj2-vid, #proj4-vid,  #proj3-vid {
+width: 100%;
+    height: 100%;
+}
 
+#proj4-vid {
+background-color: #ff8000;
+}
 
 
 .jumbotron {
@@ -1198,7 +1253,8 @@ height: 50%;
     }
     .container-fluid .bioPanel {
         height: 2000px;
-        width: inherit border-radius: 0px;
+        width: inherit;
+        border-radius: 0px;
         margin-bottom: 0px;
         width: 100%;
         padding-top: 10%;
