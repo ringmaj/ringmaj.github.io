@@ -10,12 +10,17 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300italic' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
     <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed" rel="stylesheet">
+        <link href="simple-sidebar.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.typeit/4.4.0/typeit.min.js"></script>
     <!-- Latest compiled and minified CSS -->
@@ -28,6 +33,63 @@
 </head>
 
 <body>
+
+      <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        Start Bootstrap
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#">Shortcuts</a>
+                </li>
+                <li>
+                    <a href="#">Overview</a>
+                </li>
+                <li>
+                    <a href="#">Events</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        var menu = $('#sidebar-wrapper');
+var menuTimeout;
+
+$(window).on('mousemove', mouseMoveHandler);
+
+function mouseMoveHandler(e) {
+  if (e.pageX < 20 || menu.is(':hover')) {
+    // Show the menu if mouse is within 20 pixels from the left or we are hovering over it
+    clearTimeout(menuTimeout);
+    menuTimeout = null;
+    //showMenu();
+//        $("#wrapper").toggleClass("toggled");
+        $("#wrapper").show();
+
+  }
+    else {
+           $("#wrapper").hide();
+    }
+}
+    </script>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top" id="navB">
         <div class="container" id="navc">
@@ -62,6 +124,7 @@
         </div>
     </nav>
     <script>
+         $("#wrapper").toggleClass("toggled");
         $(".nav a").on("click", function () {
             $(".nav").find(".active").removeClass("active");
             $(this).parent().addClass("active");
@@ -267,13 +330,13 @@
                     //                                                                                                                });
                 </script>
             </div>
-            <button type="button" class="btn btn-default" aria-label="Left Align" id="enterButton"><span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span> </button>
+            <button type="button" class="btn btn-default" aria-label="Left Align" id="enterButton"><a href="#aboutMe"><span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></button>
         </div>
         <!--<div id="aboutMe"></div>-->
         <div class="container-fluid" style="
     padding: 0;" id="aboutMe">
             <div class="bioPanel">
-                <p id="bioTitle">BIO</p>
+                <p id="bioTitle">> BIO</p>
                 <div class="user">
                     <div class="profilePhoto"> </div>
                     <div class="name"> Majok Francis Ring </div>
@@ -362,7 +425,7 @@
         </div>
     </div>
     <div class="container-fluid" id="experience-container">
-        <p id="experienceTitle">EXPERIENCE</p>
+        <p id="experienceTitle">> EXPERIENCE</p>
         <div class="job-experience">
             <p id="experience-sub-title">Experience & Volunteering</p>
             <div class="job">
@@ -413,114 +476,287 @@
         </div>
         <!--        PROJECTS---------------------------------------->
         <div class="project-experience">
-
             <div class="project" id="first-project">
-                <div class="project-image" style="cursor: pointer;" onclick="window.location='http://google.com';">
-                </div>
+                      <div class="project-image">
+                    <video playsinline autoplay muted loop poster="polina.jpg" id="proj1-vid">
+                        <source src="Resources/project_photos/recursive-tree-demo.webm" type="video/webm"> </div>
                 <div class="container-fluid" id="project-summary">
-                <div class="project-title">Recursive Tree Analysis Tool</div>
+                    <div class="project-title">Recursive Tree Analysis Tool</div>
                     <div class="language-container">
                         <ul class="language-list">
-                        <li>C++</li>
-                        <li>OpenGL</li>
+                            <li>C++</li>
+                            <li>OpenGL</li>
                         </ul>
-                        </div>
+                    </div>
                 </div>
             </div>
-
-
-               <div class="project" id="second-project">
+            <div class="project" id="second-project">
                 <div class="project-image">
                     <video playsinline autoplay muted loop poster="polina.jpg" id="proj2-vid">
-    <source src="Resources/project_photos/parking.webm" type="video/webm">
-
-</video>
+                        <source src="Resources/project_photos/parking.webm" type="video/webm"> </video>
                 </div>
                 <div class="container-fluid" id="project-summary">
-                <div class="project-title">Parking Analytics Database</div>
+                    <div class="project-title">Parking Analytics Database</div>
                     <div class="language-container">
                         <ul class="language-list">
-                        <li>Java</li>
-                        <li>SQLite</li>
+                            <li>Java</li>
+                            <li>SQLite</li>
                             <li>JavaScript</li>
                             <li>CSS</li>
                             <li>HTML</li>
                         </ul>
-                        </div>
+                    </div>
                 </div>
             </div>
-
-
-               <div class="project" id="third-project">
+            <div class="project" id="third-project">
                 <div class="project-image">
-                     <video playsinline autoplay muted loop poster="polina.jpg" id="proj3-vid">
-    <source src="Resources/project_photos/UAV-demo-vid.mp4#t=100,140" type="video/mp4">
-                </div>
+                    <video playsinline autoplay muted loop poster="polina.jpg" id="proj3-vid">
+                        <source src="Resources/project_photos/UAV-demo-vid.mp4#t=100,140" type="video/mp4"> </div>
                 <div class="container-fluid" id="project-summary">
-                <div class="project-title">UAV Team</div>
+                    <div class="project-title">UAV Team</div>
                     <div class="language-container">
                         <ul class="language-list">
-                        <li>Java</li>
-                        <li>OpenCV</li>
+                            <li>Java</li>
+                            <li>OpenCV</li>
                             <li>Batch</li>
                         </ul>
-                        </div>
+                    </div>
                 </div>
             </div>
-
-
-               <div class="project" id="fourth-project">
+            <div class="project" id="fourth-project">
                 <div class="project-image">
-                     <video playsinline autoplay muted loop poster="polina.jpg" id="proj4-vid">
-    <source src="Resources/project_photos/skateboarding-physics.webm" type="video/webm">
-                </div>
+                    <video playsinline autoplay muted loop poster="polina.jpg" id="proj4-vid">
+                        <source src="Resources/project_photos/skateboarding-physics.webm" type="video/webm"> </div>
                 <div class="container-fluid" id="project-summary">
-                <div class="project-title">Skateboarding Physics Simulator</div>
+                    <div class="project-title">Skateboarding Physics Simulator</div>
                     <div class="language-container">
                         <ul class="language-list">
-                        <li>C++</li>
-                        <li>OpenGL</li>
+                            <li>C++</li>
+                            <li>OpenGL</li>
                         </ul>
-                        </div>
+                    </div>
                 </div>
             </div>
-
-
-               <div class="project" id="fifth-project">
-                <div class="project-image">
-                </div>
+            <div class="project" id="fifth-project">
+                <div class="project-image"> </div>
                 <div class="container-fluid" id="project-summary">
-                <div class="project-title">GRE Vocab Builder</div>
+                    <div class="project-title">GRE Vocab Builder</div>
                     <div class="language-container">
                         <ul class="language-list">
-                        <li>Java</li>
-                        <li>Android Studio</li>
+                            <li>Java</li>
+                            <li>Android Studio</li>
+                            <li>SQLite</li>
                         </ul>
-                        </div>
+                    </div>
                 </div>
             </div>
-
-
-               <div class="project" id="sixth-project">
-                <div class="project-image">
-                </div>
+            <div class="project" id="sixth-project">
+                <div class="project-image"> </div>
                 <div class="container-fluid" id="project-summary">
-                <div class="project-title">RNA Sequencing Analysis Web Pipeline</div>
+                    <div class="project-title">RNA Sequencing Analysis Web Pipeline</div>
                     <div class="language-container">
                         <ul class="language-list">
-                        <li>PHP</li>
-                        <li>SQL</li>
+                            <li>PHP</li>
+                            <li>SQL</li>
                             <li>Python</li>
                             <li>HTML</li>
                             <li>CSS</li>
                         </ul>
-                        </div>
+                    </div>
                 </div>
             </div>
-
-
         </div>
+
+        <div class="dim" id="proj1-view">
+                <div class="dim-container">
+                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button"></span></div>
+                    <p id="project_title">Recursive Tree Analysis Tool</p>
+                  <div class="project_summary">
+                    A personal project I am working on to simplify the analysis of recursive trees by the recursion tree method using OpenGl/C++. This tool allows users to follow a simple graphical user interface to input a recursive equation such as T(n) = 4T(n/2) + 2n2 and view the output as a detailed recursive tree. Users are also able to view other details such as depth, size of sub-problem, number of nodes, workload per node, and total workload per depth. In this project, only OpenGl primitives were used.
+                    </div>
+                    <div class="project_image" id="proj1-image">
+                     <video playsinline autoplay muted loop poster="polina.jpg" id="proj1-image-vid">
+                        <source src="Resources/project_photos/recursive-tree-demo.webm" type="video/webm"> </video>
+                    </div>
+                </div>
+                </div>
+
+                    <div class="dim" id="proj2-view">
+                <div class="dim-container">
+                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button2"></span></div>
+                    <p id="project_title">Parking Analytics Database</p>
+                  <div class="project_summary">
+                    For my CSE-111 Database systems project, the primary goal for our web application is to develop a program where users can view a graphical layout of the campus parking lot and see the amount of spots available through highlighted sections. The user can also select a spot and view the current occupant info (name, age, sex, parking duration) and also modify and search for specific spots/areas.</div>
+                    <div class="project_image" id="proj2-image">
+                         <video playsinline autoplay muted loop poster="polina.jpg" id="proj2-image-vid">
+                        <source src="Resources/project_photos/parking.webm" type="video/webm"> </video>
+                    </div>
+                </div>
+                </div>
+
+
+                      <div class="dim" id="proj3-view">
+                <div class="dim-container">
+                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button3"></span></div>
+                    <p id="project_title">UAV Team</p>
+                  <div class="project_summary">
+                      Through UC Merced's Engineering Service Learning program, I worked with interdisciplinary teams to develop a program which utilizes a drone to autonomously fly through a route and take images which are later processed into our computer program and is able to detect pierce’s disease in crops.I developed the user interface for our program in java and also wrote code to analyze areas of concern through NDVI.
+                   </div>
+                    <div class="project_image" id="proj3-image">
+                         <video playsinline autoplay muted loop poster="polina.jpg" id="proj3-image-vid" controls="true" >
+                        <source src="Resources/project_photos/UAV-demo-vid.mp4" type="video/mp4"> </video>
+                    </div>
+                </div>
+                </div>
+
+
+                         <div class="dim" id="proj4-view">
+                <div class="dim-container">
+                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button4"></span></div>
+                    <p id="project_title">Skateboarding Physics Simulator</p>
+                  <div class="project_summary">
+                     For my course, CSE 170 - Introduction to Computer Graphics, I developed a program to simulate and analyze skateboarding tricks in 3D using OpenGL. I used a custom graphs/Bezier class to display and control rotations in all axis using OpenGL/C++.
+
+                   </div>
+                    <div class="project_image" id="proj4-image">
+                         <video playsinline autoplay muted loop poster="polina.jpg" id="proj4-image-vid" controls="true" >
+                        <source src="Resources/project_photos/skateboarding-physics.webm" type="video/webm"> </video>
+                    </div>
+                </div>
+                </div>
+
+
+                         <div class="dim" id="proj5-view">
+                <div class="dim-container">
+                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button5"></span></div>
+                    <p id="project_title">GRE Vocab Builder</p>
+                  <div class="project_summary">
+                    A personal project where I am developing an android application to help aspiring students study for their GRE exam. This is a quiz/card based system where users can save scores, prioritize words for better learning, and also review overall progress and highlight areas of improvement.
+                   </div>
+                    <div class="project_image" id="proj5-image">
+                    </div>
+                </div>
+                </div>
+
+
+
+                        <div class="dim" id="proj6-view">
+                <div class="dim-container">
+                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button6"></span></div>
+                    <p id="project_title">RNA Sequencing Analysis Web Pipeline</p>
+                  <div class="project_summary">
+                    With my organization, the Quantitative Project, I worked on developing a web pipeline for for laboratory use at UC Merced. This web pipeline will allow users to login and access their RNA-seq data and perform analysis on the web after customizing and selecting their workflow. All data will be stored and available for easy access and is stored securely. This project is still in progress and utilizes PHP, HTML,CSS, Python, and SQL.
+                   </div>
+                    <div class="project_image" id="proj6-image">
+                    </div>
+                </div>
+                </div>
+
+
+
+
+        <script>
+            $("#first-project .project-image").click(function () {
+                $("#proj1-view").show();
+//                $("#proj1-view .dim-container").slideDown("slow");
+                $("#proj1-view .dim-container").fadeIn("slow");
+                 $("#proj1-view .dim-container").children().show();
+
+            });
+
+                        $("#second-project .project-image").click(function () {
+                $("#proj2-view").show();
+//                $("#proj1-view .dim-container").slideDown("slow");
+                $("#proj2-view .dim-container").fadeIn("slow");
+                 $("#proj2-view .dim-container").children().show();
+
+            });
+
+
+                          $("#third-project .project-image").click(function () {
+                $("#proj3-view").show();
+//                $("#proj1-view .dim-container").slideDown("slow");
+                $("#proj3-view .dim-container").fadeIn("slow");
+                 $("#proj3-view .dim-container").children().show();
+
+            });
+
+
+                          $("#fourth-project .project-image").click(function () {
+                $("#proj4-view").show();
+//                $("#proj1-view .dim-container").slideDown("slow");
+                $("#proj4-view .dim-container").fadeIn("slow");
+                 $("#proj4-view .dim-container").children().show();
+
+            });
+
+
+                        $("#fifth-project .project-image").click(function () {
+                $("#proj5-view").show();
+//                $("#proj1-view .dim-container").slideDown("slow");
+                $("#proj5-view .dim-container").fadeIn("slow");
+                 $("#proj5-view .dim-container").children().show();
+
+            });
+
+
+                                 $("#sixth-project .project-image").click(function () {
+                $("#proj6-view").show();
+//                $("#proj1-view .dim-container").slideDown("slow");
+                $("#proj6-view .dim-container").fadeIn("slow");
+                 $("#proj6-view .dim-container").children().show();
+
+            });
+
+
+               $("#exit-button").click(function () {
+                $("#exit-button").parentsUntil("#experience-container").hide();
+            });
+
+
+              $("#exit-button2").click(function () {
+                $("#exit-button2").parentsUntil("#experience-container").hide();
+            });
+
+              $("#exit-button3").click(function () {
+                $("#exit-button3").parentsUntil("#experience-container").hide();
+            });
+
+             $("#exit-button4").click(function () {
+                $("#exit-button4").parentsUntil("#experience-container").hide();
+            });
+
+
+
+             $("#exit-button5").click(function () {
+                $("#exit-button5").parentsUntil("#experience-container").hide();
+            });
+
+
+
+             $("#exit-button6").click(function () {
+                $("#exit-button6").parentsUntil("#experience-container").hide();
+            });
+
+
+        </script>
     </div>
+
+
+    <div class="container-fluid" id="pdf-container">
+
+
+                <div id="pdf">
+  <object id="pdf-resume-obj" width="400" height="500" type="application/pdf" data="/Majok_Ring_Resume.pdf?#zoom=110&scrollbar=0&toolbar=0&navpanes=0" id="pdf_content" width="100%" height="100%">
+
+    <p>Insert your error message here, if the PDF cannot be displayed.</p>
+  </object>
+</div>
+
+
+
+
+                </div>
     <div class="container-fluid" id="timeline-container">
         <div class="row example-centered">
             <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2" id="timeline-background">
@@ -541,6 +777,7 @@
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
                             <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
+                            <div class="timeline-item-banner"></div>
                             <p><strong>Secretary</strong>
                                 <br>
                                 <br> The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods; to discover big data analytics of complex questions; and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics. The Q Project (“Q”) is a graduate student run organization furthering the diversity and advancement of the analyses of very large data sets in the sciences</p>
@@ -558,6 +795,8 @@
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
                             <h3 class="timeline-title">University of California, Merced</h3>
+                                                        <div class="timeline-item-banner"></div>
+
                             <p>Bachelor’s Degree, Computer Science and Engineering</p>
                         </div>
                     </li>
@@ -573,6 +812,8 @@
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
                             <h3 class="timeline-title">Canyon Crest Academy High School</h3>
+                                                        <div class="timeline-item-banner"></div>
+
                             <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
                         </div>
                     </li>
@@ -581,6 +822,8 @@
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
                             <h3 class="timeline-title">TEDxYouth@SanDiego</h3>
+                                                        <div class="timeline-item-banner"></div>
+
                             <p>• Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area.
                                 <br>
                                 <br> • As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.
@@ -593,6 +836,15 @@
             </div>
         </div>
     </div>
+
+            <script>
+
+$(document).ready(function() {
+  $(".timeline-item-banner").css({
+    'width': ($(".first_div").width() + 'px')
+  });
+});
+            </script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
     <!-- Include all compiled plugins (below), or include individual files as needed -->

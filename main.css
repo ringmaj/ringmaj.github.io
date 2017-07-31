@@ -1,3 +1,10 @@
+:root {
+    --main-color:#7a8799;
+/*        --main-color:#5bb186;*/
+
+}
+
+
 #first {
     -webkit-animation: bannermove 30s linear infinite;
     -moz-animation: bannermove 30s linear infinite;
@@ -237,18 +244,26 @@ a:hover {
     padding: 15px;
     /*    height: 180px;*/
     display: inline-block;
-    background-color: #ff6363;
+    background-color: var(--main-color);
     color: white;
-    border-radius: 5px;
+/*    border-radius: 5px;*/
 }
 
 .timeline-content p:last-child:hover {
     margin-bottom: 0;
-    background-color: #ffa3a3;
+    background-color: #9caec6;
     color: #ffffff;
     /*    background-color: #fafafa;*/
 }
 
+
+.timeline-item-banner {
+  height: 32px;
+    border: 1px solid #b1b1b1;
+    background-color: #eee;
+    margin-top: 30px;
+    display: none;
+}
 
 /*----- TIMELINE PERIOD -----*/
 
@@ -420,8 +435,14 @@ body {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
-    /*    overflow-y: scroll;*/
+        overflow-y: scroll;
     margin: 0px;
+    font-family: 'Ubuntu', sans-serif;
+
+/*
+    width: 95%;
+    float: right;
+*/
 }
 
 html {
@@ -627,10 +648,11 @@ txt {
 }
 
 .container-fluid .bioPanel {
-    height: 1250px;
+    height: 1300px;
     width: inherit;
     border-radius: 0px;
     margin-bottom: 0px;
+    width: 100%;
     width: 100%;
 }
 
@@ -640,7 +662,9 @@ txt {
     /*    background-image: url(https://static.pexels.com/photos/506355/pexels-photo-506355.jpeg);*/
     /*    background-image: url(https://static.pexels.com/photos/1526/dark-blur-blurred-gradient.jpg);*/
     /*    background: linear-gradient(to bottom, #a90329 0%, #8f0222 60%, #6d0019 97%);*/
-    background: linear-gradient(to bottom, #7f2d2d 0%, #6c2626 44%, #531b1b 100%);
+/*    background: linear-gradient(to bottom, #7f2d2d 0%, #6c2626 44%, #531b1b 100%);*/
+/*      background: linear-gradient(to bottom, #ff8989 0%, #997a99 55%, #7a8799 100%);*/
+    background-color: #d8d8d8;
     background-size: cover;
     background-repeat: no-repeat;
     padding-top: 100px;
@@ -655,7 +679,8 @@ txt {
 }
 
 #journey-background {
-    background-color: #ed5a5a;
+/*    background-color: #4DAA57;*/
+    background-color: var(--main-color);
     padding-left: 0px;
     padding-right: 0px;
     width: 100%;
@@ -668,7 +693,7 @@ txt {
 }
 
 #journeyWelcome {
-    background-color: #ed5a5a;
+    background-color: var(--main-color);
     color: white;
     margin: auto;
 }
@@ -695,15 +720,21 @@ txt {
 
 #timelineObj {
     padding: 40px;
+        box-shadow: 10px 10px 50px #b5aaaa;
+
 }
 
 #bioTitle {
-    background-color: #EEEEEE;
+/*    background-color: #EEEEEE;*/
     text-align: center;
     font-family: 'Fjalla One', sans-serif;
     font-size: 40px;
     margin-bottom: 85px;
-    background-color: #dedcdc;
+/*    background-color: #dedcdc;*/
+    padding-top: 40px;
+
+
+    font-size: 30px;
 }
 
 .bioPanel {
@@ -727,7 +758,7 @@ txt {
     height: 700px;
     /*    background-color: #ed5a5a;*/
 /*    background-color: #ed5a5a;*/
-    background-color: #7a8799;
+    background-color: var(--main-color);
     display: block;
     padding: 20px;
     padding-left: 0px;
@@ -747,6 +778,7 @@ txt {
     margin-right: 50px;
     margin-top: -700px;
     padding-top: 70px;
+=
 }
 
 .photoGallery {
@@ -757,7 +789,7 @@ txt {
     margin-right: auto;
     /*    background-color: #ffffff;*/
 /*    background-color: #a73e3e;*/
-    background-color: #7a8799;
+    background-color: var(--main-color);
     padding-top: 1%;
 /*    box-shadow: 10px 10px 50px #b5aaaa;*/
 
@@ -785,12 +817,16 @@ txt {
 }
 
 #experienceTitle {
-    background-color: #EEEEEE;
+/*    background-color: #EEEEEE;*/
     text-align: center;
     font-family: 'Fjalla One', sans-serif;
     font-size: 40px;
     margin-bottom: 50px;
-    background-color: #dedcdc;
+/*    background-color: #dedcdc;*/
+/*    background-color: var(--main-color);*/
+    margin-top: 40px;
+    color: white;
+    font-size: 30px;
 }
 
 #experience-sub-title {
@@ -809,7 +845,8 @@ txt {
     padding-left: 0px;
     padding-right: 0px;
 /*    background-color: #6f4f57;*/
-    background-color: #7a8799;
+/*    background-color: var(--main-color);*/
+        background-color: var(--main-color);
 }
 
 .job-experience {
@@ -968,12 +1005,14 @@ background-color: #f7f7f7;
         box-shadow: 10px 10px 25px rgba(181, 170, 170, 0.5);
 
 
+
 }
 
 .project-image {
     height: 200px;
     width: 350px;
     background-color: #b6ccff;
+
 }
 
 #project-summary {
@@ -1077,7 +1116,7 @@ height: 50%;
 
 
 #first-project  .project-image{
-    background-image: url(https://raw.githubusercontent.com/ringmaj/Recursive-Tree-Analysis-Tool/master/program_image.PNG);
+    background-image: url(Resources/project_photos/recursive-tree-demo.webm);
     background-size: 100% 100%;
     background-repeat: no-repeat;
 }
@@ -1102,7 +1141,7 @@ height: 50%;
 }
 
 
-#proj2-vid, #proj4-vid,  #proj3-vid {
+#proj2-vid, #proj4-vid,  #proj3-vid, #proj1-vid{
 width: 100%;
     height: 100%;
 }
@@ -1111,6 +1150,172 @@ width: 100%;
 background-color: #ff8000;
 }
 
+#proj1-vid {
+background-color: #ff8153;
+}
+
+
+
+
+
+.dim {
+    height:100%;
+    width:100%;
+    position:fixed;
+    left:0;
+    top:0;
+    z-index:1 !important;
+    background-color:black;
+      background-color:rgba(0, 0, 0, 0.84);
+    display: none;
+}
+
+
+.dim-container {
+    height: 85%;
+    width: 85%;
+    background-color: rgb(255, 255, 255);
+      filter: alpha(opacity=100); /* internet explorer */
+    -khtml-opacity: 1.0;      /* khtml, old safari */
+      -moz-opacity: 1.0;      /* mozilla, netscape */
+           opacity: 1.0;      /* fx, safari, opera */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 95px;
+    z-index: 5;
+
+
+
+}
+
+
+.exit-button-container {
+    height: 5%;
+    text-align: right;
+
+}
+
+#exit-button,#exit-button2, #exit-button3, #exit-button4, #exit-button5, #exit-button6 {
+    padding: 10px;
+    font-size: 1.6em;
+    display: inline-flex;
+    margin: 2px;
+     background-color: #d8d8d8;
+
+}
+
+#exit-button:hover, #exit-button2:hover, #exit-button3:hover, #exit-button4:hover, #exit-button5:hover, #exit-button6:hover {
+ background-color: #ff9a9a;
+}
+
+
+#project_title {
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+
+}
+
+.project_summary {
+    height: 20%;
+    padding: 50px;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.project_image {
+height: 65%;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #8e8e8e;
+     background-size:contain;
+}
+
+#proj1-image {
+    background-image:url(Resources/project_photos/recursiveTree.PNG);
+    background-size: contain;
+    background-repeat: no-repeat;
+        background-position: center;
+    background-color: white;
+}
+
+#proj2-view .project_summary, #proj3-view .project_summary, #proj4-view .project_summary,  #proj1-view .project_summary {
+height: 10%;
+    padding-top: 0px;
+margin-bottom: 0px;
+}
+
+#proj2-view .dim-container, #proj3-view .dim-container, #proj5-view .dim-container, {
+height: 89%;
+}
+
+#proj1-image, #proj2-image, #proj3-image, #proj4-image, #proj5-image, #proj6-image, #proj-image{
+    height: 80%;
+    width: 90%;
+    margin-top: 0px;
+    background-color: white;
+}
+
+#proj1-image-vid,#proj2-image-vid, #proj3-image-vid, #proj4-image-vid {
+    width: 100%;
+    height: 100%;
+}
+
+#proj4-image-vid {
+    background-color: #ff8000;
+}
+
+
+#proj5-image {
+background-image: url(Resources/project_photos/GRE-App.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: -50px;
+    height: 600px;
+}
+
+
+#proj6-image {
+background-image: url(Resources/project_photos/rna-seq.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: -50px;
+    height: 600px;
+}
+
+
+
+#pdf-container {
+height: 1250px;
+    padding: 0px;
+    text-align:center;
+/*    background-color: #7a8799;*/
+        background-color: #3d434b;
+
+}
+
+#pdf {
+    height: inherit;
+    width: inherit;
+    padding: 50px;
+
+}
+
+#pdf-resume-obj {
+
+    height: 100%;
+    width: 50%;
+
+}
+
+.dim-container video::-webkit-media-controls-panel {
+    display: flex !important;
+    opacity: 1 !important;
+}
 
 .jumbotron {
     border-radius: 0px;
@@ -1221,10 +1426,17 @@ background-color: #ff8000;
         border-radius: 200px;
         margin-left: auto;
         margin-right: auto;
+
+
     }
+
+
+
+
+
     .userCard {
         width: 100%;
-        height: 100%;
+        height: 50%;
         margin-top: 0px;
     }
     .bioPanel {
@@ -1235,13 +1447,17 @@ background-color: #ff8000;
         text-align: left;
         padding-left: 30px;
     }
+
+    .photoGallery {
+        display: none;
+
+}
     #timeline-container {
         background-image: none;
     }
     #timeline-background {
         background-color: white;
-        padding-left: 5px;
-        padding-right: 5px;
+        width: 100%;
     }
     .bioPanel {
         border-bottom: 2px solid #968b8b;
@@ -1252,12 +1468,15 @@ background-color: #ff8000;
         padding-left: 30px;
     }
     .container-fluid .bioPanel {
-        height: 2000px;
+        height: 2100px;
         width: inherit;
         border-radius: 0px;
         margin-bottom: 0px;
         width: 100%;
         padding-top: 10%;
+
+
+
     }
     .user {
         width: 90%;
@@ -1268,7 +1487,65 @@ background-color: #ff8000;
         margin-top: 5%;
         width: 90%;
         margin-right: 5%;
+         height: auto;
+  min-height: 100% !imprtant;
+
     }
+
+    #experience-container {
+    width: 100%;
+    height: 3600px;
+    padding-left: 0px;
+    padding-right: 0px;
+/*    background-color: #6f4f57;*/
+/*    background-color: var(--main-color);*/
+        background-color: #6f7c8d;
+        display: inline-block;
+
+
+}
+
+    .project{
+        box-shadow: none;
+        padding: 0px;
+        margin-left: 0px;
+
+    }
+
+    .project-experience {
+        margin-top: 50px;
+      margin: 0px;
+        padding: 0px;
+        float: none;
+        margin-top: 10%;
+        margin-left: auto;
+        margin-right: auto;
+        width: 350px;
+
+
+}
+
+    .job-experience {
+    width: 90%;
+    height: 1100px;
+    /*    background-color: #ed5a5a;*/
+    /*    background-color: #ed5a5a;*/
+    /*    background-color: #895d5d;*/
+    background-color: white;
+    display: block;
+    padding: 20px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 5%;
+    margin-top: 120px;
+    padding: 40px;
+    color: black;
+/*        box-shadow: 10px 10px 50px #b5aaaa;*/
+        box-shadow: 10px 10px 0px #b5aaaa;
+        height: auto;
+
+
+}
 }
 
 @media (max-width: @screen-xs) {
