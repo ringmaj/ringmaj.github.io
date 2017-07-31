@@ -1294,21 +1294,23 @@ height: 1250px;
     padding: 0px;
     text-align:center;
 /*    background-color: #7a8799;*/
-        background-color: #3d434b;
+        background-color: #525659;
 
 }
 
 #pdf {
     height: inherit;
     width: inherit;
-    padding: 50px;
+    padding: 0px;
 
 }
 
 #pdf-resume-obj {
 
     height: 100%;
-    width: 50%;
+    width: 44%;
+    padding: 0px;
+    margin: 0px;
 
 }
 
