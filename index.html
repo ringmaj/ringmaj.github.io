@@ -29,7 +29,55 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="footer-reveal.js"></script>
     <!--    scrolling-->
+
+       <script>
+        $(function () {
+      // Select all links with hashes
+
+            var headerHeight = $("#navB").height();
+$('a[href*="#"]')
+  // Remove links that don't actually link to anything
+  .not('[href="#"]')
+  .not('[href="#0"]')
+  .click(function(event) {
+    // On-page links
+    if (
+      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
+      &&
+      location.hostname == this.hostname
+    ) {
+      // Figure out element to scroll to
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+      // Does a scroll target exist?
+      if (target.length) {
+        // Only prevent default if animation is actually gonna happen
+        event.preventDefault();
+
+              var scrollToPosition = $(target).offset().top - headerHeight;
+
+        $('html, body').animate({
+          scrollTop: scrollToPosition
+        }, 1000, function() {
+          // Callback after animation
+          // Must change focus!
+          var $target = $(target);
+          $target.focus();
+          if ($target.is(":focus")) { // Checking if the target was focused
+            return false;
+          } else {
+            $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+            $target.focus(); // Set focus again
+          };
+        });
+      }
+    }
+  });
+
+        });
+    </script>
 </head>
 
 <body>
@@ -45,25 +93,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">Dashboard</a>
+                    <a href="#top">Home</a>
                 </li>
                 <li>
-                    <a href="#">Shortcuts</a>
+                    <a href="#aboutMe">About Me</a>
                 </li>
                 <li>
-                    <a href="#">Overview</a>
+                    <a href="#experience-container">Experience & Projects</a>
                 </li>
                 <li>
-                    <a href="#">Events</a>
+                    <a href="#pdf-container">Resume</a>
                 </li>
                 <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#">Services</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
+                    <a href="#timeline-container">Timeline</a>
                 </li>
             </ul>
         </div>
@@ -99,25 +141,16 @@ function mouseMoveHandler(e) {
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
+                    <li class="active"><a href="#top">Home</a></li>
                     <li id="aboutButton"><a href="#aboutMe">About Me </a></li>
-                    <li><a href="#contact">Experience</a></li>
-                    <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resume <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Resume</a></li>
-                            <li><a href="#">Cover Letter</a></li>
-                            <li><a href="#">Github</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="#experience-container">Experience</a></li>
+
+                            <li><a href="#pdf-container">Resume</a></li>
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="../navbar/">Timeline</a></li>
-                    <li><a href="../navbar-static-top/">Projects</a></li>
-                    <li class="active"><a href="./">Future <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#timeline-container">Timeline</a></li>
+                    <li class="active"><a href="#empty">Future <span class="sr-only">(current)</span></a></li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -125,14 +158,18 @@ function mouseMoveHandler(e) {
     </nav>
     <script>
          $("#wrapper").toggleClass("toggled");
-        $(".nav a").on("click", function () {
-            $(".nav").find(".active").removeClass("active");
-            $(this).parent().addClass("active");
-        });
+
+
+        $('body').scrollspy({ target: '#navB' });
+
+//        $(".nav a").on("click", function () {
+//            $(".nav").find(".active").removeClass("active");
+//            $(this).parent().addClass("active");
+//        });
     </script>
     <div class="container-fluid" style="
     padding: 0;">
-        <div class="jumbotron" align="center" style="border-radius:0px;">
+        <div class="jumbotron" id="top" align="center" style="border-radius:0px;">
             <!--            Holds terminal info page-->
             <div class="infoPanel" align="center">
                 <div class="line" align="center"> </div>
@@ -337,6 +374,8 @@ function mouseMoveHandler(e) {
     padding: 0;" id="aboutMe">
             <div class="bioPanel">
                 <p id="bioTitle">> BIO</p>
+                        <div class="usercard-container">
+
                 <div class="user">
                     <div class="profilePhoto"> </div>
                     <div class="name"> Majok Francis Ring </div>
@@ -408,6 +447,7 @@ function mouseMoveHandler(e) {
                             <br>As exemplified by the above, I have a strong interest in software development and have the discipline and communication skills to be successful in a team environment. I am confident that I will be a very functional addition to your team of engineers. </p>
                     </div>
                 </div>
+                </div>
                 <div class="photoGallery">
                     <div class="imageContainer"> <img src="Resources/gallery_photos/profile.jpg" class="galleryImages" id="first"> <img src="Resources/gallery_photos/treflip.jpg" class="galleryImages"> <img src="Resources/gallery_photos/boardsky.jpg" class="galleryImages"> <img src="Resources/gallery_photos/kickflip.jpg" class="galleryImages"> <img src="Resources/gallery_photos/profile2.jpg" class="galleryImages"> <img src="Resources/gallery_photos/profile3" class="galleryImages"> <img src="Resources/gallery_photos/treflip.jpg" class="galleryImages"> <img src="Resources/gallery_photos/boardsky.jpg" class="galleryImages"> <img src="Resources/gallery_photos/kickflip.jpg" class="galleryImages"> <img src="Resources/gallery_photos/profile2.jpg" class="galleryImages"> <img src="Resources/gallery_photos/profile3" class="galleryImages">
                         <!--                        repeat--><img src="Resources/gallery_photos/profile.jpg" class="galleryImages"> <img src="Resources/gallery_photos/treflip.jpg" class="galleryImages"> <img src="Resources/gallery_photos/boardsky.jpg" class="galleryImages"> <img src="Resources/gallery_photos/kickflip.jpg" class="galleryImages"> <img src="Resources/gallery_photos/treflip.jpg" class="galleryImages"> <img src="Resources/gallery_photos/boardsky.jpg" class="galleryImages"> <img src="Resources/gallery_photos/kickflip.jpg" class="galleryImages"> <img src="Resources/gallery_photos/profile2.jpg" class="galleryImages"> <img src="Resources/gallery_photos/profile3" class="galleryImages">
@@ -426,6 +466,7 @@ function mouseMoveHandler(e) {
     </div>
     <div class="container-fluid" id="experience-container">
         <p id="experienceTitle">> EXPERIENCE</p>
+        <div class="experience-projects-container">
         <div class="job-experience">
             <p id="experience-sub-title">Experience & Volunteering</p>
             <div class="job">
@@ -566,6 +607,7 @@ function mouseMoveHandler(e) {
                 </div>
             </div>
         </div>
+                </div>
 
         <div class="dim" id="proj1-view">
                 <div class="dim-container">
@@ -837,12 +879,20 @@ function mouseMoveHandler(e) {
         </div>
     </div>
 
+
+     <div class="container-fluid" id="empty">
+
+
+
+            </div>
+
             <script>
 
 $(document).ready(function() {
   $(".timeline-item-banner").css({
     'width': ($(".first_div").width() + 'px')
   });
+     $('footer').footerReveal();
 });
             </script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -850,5 +900,11 @@ $(document).ready(function() {
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
 </body>
+
+              <div class="container" id="footer">
+
+
+
+            </div>
 
 </html>

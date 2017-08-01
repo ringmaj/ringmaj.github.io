@@ -69,6 +69,7 @@ body {
     padding: 0;
     -webkit-font-smoothing: antialiased;
     width: 100%;
+
 }
 
 h1,
@@ -431,6 +432,7 @@ a:hover {
 
 html,
 body {
+/*
     max-width: 100%;
     width: 100%;
     height: 100%;
@@ -438,17 +440,15 @@ body {
         overflow-y: scroll;
     margin: 0px;
     font-family: 'Ubuntu', sans-serif;
-
-/*
-    width: 95%;
-    float: right;
 */
+
 }
 
 html {
-        overflow-y: hidden;
+/*        overflow-y: hidden;*/
 
 }
+
 
 
 @font-face {
@@ -669,6 +669,8 @@ txt {
     background-repeat: no-repeat;
     padding-top: 100px;
     height: 1650px;
+        box-shadow: 10px 10px 30px rgba(29, 29, 29, 0.57);
+
 }
 
 #journey_container {
@@ -765,6 +767,7 @@ txt {
     padding-right: 0px;
     box-shadow: 10px 10px 50px #b5aaaa;
     margin-left: 50px;
+    min-width: 450px;
 }
 
 .userCard {
@@ -776,13 +779,14 @@ txt {
     box-shadow: 10px 10px 50px #b5aaaa;
     float: right;
     margin-right: 50px;
-    margin-top: -700px;
     padding-top: 70px;
-=
+    overflow: hidden;
+    margin-left: 5%;
+    overflow-y: auto;
 }
 
 .photoGallery {
-    margin-top: 125px;
+    margin-top: 50px;
     width: 95%;
     height: 15%;
     margin-left: auto;
@@ -839,6 +843,21 @@ txt {
     /*    background-color: #dedcdc;*/
 }
 
+.usercard-container {
+      display: inline-flex;
+    overflow: hidden;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    margin-top: -50px;
+
+}
+.experience-projects-container {
+    display: inline-flex;
+    overflow: hidden;
+    height: 100%;
+
+}
+
 #experience-container {
     width: 100%;
     height: 1500px;
@@ -847,6 +866,8 @@ txt {
 /*    background-color: #6f4f57;*/
 /*    background-color: var(--main-color);*/
         background-color: var(--main-color);
+        overflow: hidden;
+
 }
 
 .job-experience {
@@ -866,8 +887,7 @@ txt {
     color: black;
 /*        box-shadow: 10px 10px 50px #b5aaaa;*/
         box-shadow: 10px 10px 0px #b5aaaa;
-
-
+    overflow-y: auto;
 }
 
 
@@ -982,18 +1002,22 @@ background-color: #f7f7f7;
 
 .project-experience {
     width: 50%;
-    height: 990px;
+    height: 1050px;
 /*    background-color: #ffffff;*/
     display: block;
     padding: 20px;
 /*    box-shadow: 10px 10px 50px #b5aaaa;
     */    float: right;
     margin-right: 50px;
-    margin-top: -990px;
     padding-top: 70px;
         padding: 40px;
     padding-top: 0px;
+    margin-top: 120px;
+        overflow-y: auto;
+}
 
+#sixth-project, #fifth-project {
+margin-bottom: 0px;
 }
 
 .project {
@@ -1358,6 +1382,27 @@ height: 1250px;
     font-size: 15px;
 }
 
+
+#footer {
+  width: 100%;
+  height: 400px;
+  background-color: #000;
+  text-align: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+    background-color: #ff8900;
+/*    background-image: url(Resources/bioLab.JPG)*/
+}
+
+#empty {
+width: 100%;
+    height: 400px;
+    background-color: rgba(255, 0, 0, 0);
+
+
+}
 
 /*
 #timelineObj p {
