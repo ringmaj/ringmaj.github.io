@@ -462,6 +462,16 @@ html {
     src: url('LemonMilk.otf');
 }
 
+@font-face {
+    font-family: Ubuntu-R;
+    src: url('Ubuntu-R.ttf');
+}
+
+@font-face {
+    font-family: Roboto-Mono-R;
+    src: url('RobotoMono-Regular.ttf');
+}
+
 #navB {
     border: none;
     box-shadow: none;
@@ -508,21 +518,28 @@ color: #393939;
 
 #terminal_ls {
     color: white;
-    font-family: monospace;
+    font-family: Roboto-Mono-R;
     font-size: 14px;
 }
 
 #fileList {
     color: white;
-    font-family: monospace;
+    font-family: Roboto-Mono-R;
     font-size: 14px;
     display: inline;
+
+
+
+    font-family: Roboto-Mono-R, LemonMilk;
+
+
 }
 
 .terminal p {
     color: white;
-    font-family: monospace;
+    font-family: Roboto-Mono-R;
     font-size: 14px;
+
 }
 
 .terminal .p .termText {
@@ -548,14 +565,14 @@ color: #393939;
 #cat_command2,
 #cat_card_answer2 {
     color: white;
-    font-family: monospace;
+    font-family: Roboto-Mono-R;
     font-size: 14px;
     display: inline;
 }
 
 username {
     color: white;
-    font-family: monospace;
+    font-family: Roboto-Mono-R;
 }
 
 .line {
@@ -900,7 +917,8 @@ margin-top: 170px;
     background-size: 100% 100%;
 */
 
-        background-image:linear-gradient(to bottom, rgba(122, 135, 153, 0.71) 100%, rgba(255, 255, 255, 0.5) 100%), url(https://static.pexels.com/photos/50631/pexels-photo-50631.jpeg);
+        background-image:linear-gradient(to bottom, rgba(122, 135, 153, 0.71) 100%, rgba(255, 255, 255, 0.5) 100%), url(Resources/Backgrounds/river.jpeg);
+
     background-size: 100% 100%;
 
 
@@ -1399,7 +1417,7 @@ overflow: hidden;
 
 /*    background-image: url(https://static.pexels.com/photos/1587/blurred-background.jpg);*/
 
-    background-image: url(https://static.pexels.com/photos/249074/pexels-photo-249074.jpeg);
+    background-image: url(Resources/Backgrounds/bridge.jpeg);
     background-size: 100% 100%;
     /*    background-repeat: repeat-y;*/
     height: 100%;
@@ -1464,7 +1482,7 @@ overflow: hidden;
   z-index: -1;
     background-color: #ff8900;
 /*    background-image: url(Resources/bioLab.JPG)*/
-     background-image:linear-gradient(to bottom, rgba(92, 114, 157, 0.74) 100%, rgba(255, 255, 255, 0.5) 100%), url(https://static.pexels.com/photos/50631/pexels-photo-50631.jpeg);
+     background-image:linear-gradient(to bottom, rgba(92, 114, 157, 0.74) 100%, rgba(255, 255, 255, 0.5) 100%), url(Resources/Backgrounds/city.jpeg);
     background-size: 100%;
     background-position: center;
 
@@ -1485,7 +1503,7 @@ font-family: 'Montserrat', sans-serif;
     font-size: 18px;
 font-family: 'Montserrat', sans-serif;
     font-weight: bold;
-    background-color: rgba(0, 0, 0, 0.35);
+    background-color: rgba(0, 0, 0, 0.25);
     padding: 10px;
 
 }
@@ -1525,7 +1543,7 @@ width: 100%;
   left: 0;
   bottom: 0;
   z-index: -1;
-        background-image:linear-gradient(to bottom, rgba(216, 216, 216, 0.94) 100%, rgba(255, 255, 255, 0.5) 100%), url(https://static.pexels.com/photos/137611/pexels-photo-137611.jpeg);
+        background-image:linear-gradient(to bottom, rgba(216, 216, 216, 0.94) 100%, rgba(255, 255, 255, 0.5) 100%), url(Resources/Backgrounds/city.jpeg);
     background-size: 100% 100%;
     background-position: bottom;
 }
@@ -1667,18 +1685,18 @@ margin-bottom: 50px;
     #cat_command2,
     #cat_card_answer2 {
         color: white;
-        font-family: monospace;
+        font-family: Roboto-Mono-R;
         font-size: 10px;
         display: inline;
     }
     #terminal_ls {
         color: white;
-        font-family: monospace;
+        font-family: Roboto-Mono-R;
         font-size: 10px;
     }
     #fileList {
         color: white;
-        font-family: monospace;
+        font-family: Roboto-Mono-R;
         font-size: 10px;
         display: inline;
     }
