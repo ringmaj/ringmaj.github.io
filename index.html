@@ -20,6 +20,8 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:100" rel="stylesheet">
         <link href="simple-sidebar.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.typeit/4.4.0/typeit.min.js"></script>
@@ -141,6 +143,7 @@ function mouseMoveHandler(e) {
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+
                     <li class="active"><a href="#top">Home</a></li>
                     <li id="aboutButton"><a href="#aboutMe">About Me </a></li>
                     <li><a href="#experience-container">Experience</a></li>
@@ -149,18 +152,28 @@ function mouseMoveHandler(e) {
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#timeline-container">Timeline</a></li>
-                    <li class="active"><a href="#empty">Future <span class="sr-only">(current)</span></a></li>
+                    <li id="timeline-tab"><a href="#timeline-container">Timeline</a></li>
+                    <li><a href="#empty">Future <span class="sr-only">(current)</span></a></li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
         </div>
     </nav>
     <script>
-         $("#wrapper").toggleClass("toggled");
+//         $("#wrapper").toggleClass("toggled");
 
 
-        $('body').scrollspy({ target: '#navB' });
+        $('body').scrollspy({ target: '#navB', offset: 70 });
+
+
+
+        if($('html').width() <= 768) {
+            alert("Mobile site still in progress, please try desktop version");
+        }
+
+
+
+
 
 //        $(".nav a").on("click", function () {
 //            $(".nav").find(".active").removeClass("active");
@@ -171,6 +184,7 @@ function mouseMoveHandler(e) {
     padding: 0;">
         <div class="jumbotron" id="top" align="center" style="border-radius:0px;">
             <!--            Holds terminal info page-->
+            <div class="container-fluid" id="tint"></div>
             <div class="infoPanel" align="center">
                 <div class="line" align="center"> </div>
                 <div class="terminal">
@@ -221,7 +235,9 @@ function mouseMoveHandler(e) {
                         <br>UAV Crop Analysis Tool
                         <br>Skateboarding Physics Simulator
                         <br> </p>
-                    <p id="username5"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
+                    <p id="username5"> <span style="color: #adf447; display:inline;">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span><span id="empty" style="color: #ffffff"> </span> </p>
+
+
                 </div>
                 <script>
                     //                Hide all elements
@@ -246,7 +262,7 @@ function mouseMoveHandler(e) {
                     $('#cat_card_answer2').hide();
                     $('#terminal_ls').typeIt({
                         strings: ['This is my string!']
-                        , startDelay: 3500
+                        , startDelay: 2500
                         , speed: 350
                         , callback: function () {
                             setTimeout(function () {
@@ -336,7 +352,16 @@ function mouseMoveHandler(e) {
                                                                                         $('#cat_card_answer2').show();
                                                                                     }, 500);
                                                                                     setTimeout(function () {
-                                                                                        $('#username5').show();
+                                                                                       $('#username5').show();
+                                                                                        $('#empty').typeIt({
+                                                                                         strings: ['This is my string!'],
+                                                                                            speed: 0
+
+
+
+
+
+                                                      });
                                                                                     }, 500);
                                                                                     $('#cat_command2').find('.ti-cursor').css("visibility", "hidden");
                                                                                 }
@@ -367,13 +392,13 @@ function mouseMoveHandler(e) {
                     //                                                                                                                });
                 </script>
             </div>
-            <button type="button" class="btn btn-default" aria-label="Left Align" id="enterButton"><a href="#aboutMe"><span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></button>
+            <button type="button" class="btn btn-default" aria-label="Left Align" id="enterButton"><a href="#aboutMe"><span class="glyphicon glyphicon-menu-down" aria-hidden="true" id="enter"></span></a></button>
         </div>
         <!--<div id="aboutMe"></div>-->
         <div class="container-fluid" style="
     padding: 0;" id="aboutMe">
             <div class="bioPanel">
-                <p id="bioTitle">> BIO</p>
+                <p id="bioTitle" class="pageTitles"> + BIO</p>
                         <div class="usercard-container">
 
                 <div class="user">
@@ -400,9 +425,12 @@ function mouseMoveHandler(e) {
                             <div class="col"><strong>Phone:</strong> </div>
                             <div class="col">(858) 925-3768 </div>
                         </div>
+
+
+
                         <!--                Skills Section -->
                         <div class="skillsTitle" align="center">
-                            <txt>Skills</txt>
+
                         </div>
                         <div class="skillsTable" align="center">
                             <table width="400">
@@ -465,22 +493,59 @@ function mouseMoveHandler(e) {
         </div>
     </div>
     <div class="container-fluid" id="experience-container">
-        <p id="experienceTitle">> EXPERIENCE</p>
+        <p id="experienceTitle" class="pageTitles"> + EXPERIENCE</p>
         <div class="experience-projects-container">
         <div class="job-experience">
             <p id="experience-sub-title">Experience & Volunteering</p>
-            <div class="job">
+            <div class="job" id="job1">
                 <div class="job_logo" id="hackmerced-logo"></div>
                 <div class="job-container">
                     <div class="jobTitle"> Software Engineer </div>
                     <div class="company">HackMerced</div>
                     <div class="date"> June 2017 - Present</div>
                     <div class="location">Merced, California</div>
-                    <div class="summary"> Software Engineer, Mobile.
-                        <br> *Will Update
-                        <br>HackMerced, is a 36 hour yearly programming competition that occurs in Merced, California with attendance of around 400 students from all over the world</div>
+                    <div class="summary">
+                        <ul>
+                            <li>Goals
+
+                                <ul>
+                                <li>Contestant/sponsor checkin via iOS/web portal
+                                    </li>
+                                    <li>
+                                    Apple Pay integration
+                                    </li>
+                                    <li>
+                                    QR/VR scavenger hunt
+                                    </li>
+                                </ul>
+
+
+                            </li>
+
+                            <li>HackMerced, is a 36 hour yearly programming competition that occurs in Merced, California with attendance of around 400 students from all over the world. </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
+
+             <div class="job">
+                <div class="job_logo" id="QProject-logo"></div>
+                <div class="job-container">
+                    <div class="jobTitle">Secretary, ICC Representative</div>
+                    <div class="company">Quantitative Project @ UC Merced</div>
+                    <div class="date"> September 2014 - Present</div>
+                    <div class="location">Merced, California</div>
+                    <div class="summary">
+                        <ul>
+                            <li>Worked with ASUCM office to draft grant proposals for current and future projects such as MakerCorner, RNA-Seq Web Pipeline, etc. </li>
+                            <li>Organize members and update roster. Communicate between students and departments for project/organizational goals.</li>
+                            <li>The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="job">
                 <div class="job_logo" id="tedx-logo"></div>
                 <div class="job-container">
@@ -498,22 +563,7 @@ function mouseMoveHandler(e) {
                 </div>
             </div>
             <!--            Q-Project------------------------------------------->
-            <div class="job">
-                <div class="job_logo" id="tedx-logo"></div>
-                <div class="job-container">
-                    <div class="jobTitle">Secretary, ICC Representative</div>
-                    <div class="company">Quantitative Project @ UC Merced</div>
-                    <div class="date"> September 2014 - Present</div>
-                    <div class="location">Merced, California</div>
-                    <div class="summary">
-                        <ul>
-                            <li>Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area. </li>
-                            <li>As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.</li>
-                            <li>Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+
         </div>
         <!--        PROJECTS---------------------------------------->
         <div class="project-experience">
@@ -786,7 +836,7 @@ function mouseMoveHandler(e) {
 
 
     <div class="container-fluid" id="pdf-container">
-
+<p id="resumeTitle" class="pageTitles"> + RESUME</p>
 
                 <div id="pdf">
   <object id="pdf-resume-obj" width="400" height="500" type="application/pdf" data="/Majok_Ring_Resume.pdf#toolbar=1" id="pdf_content" width="100%" height="100%">
@@ -795,12 +845,23 @@ function mouseMoveHandler(e) {
   </object>
 </div>
 
-
-
-
                 </div>
+
+
+<!--           empty  -->
+            <div class="container-fluid" id="empty2-background"></div>
+            <div class="container-fluid" id="empty2">
+
+            </div>
+
+
+
+
+
     <div class="container-fluid" id="timeline-container">
+
         <div class="row example-centered">
+            <p id="timelineTitle" class="pageTitles"> + TIMELINE</p>
             <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2" id="timeline-background">
                 <div class="col-md-12 example-title" id="journey-background">
                     <h2 id="journeyText">Journey</h2>
@@ -808,14 +869,30 @@ function mouseMoveHandler(e) {
                 </div>
                 <ul class="timeline timeline-centered" id="timelineObj">
                     <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                    <li class="timeline-item period">
+                    <li class="timeline-item period" id="present">
                         <div class="timeline-info"></div>
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
-                            <h2 class="timeline-title">September 2014</h2> </div>
+                            <h2 class="timeline-title">Present</h2> </div>
                     </li>
+
+
+                         <li class="timeline-item">
+                        <div class="timeline-info"> <span>June 2017 - Present</span> </div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">HackMerced</h3>
+                            <div class="timeline-item-banner"></div>
+                            <p><strong>Software Engineer</strong>
+                                <br>
+                                <br>HackMerced, is a 36 hour yearly programming competition that occurs in Merced, California with attendance of around 400 students from all over the world. </p>
+                        </div>
+                    </li>
+
+
+
                     <li class="timeline-item">
-                        <div class="timeline-info"> <span>September 2014 - May 2018</span> </div>
+                        <div class="timeline-info"> <span>September 2014 - Present</span> </div>
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
                             <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
@@ -859,6 +936,16 @@ function mouseMoveHandler(e) {
                             <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
                         </div>
                     </li>
+
+
+                         <li class="timeline-item period">
+                        <div class="timeline-info"></div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h2 class="timeline-title">January 2014</h2> </div>
+                    </li>
+
+
                     <li class="timeline-item">
                         <div class="timeline-info"> <span>April 2013 - January 2014</span> </div>
                         <div class="timeline-marker"></div>
@@ -871,6 +958,105 @@ function mouseMoveHandler(e) {
                                 <br> • As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.
                                 <br>
                                 <br> • Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</p>
+                        </div>
+                    </li>
+
+
+     <li class="timeline-item period">
+                        <div class="timeline-info"></div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h2 class="timeline-title">May 2013</h2> </div>
+                    </li>
+
+                    <li class="timeline-item">
+                        <div class="timeline-info"> <span>May 2013</span><br>Health </div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">American Liver Foundation</h3>
+                                                        <div class="timeline-item-banner"></div>
+
+                            <p>
+Working with my Rotary organization, I assisted the American Liver Foundation's annual Liver Life Walk which is a national fundraiser that brings much needed awareness and financial support to the needs of millions of Americans who are battling more than 100 different types of liver disease. My responsibilities included organized a group of Canyon Crest Academy students to assist in the facilitation of the event and also the guiding of runners to proper paths, providing support to runners, organizing registration tables, and also distributing water and supplies.</p>
+                        </div>
+                    </li>
+
+
+     <li class="timeline-item">
+                        <div class="timeline-info"> <span>May 2013</span><br>Disaster and Humanitarian Relief </div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">TPHS Community Service Club</h3>
+                                                        <div class="timeline-item-banner"></div>
+
+                            <p>Working with my Rotary club, I collaborated with the TPHS community service club Interact in order to host a Walk for Water to raise money in support of Water For South Sudan, Inc.<br><br>
+
+“Water for South Sudan empowers people in remote villages of South Sudan to change their lives. By providing access to clean, safe water and facilitating hygiene education, Water for South Sudan sows the seeds for growth. Once a well is drilled, schools, markets, and clinics spring up, and life changes, especially for women and girls.” -WFSS</p>
+                        </div>
+                    </li>
+
+
+                             <li class="timeline-item">
+                        <div class="timeline-info"> <span>May 2013</span><br>Poverty Alleviation </div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Rotary Club of Del Mar</h3>
+                                                        <div class="timeline-item-banner"></div>
+
+                            <p>Working with the CCA Interact Rotary club, I assisted Del-Mar/Solana Beach’s Rotary Club’s biggest annual fundraiser benefiting youth and humanitarian program. My responsibilities included directing parking, setting up booths, providing games for children, and also organizing registration.</p>
+                        </div>
+                    </li>
+
+
+                         <li class="timeline-item period">
+                        <div class="timeline-info"></div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h2 class="timeline-title">January 2013</h2> </div>
+                    </li>
+
+                             <li class="timeline-item">
+                        <div class="timeline-info"> <span>January 2013</span><br>Health</div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Tri-City Medical Center</h3>
+                                                        <div class="timeline-item-banner"></div>
+
+                            <p>Working with my Rotary club, I volunteered at the Carlsbad Marathon for Tri-City Medical Center. My responsibilities were to provide key support to the over 10,000 participants as they reach their goal of completing the Tri-City Medical Center Carlsbad Marathon or Half Marathon. I also organized booths, assisted with registration, distributed refreshments/food snacks, and encouraged runners.</p>
+                        </div>
+                    </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <li class="timeline-item period">
+                        <div class="timeline-info"></div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h2 class="timeline-title">December 2012</h2> </div>
+                    </li>
+
+
+                          <li class="timeline-item">
+                        <div class="timeline-info"> <span>December 2012</span><br>Poverty Alleviation</div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Community Resource Center</h3>
+                                                        <div class="timeline-item-banner"></div>
+
+                            <p>While volunteering at my local Community Resource Center (CRC) with my Rotary club, I was responsible for the collection and set up of food, outerwear, blankets, toys and baby items for approximately 1,500 families during December. I also assisted in creating a mock shopping mall and distribute food and clothing to impoverished families in San Diego.
+</p>
                         </div>
                     </li>
                     <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -886,6 +1072,30 @@ function mouseMoveHandler(e) {
 
             </div>
 
+              <div class="container" id="footer">
+                  <div class="tint2">
+                  <p id="thanks">Let's get to work!</p>
+
+<!--
+                  <ul id="contacts-list">
+                      <li><a href="https://www.linkedin.com/in/majok-ring-4b1936110/"><img src="Resources/Logos/linkedin.png" class="contact-img linkedinLogo"></a></li>
+                       <li><a href="https://github.com/ringmaj"><img src="Resources/Logos/GitHub_Logo.png" class="contact-img gitLogo"></a></li>
+                  </ul>
+-->
+
+                          <ul id="user-links">
+                            <li><a href="https://www.linkedin.com/in/majok-ring-4b1936110/"><img src="Resources/Logos/linkedin.png" class="contact-img linkedin-logo"></a></li>
+                       <li><a href="https://github.com/ringmaj"><img src="Resources/Logos/GitHub_Logo.png" class="contact-img git-logo"></a></li>
+                        </ul>
+
+                  <p id="closing-statement">I have a strong interest in software development and have the discipline and communication skills to be successful in a team environment.</p>
+
+
+
+                  </div>
+   </div>
+
+
             <script>
 
 $(document).ready(function() {
@@ -893,7 +1103,37 @@ $(document).ready(function() {
     'width': ($(".first_div").width() + 'px')
   });
      $('footer').footerReveal();
+
+
+    var repeater;
+
+function checkLocation() {
+ if($('.nav .active').text() == "Timeline") {
+
+            $('#footer').show();
+      $('#empty2-background').hide();
+
+        }
+
+     if($('.nav .active').text() == "Resume") {
+
+            $('#footer').hide();
+            $('#empty2-background').show();
+
+
+        }
+ repeater = setTimeout(checkLocation, 100);
+}
+
+checkLocation();
+
+
+
+
 });
+
+
+
             </script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
@@ -901,10 +1141,7 @@ $(document).ready(function() {
     <script src="js/bootstrap.min.js"></script>
 </body>
 
-              <div class="container" id="footer">
 
 
-
-            </div>
 
 </html>
