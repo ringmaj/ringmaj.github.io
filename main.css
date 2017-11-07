@@ -18,7 +18,7 @@
         margin-left: 0px;
     }
     100% {
-        margin-left: -2125px;
+        margin-left: -2500px;
     }
 }
 
@@ -27,7 +27,7 @@
         margin-left: 0px;
     }
     100% {
-        margin-left: -2125px;
+        margin-left: -2500px;
     }
 }
 
@@ -36,7 +36,8 @@
         margin-left: 0px;
     }
     100% {
-        margin-left: -2125px;
+/*        margin-left: -2725px;*/
+         margin-left: -155.5%;
     }
 }
 
@@ -858,6 +859,7 @@ margin-top: 170px;
     height: 100%;
     margin-right: -5px;
     padding: 0px;
+   
     /*
     height: 233px;
     width: 350px;
@@ -1205,16 +1207,29 @@ height: 50%;
 
 
 #first-project  .project-image{
-    background-image: url(Resources/project_photos/recursive-tree-demo.webm);
+    background-image: url(Resources/project_photos/Previews/recursiveTree.gif);
     background-size: 100% 100%;
     background-repeat: no-repeat;
 }
 
 #second-project  .project-image{
-    background-image:url(Resources/project_photos/parking.webm);
+    background-image:url(Resources/project_photos/Previews/parking.gif);
     background-size: 100% 100%;
     background-repeat: no-repeat;
 }
+
+#third-project  .project-image{
+    background-image:url(Resources/project_photos/Previews/uavTeam.gif);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+#fourth-project  .project-image{
+    background-image:url(Resources/project_photos/Previews/skate.gif);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
 
 #fifth-project  .project-image{
     background-image: url(Resources/project_photos/GRE-App.png);
@@ -1320,15 +1335,26 @@ height: 65%;
     margin-right: auto;
     background-color: #8e8e8e;
      background-size:contain;
+    
 }
 
 #proj1-image {
-    background-image:url(Resources/project_photos/recursiveTree.PNG);
     background-size: contain;
     background-repeat: no-repeat;
         background-position: center;
     background-color: white;
+    width: 500px;
+      text-align: center;
 }
+
+#proj1-iframe, #proj2-iframe, #proj3-iframe, #proj4-iframe {
+    width: 75%;
+    height: 85%;
+    margin-top: 40px;
+}
+
+
+
 
 #proj2-view .project_summary, #proj3-view .project_summary, #proj4-view .project_summary,  #proj1-view .project_summary {
 height: 10%;
@@ -1345,6 +1371,7 @@ height: 89%;
     width: 90%;
     margin-top: 0px;
     background-color: white;
+    text-align: center;
 }
 
 #proj1-image-vid,#proj2-image-vid, #proj3-image-vid, #proj4-image-vid {
