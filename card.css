@@ -1,0 +1,111 @@
+.card-container {
+  z-index: 100;
+  width: 19vw;
+  height: 35vh;
+  display: block;
+  font-size: 0.7em;
+  padding: 2em !important;
+  margin-right: 2em;
+
+  border-radius: 12px !important;
+  /* border: solid 3px red; */
+  position: relative !important;
+  /* box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px; */
+
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+.card-container:hover {
+  box-shadow: rgba(255, 255, 255, 0.09) 0px 2px 1px,
+    rgba(235, 235, 235, 0.09) 0px 4px 2px, rgba(206, 206, 206, 0.09) 0px 8px 4px,
+    rgba(98, 98, 98, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 2px 16px;
+}
+
+.card-logo {
+  position: absolute;
+  top: 10%;
+  margin-left: 10%;
+}
+
+#award_name {
+  font-weight: 800 !important;
+  font-size: 1.2em;
+  /* color: red; */
+  color: #223a61;
+}
+
+.award_sender {
+  color: rgb(139, 139, 139);
+  font-size: 0.8em;
+}
+
+.card-content {
+  position: absolute;
+  bottom: 0px;
+  left: 0.8em;
+  padding-bottom: 0.7em;
+  padding: 2em;
+}
+
+#awardHero {
+  /* visibility: hidden; */
+  position: relative;
+  height: fit-content;
+  float: right;
+  /* padding: 6em; */
+  padding-bottom: 1em;
+  padding-top: 0em;
+  padding-left: 0;
+  width: 25%;
+}
+
+#awardContainer {
+  /* background-color: red; */
+  /* height: 100vh !important;
+  width: 100vw; */
+  /* position: absolute; */
+  /* display: flex !important;
+  display */
+  /* display: inline-grid !important; */
+  /* display: block !important; */
+  height: 80em !important;
+  padding-left: 6em;
+  padding-right: 6em;
+  /* position: relative !important; */
+
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  /* grid-template-columns: 30% 30% 30% 30%; */
+  grid-template-rows: 500px 100px;
+  grid-gap: 1em;
+  /* background-color: #2196f3; */
+}
+
+#awardSectionContainer {
+  height: 100vh;
+  padding-top: 3em;
+  display: block !important;
+  /* position: relative !important; */
+}
+
+#top_cards {
+  display: flex !important;
+  padding-left: 6em;
+  padding-right: 6em;
+  margin-bottom: 2em !important;
+}
+#bottom_cards {
+  display: flex !important;
+  padding-left: 6em;
+  padding-right: 6em;
+  margin-bottom: 6em !important;
+}
+
+#bottom_cards .card-container {
+  width: 29.25vw;
+}
+
+#awardSectionContainer .arrowButtons {
+  /* background-color: red; */
+  margin-bottom: 4.8em;
+}

@@ -1,1172 +1,2395 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="timeline.css" />
+    <link rel="stylesheet" href="card.css" />
+    <script
+      src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"
+      defer
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+      defer
+    ></script>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Majok Francis Ring</title>
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Lato:400,300italic' rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
-    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
-    <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:100" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-        <link href="simple-sidebar.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.typeit/4.4.0/typeit.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="footer-reveal.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
 
-    <!--    scrolling-->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
 
-       <script>
-        $(function () {
-      // Select all links with hashes
-
-            var headerHeight = $("#navB").height();
-$('a[href*="#"]')
-  // Remove links that don't actually link to anything
-  .not('[href="#"]')
-  .not('[href="#0"]')
-  .click(function(event) {
-    // On-page links
-    if (
-      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
-      &&
-      location.hostname == this.hostname
-    ) {
-      // Figure out element to scroll to
-      var target = $(this.hash);
-      target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-      // Does a scroll target exist?
-      if (target.length) {
-        // Only prevent default if animation is actually gonna happen
-        event.preventDefault();
-
-              var scrollToPosition = $(target).offset().top - headerHeight;
-
-        $('html, body').animate({
-          scrollTop: scrollToPosition
-        }, 1000, function() {
-          // Callback after animation
-          // Must change focus!
-          var $target = $(target);
-          $target.focus();
-          if ($target.is(":focus")) { // Checking if the target was focused
-            return false;
-          } else {
-            $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
-            $target.focus(); // Set focus again
-          };
-        });
-      }
+<script type="importmap-shim">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.155.0/examples/jsm/"
     }
-  });
-
-        });
-    </script>
-</head>
-
-<body>
-        <script>
-
-        alert("Page out of date: Under construction. Changes will be ready by 5/25/2023")
-    </script>
-
-      <div id="wrapper">
-
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="#">
-                        Start Bootstrap
-                    </a>
-                </li>
-                <li>
-                    <a href="#top">Home</a>
-                </li>
-                <li>
-                    <a href="#aboutMe">About Me</a>
-                </li>
-                <li>
-                    <a href="#experience-container">Experience & Projects</a>
-                </li>
-                <li>
-                    <a href="#pdf-container">Resume</a>
-                </li>
-                <li>
-                    <a href="#timeline-container">Timeline</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <script>
-        var menu = $('#sidebar-wrapper');
-var menuTimeout;
-
-$(window).on('mousemove', mouseMoveHandler);
-
-function mouseMoveHandler(e) {
-  if (e.pageX < 20 || menu.is(':hover')) {
-    // Show the menu if mouse is within 20 pixels from the left or we are hovering over it
-    clearTimeout(menuTimeout);
-    menuTimeout = null;
-    //showMenu();
-//        $("#wrapper").toggleClass("toggled");
-        $("#wrapper").show();
-
   }
-    else {
-           $("#wrapper").hide();
-    }
-}
-    </script>
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top" id="navB">
-        <div class="container" id="navc">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                <a class="navbar-brand" href="#"></a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+</script>
 
-                    <li class="active"><a href="#top">Home</a></li>
-                    <li id="aboutButton"><a href="#aboutMe">About Me </a></li>
-                    <li><a href="#experience-container">Experience</a></li>
 
-                            <li><a href="#pdf-container">Resume</a></li>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
 
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li id="timeline-tab"><a href="#timeline-container">Timeline</a></li>
-                    <li><a href="#empty">Future <span class="sr-only">(current)</span></a></li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meet Majok Ring!</title>
+    <link rel="icon" type="image/x-icon" href="/src/assets/Icons/favicon.ico" />
+  </head>
+  <body>
+    <header class="p-2 text-bg-dark2 fixed-top" id="nav">
+      <div class="container" id="navbar">
+        <div
+          id="nav-links-container"
+          class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+        >
+          <ul
+            class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
+            id="navList"
+          >
+            <li>
+              <a
+                onclick="linkScroll('introSectionContainer')"
+                class="nav-link px-2 text-white"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a href="#" class="minMenu nav-link px-2 text-white">About Me</a>
+            </li>
+            <li>
+              <a href="#" class="minMenu nav-link px-2 text-white"
+                >Experience</a
+              >
+            </li>
+            <li>
+              <a
+                href="src/assets/Majok_Ring_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="nav-link px-2 text-white"
+                >Resume</a
+              >
+            </li>
+            <!-- <li>
+              <button id="carItemsZoomBtn" class="searchButtons">
+                <span
+                  class="icon-asset material-symbols-outlined"
+                  style="font-size: 25px"
+                  ><span _ngcontent-ng-c2377212316="">search</span></span
+                ><span
+                  _ngcontent-ng-c2377212316=""
+                  class="icon-name mat-caption"
+                ></span>
+              </button>
+            </li> -->
+            <!-- <li><a href="#" class="nav-link px-2 text-white">Timeline</a></li> -->
+          </ul>
+
+          <!-- <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+            <input
+              type="search"
+              class="form-control form-control-dark text-bg-dark"
+              placeholder="Search..."
+              aria-label="Search"
+            />
+          </form> -->
+
+          <div class="text-end" id="logoContainer">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 mb-md-0">
+              <a
+                href="https://www.linkedin.com/in/majok-r-4b1936110/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <li
+                  style="
+                    border-right: solid rgb(0, 0, 0) 2px;
+                    padding-right: 10px;
+                  "
+                >
+                  <svg
+                    class="nav_logo"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    fill="white"
+                    class="bi bi-linkedin"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"
+                    />
+                  </svg>
+                </li>
+              </a>
+
+              <a
+                href="https://github.com/ringmaj"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
+                <li style="padding-left: 10px">
+                  <svg
+                    class="nav_logo"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    fill="white"
+                    class="bi bi-github"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+                    />
+                  </svg>
+                </li>
+              </a>
+            </ul>
+          </div>
         </div>
-    </nav>
-    <script>
-//         $("#wrapper").toggleClass("toggled");
-
-
-        $('body').scrollspy({ target: '#navB', offset: 70 });
-
-
-
-        if($('html').width() <= 768) {
-            alert("Mobile site still in progress, please try desktop version");
-        }
-
-
-
-
-
-//        $(".nav a").on("click", function () {
-//            $(".nav").find(".active").removeClass("active");
-//            $(this).parent().addClass("active");
-//        });
-    </script>
-    <div class="container-fluid" style="
-    padding: 0;">
-        <div class="jumbotron" id="top" align="center" style="border-radius:0px;">
-            <!--            Holds terminal info page-->
-<!--            <div class="container-fluid" id="tint"></div>-->
-            <div class="infoPanel" align="center">
-                <div class="line" align="center"> </div>
-                <div class="terminal">
-                    <p id="username1"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span>
-                        <p1 id="terminal_ls"> ls</p1>
-                    </p>
-                    <p id="fileList"><span style="color: #a3a3f8"><br>introduction.sh <br>resume.pdf <br> cover_letter.pdf<br> skills.txt<br>projects.txt<br></span></p>
-                    <p id="username2"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
-                    <p id="intro_script">./introduction.sh</p>
-                    <p id="name_card">
-                        <br> Name:
-                        <br> > </p>
-                    <p id="name_card_answer">Majok Francis Ring</p>
-                    <p id="university_card">
-                        <br> College:
-                        <br> > </p>
-                    <p id="university_card_answer"> University of California, Merced</p>
-                    <p id="major_card">
-                        <br> Field of Study:
-                        <br> > </p>
-                    <p id="major_card_answer">B.S Computer Science and Engineering 2014-2018</p>
-                    <p id="graduation_card">
-                        <br> Graduating:
-                        <br> > </p>
-                    <p id="graduation_card_answer"> May 2018</p>
-                    <p id="username3"><span style="color:#adf447"><br>ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
-                    <p id="cat_command1">cat skills.txt</p>
-                    <p id="cat_card_answer1">
-                        <br>C++
-                        <br>Python
-                        <br>HTML
-                        <br>C
-                        <br>SQL
-                        <br>CSS
-                        <br>OpenGl
-                        <br>Android
-                        <br>Git
-                        <br>Java
-                        <br>MIPS Assembly
-                        <br>Algorithms
-                        <br> </p>
-                    <p id="username4"> <span style="color: #adf447">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span> </p>
-                    <p id="cat_command2">cat projects.txt</p>
-                    <p id="cat_card_answer2">
-                        <br>Recursive Tree Analysis Tool
-                        <br>RNA-Seq Pipeline
-                        <br>Parking Analytics
-                        <br>UAV Crop Analysis Tool
-                        <br>Skateboarding Physics Simulator
-                        <br> </p>
-                    <p id="username5"> <span style="color: #adf447; display:inline;">ring@ring</span><span style="color: #ffffff">:</span><span style="color: #7fd8ff">~</span><span style="color: #ffffff">$ </span><span id="empty" style="color: #ffffff"> </span> </p>
-
-
-                </div>
-                <script>
-                    //                Hide all elements
-                    $('#fileList').hide();
-                    $('#username2').hide();
-                    $('#username3').hide();
-                    $('#username4').hide();
-                    $('#username5').hide();
-                    $('#intro_script').hide();
-                    $('#name_card').hide();
-                    $('#name_card_answer').hide();
-                    $('#university_card').hide();
-                    $('#university_card_answer').hide();
-                    $('#major_card').hide();
-                    $('#major_card_answer').hide();
-                    $('#graduation_card').hide();
-                    $('#graduation_card_answer').hide();
-                    $('#username3').hide();
-                    $('#cat_command1').hide();
-                    $('#cat_card_answer1').hide();
-                    $('#cat_command2').hide();
-                    $('#cat_card_answer2').hide();
-                    $('#terminal_ls').typeIt({
-                        strings: ['This is my string!']
-                        , startDelay: 2500
-                        , speed: 350
-                        , callback: function () {
-                            setTimeout(function () {
-                                $('#fileList').show();
-                            }, 500);
-                            setTimeout(function () {
-                                $('#username2').show();
-                            }, 500);
-                            $('#terminal_ls').find('.ti-cursor').css("visibility", "hidden");
-                            setTimeout(function () {
-                                $('#intro_script').show();
-                            }, 650);
-                            $('#intro_script').typeIt({
-                                strings: ['This is my string!']
-                                , startDelay: 1500
-                                , callback: function () {
-                                    setTimeout(function () {
-                                        $('#name_card').show();
-                                    }, 500);
-                                    $('#intro_script').find('.ti-cursor').css("visibility", "hidden");
-                                    setTimeout(function () {
-                                        $('#name_card_answer').show();
-                                    }, 650);
-                                    $('#name_card_answer').typeIt({
-                                        strings: ['This is my string!']
-                                        , startDelay: 1500
-                                        , callback: function () {
-                                            setTimeout(function () {
-                                                $('#university_card').show();
-                                            }, 500);
-                                            $('#name_card_answer').find('.ti-cursor').css("visibility", "hidden");
-                                            setTimeout(function () {
-                                                $('#university_card_answer').show();
-                                            }, 650);
-                                            $('#university_card_answer').typeIt({
-                                                strings: ['This is my string!']
-                                                , startDelay: 1500
-                                                , callback: function () {
-                                                    setTimeout(function () {
-                                                        $('#major_card').show();
-                                                    }, 500);
-                                                    $('#university_card_answer').find('.ti-cursor').css("visibility", "hidden");
-                                                    setTimeout(function () {
-                                                        $('#major_card_answer').show();
-                                                    }, 650);
-                                                    $('#major_card_answer').typeIt({
-                                                        strings: ['This is my string!']
-                                                        , startDelay: 1500
-                                                        , callback: function () {
-                                                            setTimeout(function () {
-                                                                $('#graduation_card').show();
-                                                            }, 500);
-                                                            $('#major_card_answer').find('.ti-cursor').css("visibility", "hidden");
-                                                            setTimeout(function () {
-                                                                $('#graduation_card_answer').show();
-                                                            }, 650);
-                                                            $('#graduation_card_answer').typeIt({
-                                                                strings: ['This is my string!']
-                                                                , startDelay: 1500
-                                                                , callback: function () {
-                                                                    setTimeout(function () {
-                                                                        $('#username3').show();
-                                                                    }, 500);
-                                                                    $('#graduation_card_answer').find('.ti-cursor').css("visibility", "hidden");
-                                                                    setTimeout(function () {
-                                                                        $('#cat_command1').show();
-                                                                    }, 650);
-                                                                    $('#cat_command1').typeIt({
-                                                                        strings: ['This is my string!']
-                                                                        , startDelay: 1500
-                                                                        , callback: function () {
-                                                                            setTimeout(function () {
-                                                                                $('#cat_card_answer1').show();
-                                                                            }, 500);
-                                                                            $('#cat_command1').find('.ti-cursor').css("visibility", "hidden");
-                                                                            setTimeout(function () {
-                                                                                $('#username4').show();
-                                                                            }, 500);
-                                                                            setTimeout(function () {
-                                                                                $('#cat_command2').show();
-                                                                            }, 650);
-                                                                            $('#cat_command2').typeIt({
-                                                                                strings: ['This is my string!']
-                                                                                , startDelay: 1500
-                                                                                , callback: function () {
-                                                                                    setTimeout(function () {
-                                                                                        $('#cat_card_answer2').show();
-                                                                                    }, 500);
-                                                                                    setTimeout(function () {
-                                                                                       $('#username5').show();
-                                                                                        $('#empty').typeIt({
-                                                                                         strings: ['This is my string!'],
-                                                                                            speed: 0
-
-
-
-
-
-                                                      });
-                                                                                    }, 500);
-                                                                                    $('#cat_command2').find('.ti-cursor').css("visibility", "hidden");
-                                                                                }
-                                                                            });
-                                                                        }
-                                                                    });
-                                                                }
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                    //
-                    //                                                                                                                        $('#terminal_ls').typeIt({
-                    //                                                                                                                    strings: ['This is my string!'],
-                    //                                                                                                                    startDelay: 1500,
-                    //                                                                                                                    callback: function() {
-                    //
-                    //
-                    //                                                                                                                    }
-                    //
-                    //                                                                                                                });
-                </script>
-            </div>
-            <button type="button" class="btn btn-default" aria-label="Left Align" id="enterButton"><a href="#aboutMe"><span class="glyphicon glyphicon-menu-down" aria-hidden="true" id="enter"></span></a></button>
-        </div>
-        <!--<div id="aboutMe"></div>-->
-        <div class="container-fluid" style="
-    padding: 0;" id="aboutMe">
-            <div class="bioPanel">
-                <p id="bioTitle" class="pageTitles"> + BIO</p>
-                        <div class="usercard-container">
-
-                <div class="user">
-                    <div class="profilePhoto"> </div>
-                    <div class="name"> Majok Francis Ring </div>
-                    <div class="container-fluid" id="userCardInfo">
-                        <div class="row">
-                            <div class="col"><strong>College:</strong> </div>
-                            <div class="col">University of California, Merced </div>
-                        </div>
-                        <div class="row">
-                            <div class="col"><strong>Major:</strong> </div>
-                            <div class="col">Computer Science and Engineering 2014-2018 </div>
-                        </div>
-                        <div class="row">
-                            <div class="col"><strong>Graduate:</strong> </div>
-                            <div class="col">May 2018 </div>
-                        </div>
-                        <div class="row">
-                            <div class="col"><strong>Email:</strong> </div>
-                            <div class="col">mring3@ucmerced.edu </div>
-                        </div>
-                        <div class="row">
-                            <div class="col"><strong>Phone:</strong> </div>
-                            <div class="col">(858) 925-3768 </div>
-                        </div>
-
-
-
-                        <!--                Skills Section -->
-                        <div class="skillsTitle" align="center">
-
-                        </div>
-                        <div class="skillsTable" align="center">
-                            <table width="400">
-                                <tr>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C++</td>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Python</td>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">HTML</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">C</td>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">SQL</td>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">CSS</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">OpenGl</td>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Android</td>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Git</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Java</td>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Assembley</td>
-                                    <td><img class="checkmark" src="Resources/checkmark.png" width="15" heigh="15">Algorithms</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="userCard">
-                    <div class="container-fluid" id="bioParagraphs">
-                        <p> Hello!
-                            <br>
-                            <br> My name is Majok Ring, I am a 4th year undergraduate student at the University of California Merced. I am in the Computer Science and Engineering program and will graduate in May 2018.
-                            <br>
-                            <br> During my studies at UC Merced, I completed essential courses such as Database Systems, Introduction to Artificial Intelligence, Object Oriented Programming, Computer Architecture, Computer Graphics. These courses have created a foundation for most of my programming have helped me develop essential skills which I apply to research projects, hackathons, and mobile app challenges. With these experiences, I learned the many processes of creating a program and working in a team environment to achieve a goal.
-                            <br>
-                            <br><strong>Coursework:</strong> For the Fall 2017 semester, I will be taking Computer Networks (CSE 160), Computers and Networks Security (CSE 178), Circuit Theory (ENGR 65), and Professional Seminar (ENGR 191). I am very interested in Computer Networking and as you can see by my upcoming courses, am preparing myself for a foundation in this area. During the summer, I am reading and learning more about this subject to hopefully join a lab on campus during the Fall/Spring semester.
-                            <br>
-                            <br><strong>Teamwork:</strong> Throughout my years, I have proven myself very skilled at working in interdisciplinary teams and communicating well. From my experience working on TEDxYouth@SanDiego, I worked with students and mentors to develop a TED talks program for students within the San Diego area. On the partnership team, I worked with 4 other students and mentors to raise $60,000 in funds for our event over the course of 8 months. Through weekly meetings and email updates, I learned to communicate with large local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.
-                            <br>
-                            <br><strong>Undergraduate Research/Involvement:</strong> During my first year at university, I sought out organizations to further my understanding on Big Data analytics and gain experience. I ended up finding a graduate student who shared the same values and I helped found our organization, The Quantitative Project, in 2014. Through my time as a Secretary and other leadership positions, I have guided students to foster investigative research and lead independent projects to gain necessary experience for the future. I worked on projects such as an RNA Sequencing Analysis Web Pipeline (IP), MakerCorner, Programming Bootcamps, and BiotaQ.
-                            <br>
-                            <br>As exemplified by the above, I have a strong interest in software development and have the discipline and communication skills to be successful in a team environment. I am confident that I will be a very functional addition to your team of engineers. </p>
-                    </div>
-                </div>
-                </div>
-                <div class="photoGallery">
-                    <div class="imageContainer"> <img src="Resources/gallery_photos/profile.jpg" class="galleryImages" id="first"> 
-                        <img src="Resources/gallery_photos/family.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/boardsky.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/kickflip.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/profile2.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/family3.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/treflip.gif" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/kid.jpg" class="galleryImages"> 
-                         <img src="Resources/gallery_photos/family2.jpg" class="galleryImages"> 
-                          <img src="Resources/gallery_photos/fs3shuv.gif" class="galleryImages"> 
-                         <img src="Resources/gallery_photos/profile3.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/photog.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/lightpainting.jpg" class="galleryImages"> 
-                         <img src="Resources/gallery_photos/family4.jpg" class="galleryImages" >                  
-                         <img src="Resources/gallery_photos/boardslide.gif" class="galleryImages" >
-                         <img src="Resources/gallery_photos/yosemite.jpg" class="galleryImages" > 
-                        
-                        
-                        
-                    
-                      
-                        <img src="Resources/gallery_photos/profile.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/family.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/boardsky.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/kickflip.jpg" class="galleryImages"> 
-                      <img src="Resources/gallery_photos/profile2.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/family3.jpg" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/treflip.gif" class="galleryImages"> 
-                        <img src="Resources/gallery_photos/kid.jpg" class="galleryImages"> 
-                         <img src="Resources/gallery_photos/family2.jpg" class="galleryImages"> 
-                          <img src="Resources/gallery_photos/fs3shuv.gif" class="galleryImages"> 
-                         <img src="Resources/gallery_photos/profile3.jpg" 
-                     
-                        
-                        
-                        <!--
-                        <ul>
-                            <li><img src="Resources/gallery_photos/profile.jpg" class="galleryImages"></li>
-                            <li><img src="Resources/gallery_photos/treflip.jpg" class="galleryImages"></li>
-                            <li><img src="Resources/gallery_photos/boardsky.jpg" class="galleryImages"></li>
-                            <li><img src="Resources/gallery_photos/kickflip.jpg" class="galleryImages"></li>
-                        </ul>
--->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid" id="experience-container">
-        <p id="experienceTitle" class="pageTitles"> + EXPERIENCE</p>
-        <div class="experience-projects-container">
-        <div class="job-experience">
-            <p id="experience-sub-title">Experience & Volunteering</p>
-            <div class="job" id="job1">
-                <div class="job_logo" id="hackmerced-logo"></div>
-                <div class="job-container">
-                    <div class="jobTitle"> Software Engineer </div>
-                    <div class="company">HackMerced</div>
-                    <div class="date"> June 2017 - Present</div>
-                    <div class="location">Merced, California</div>
-                    <div class="summary">
-                        <ul>
-                            <li>
-
-Worked with senior developers to maintain and optimize webpages for login, registration, sponsorship, and contact pages.
-                            </li>
-
-                            <li>HackMerced, is a 36 hour yearly programming competition that occurs in Merced, California with attendance of around 400 students from all over the world. </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-             <div class="job">
-                <div class="job_logo" id="QProject-logo"></div>
-                <div class="job-container">
-                    <div class="jobTitle">Secretary, ICC Representative</div>
-                    <div class="company">Quantitative Project @ UC Merced</div>
-                    <div class="date"> September 2014 - Present</div>
-                    <div class="location">Merced, California</div>
-                    <div class="summary">
-                        <ul>
-                            <li>Worked with ASUCM office to draft grant proposals for current and future projects such as MakerCorner, RNA-Seq Web Pipeline, etc. </li>
-                            <li>Organize members and update roster. Communicate between students and departments for project/organizational goals.</li>
-                            <li>The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="job">
-                <div class="job_logo" id="tedx-logo"></div>
-                <div class="job-container">
-                    <div class="jobTitle">Sponsors/Partnership Team Member</div>
-                    <div class="company">TEDxYouth@SanDiego</div>
-                    <div class="date"> April 2013 - January 2014</div>
-                    <div class="location">San Diego, California</div>
-                    <div class="summary">
-                        <ul>
-                            <li>Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area. </li>
-                            <li>As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.</li>
-                            <li>Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--            Q-Project------------------------------------------->
-
-        </div>
-        <!--        PROJECTS---------------------------------------->
-        <div class="project-experience">
-            <div class="project" id="first-project">
-                      <div class="project-image">
-                         
-                   </div>
-                <div class="container-fluid" id="project-summary">
-                    <div class="project-title">Recursive Tree Analysis Tool</div>
-                    <div class="language-container">
-                        <ul class="language-list">
-                            <li>C++</li>
-                            <li>OpenGL</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="project" id="second-project">
-                <div class="project-image">
-                    
-                </div>
-                <div class="container-fluid" id="project-summary">
-                    <div class="project-title">Parking Analytics Database</div>
-                    <div class="language-container">
-                        <ul class="language-list">
-                            <li>Java</li>
-                            <li>SQLite</li>
-                            <li>JavaScript</li>
-                            <li>CSS</li>
-                            <li>HTML</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="project" id="third-project">
-                <div class="project-image">
-                    </div>
-                <div class="container-fluid" id="project-summary">
-                    <div class="project-title">UAV Team</div>
-                    <div class="language-container">
-                        <ul class="language-list">
-                            <li>Java</li>
-                            <li>OpenCV</li>
-                            <li>Batch</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="project" id="fourth-project">
-                <div class="project-image">
-                     </div>
-                <div class="container-fluid" id="project-summary">
-                    <div class="project-title">Skateboarding Physics Simulator</div>
-                    <div class="language-container">
-                        <ul class="language-list">
-                            <li>C++</li>
-                            <li>OpenGL</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="project" id="fifth-project">
-                <div class="project-image"> </div>
-                <div class="container-fluid" id="project-summary">
-                    <div class="project-title">GRE Vocab Builder</div>
-                    <div class="language-container">
-                        <ul class="language-list">
-                            <li>Java</li>
-                            <li>Android Studio</li>
-                            <li>SQLite</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="project" id="sixth-project">
-                <div class="project-image"> </div>
-                <div class="container-fluid" id="project-summary">
-                    <div class="project-title">RNA Sequencing Analysis Web Pipeline</div>
-                    <div class="language-container">
-                        <ul class="language-list">
-                            <li>PHP</li>
-                            <li>SQL</li>
-                            <li>Python</li>
-                            <li>HTML</li>
-                            <li>CSS</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-                </div>
-
-        <div class="dim" id="proj1-view">
-                <div class="dim-container">
-                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button"></span></div>
-                    <p id="project_title">Recursive Tree Analysis Tool</p>
-                  <div class="project_summary">
-                    A personal project I am working on to simplify the analysis of recursive trees by the recursion tree method using OpenGl/C++. This tool allows users to follow a simple graphical user interface to input a recursive equation such as T(n) = 4T(n/2) + 2n2 and view the output as a detailed recursive tree. Users are also able to view other details such as depth, size of sub-problem, number of nodes, workload per node, and total workload per depth. In this project, only OpenGl primitives were used.
-                    </div>
-                    <div class="project_image" id="proj1-image">
-                    <iframe class="youtube-frames" id="proj1-iframe" width="560" height="315" src="https://www.youtube.com/embed/cYld-ANZzGQ?rel=0" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                </div>
-                </div>
-
-                    <div class="dim" id="proj2-view">
-                <div class="dim-container">
-                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button2"></span></div>
-                    <p id="project_title">Parking Analytics Database</p>
-                  <div class="project_summary">
-                    For my CSE-111 Database systems project, the primary goal for our web application is to develop a program where users can view a graphical layout of the campus parking lot and see the amount of spots available through highlighted sections. The user can also select a spot and view the current occupant info (name, age, sex, parking duration) and also modify and search for specific spots/areas.</div>
-                    <div class="project_image" id="proj2-image">
-                         <iframe class="youtube-frames" id="proj2-iframe" width="560" height="315" src="https://www.youtube.com/embed/KKkGe-45qx8?rel=0" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                </div>
-                </div>
-
-
-                      <div class="dim" id="proj3-view">
-                <div class="dim-container">
-                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button3"></span></div>
-                    <p id="project_title">UAV Team</p>
-                  <div class="project_summary">
-                      Through UC Merced's Engineering Service Learning program, I worked with interdisciplinary teams to develop a program which utilizes a drone to autonomously fly through a route and take images which are later processed into our computer program and is able to detect pierce’s disease in crops.I developed the user interface for our program in java and also wrote code to analyze areas of concern through NDVI.
-                   </div>
-                    <div class="project_image" id="proj3-image">
-                         <iframe class="youtube-frames" id="proj3-iframe" width="560" height="315" src="https://www.youtube.com/embed/90oZevMljb8?rel=0" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                </div>
-                </div>
-
-
-                         <div class="dim" id="proj4-view">
-                <div class="dim-container">
-                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button4"></span></div>
-                    <p id="project_title">Skateboarding Physics Simulator</p>
-                  <div class="project_summary">
-                     For my course, CSE 170 - Introduction to Computer Graphics, I developed a program to simulate and analyze skateboarding tricks in 3D using OpenGL. I used a custom graphs/Bezier class to display and control rotations in all axis using OpenGL/C++.
-                   </div>
-                    <div class="project_image" id="proj4-image">
-                       <iframe class="youtube-frames" id="proj4-iframe" width="560" height="315" src="https://www.youtube.com/embed/iVMvrq5HqyM?rel=0" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                </div>
-                </div>
-
-
-                         <div class="dim" id="proj5-view">
-                <div class="dim-container">
-                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button5"></span></div>
-                    <p id="project_title">GRE Vocab Builder</p>
-                  <div class="project_summary">
-                    A personal project where I am developing an android application to help aspiring students study for their GRE exam. This is a quiz/card based system where users can save scores, prioritize words for better learning, and also review overall progress and highlight areas of improvement.
-                   </div>
-                    <div class="project_image" id="proj5-image">
-                    </div>
-                </div>
-                </div>
-
-
-
-                        <div class="dim" id="proj6-view">
-                <div class="dim-container">
-                    <div class="exit-button-container"><span class="glyphicon glyphicon-remove" aria-hidden="true" id="exit-button6"></span></div>
-                    <p id="project_title">RNA Sequencing Analysis Web Pipeline</p>
-                  <div class="project_summary">
-                    With my organization, the Quantitative Project, I worked on developing a web pipeline for for laboratory use at UC Merced. This web pipeline will allow users to login and access their RNA-seq data and perform analysis on the web after customizing and selecting their workflow. All data will be stored and available for easy access and is stored securely. This project is still in progress and utilizes PHP, HTML,CSS, Python, and SQL.
-                   </div>
-                    <div class="project_image" id="proj6-image">
-                    </div>
-                </div>
-                </div>
-
-
-
-
-        <script>
-            $("#first-project .project-image").click(function () {
-                $("#proj1-view").show();
-//                $("#proj1-view .dim-container").slideDown("slow");
-                $("#proj1-view .dim-container").fadeIn("slow");
-                 $("#proj1-view .dim-container").children().show();
-
-            });
-
-                        $("#second-project .project-image").click(function () {
-                $("#proj2-view").show();
-//                $("#proj1-view .dim-container").slideDown("slow");
-                $("#proj2-view .dim-container").fadeIn("slow");
-                 $("#proj2-view .dim-container").children().show();
-
-            });
-
-
-                          $("#third-project .project-image").click(function () {
-                $("#proj3-view").show();
-//                $("#proj1-view .dim-container").slideDown("slow");
-                $("#proj3-view .dim-container").fadeIn("slow");
-                 $("#proj3-view .dim-container").children().show();
-
-            });
-
-
-                          $("#fourth-project .project-image").click(function () {
-                $("#proj4-view").show();
-//                $("#proj1-view .dim-container").slideDown("slow");
-                $("#proj4-view .dim-container").fadeIn("slow");
-                 $("#proj4-view .dim-container").children().show();
-
-            });
-
-
-                        $("#fifth-project .project-image").click(function () {
-                $("#proj5-view").show();
-//                $("#proj1-view .dim-container").slideDown("slow");
-                $("#proj5-view .dim-container").fadeIn("slow");
-                 $("#proj5-view .dim-container").children().show();
-
-            });
-
-
-                                 $("#sixth-project .project-image").click(function () {
-                $("#proj6-view").show();
-//                $("#proj1-view .dim-container").slideDown("slow");
-                $("#proj6-view .dim-container").fadeIn("slow");
-                 $("#proj6-view .dim-container").children().show();
-
-            });
-
-
-               $("#exit-button").click(function () {
-                $("#exit-button").parentsUntil("#experience-container").hide();
-            });
-
-
-              $("#exit-button2").click(function () {
-                $("#exit-button2").parentsUntil("#experience-container").hide();
-            });
-
-              $("#exit-button3").click(function () {
-                $("#exit-button3").parentsUntil("#experience-container").hide();
-            });
-
-             $("#exit-button4").click(function () {
-                $("#exit-button4").parentsUntil("#experience-container").hide();
-            });
-
-
-
-             $("#exit-button5").click(function () {
-                $("#exit-button5").parentsUntil("#experience-container").hide();
-            });
-
-
-
-             $("#exit-button6").click(function () {
-                $("#exit-button6").parentsUntil("#experience-container").hide();
-            });
-
-
-        </script>
+      </div>
+    </header>
+    <div id="ProgressBarContainer" class="w3-animate-bottom">
+      <div id="progressBarContent">
+        <img
+          src="src/assets/Icons/Rolling-1s-200px.svg"
+          alt="Loading"
+          width="16"
+          height="16"
+        />
+        <p class="progressText" id="assetTag">Loading 3D Assets...</p>
+        <p class="progressText" id="percentage"></p>
+        <progress id="progressBarValue" value="0" max="100"></progress>
+      </div>
     </div>
 
-
-    <div class="container-fluid" id="pdf-container">
-<p id="resumeTitle" class="pageTitles"> + RESUME</p>
-
-                <div id="pdf">
-  <object id="pdf-resume-obj" width="400" height="500" type="application/pdf" data="/Majok_Ring_Resume.pdf#toolbar=1" id="pdf_content" width="100%" height="100%">
-
-    <p>Insert your error message here, if the PDF cannot be displayed.</p>
-  </object>
-</div>
-
-                </div>
-
-
-<!--           empty  -->
-            <div class="container-fluid" id="empty2-background"></div>
-            <div class="container-fluid" id="empty2">
-
-            </div>
-
-
-
-
-
-    <div class="container-fluid" id="timeline-container">
-
-        <div class="row example-centered">
-            <p id="timelineTitle" class="pageTitles"> + TIMELINE</p>
-            <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2" id="timeline-background">
-                <div class="col-md-12 example-title" id="journey-background">
-                    <h2 id="journeyText">Journey</h2>
-                    <p id="journeyWelcome">Welcome! Let's take a look at where I've been, and where I'm going.</p>
-                </div>
-                <ul class="timeline timeline-centered" id="timelineObj">
-                    <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                    <li class="timeline-item period" id="present">
-                        <div class="timeline-info"></div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h2 class="timeline-title">Present</h2> </div>
-                    </li>
-
-
-                         <li class="timeline-item">
-                        <div class="timeline-info"> <span>June 2017 - Present</span> </div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">HackMerced</h3>
-                            <div class="timeline-item-banner"></div>
-                            <p><strong>Software Engineer</strong>
-                                <br>
-                                <br>HackMerced, is a 36 hour yearly programming competition that occurs in Merced, California with attendance of around 400 students from all over the world. </p>
-                        </div>
-                    </li>
-
-
-
-                    <li class="timeline-item">
-                        <div class="timeline-info"> <span>September 2014 - Present</span> </div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
-                            <div class="timeline-item-banner"></div>
-                            <p><strong>Secretary</strong>
-                                <br>
-                                <br> The Q Project’s mission is to foster investigative research of fundamental and applied questions across disciplines using big data analytics and appropriate computational methods; to discover big data analytics of complex questions; and to encourage broader participation in understanding the importance of cross-disciplinary research using big data analytics. The Q Project (“Q”) is a graduate student run organization furthering the diversity and advancement of the analyses of very large data sets in the sciences</p>
-                        </div>
-                    </li>
-                    <!--    August 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                    <li class="timeline-item period">
-                        <div class="timeline-info"></div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h2 class="timeline-title">August 2014</h2> </div>
-                    </li>
-                    <li class="timeline-item">
-                        <div class="timeline-info"> <span>August 2014 - May 2018</span> </div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">University of California, Merced</h3>
-                                                        <div class="timeline-item-banner"></div>
-
-                            <p>Bachelor’s Degree, Computer Science and Engineering</p>
-                        </div>
-                    </li>
-                    <!--    June 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                    <li class="timeline-item period">
-                        <div class="timeline-info"></div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h2 class="timeline-title">June 2014</h2> </div>
-                    </li>
-                    <li class="timeline-item">
-                        <div class="timeline-info"> <span>June 13, 2014</span> </div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">Canyon Crest Academy High School</h3>
-                                                        <div class="timeline-item-banner"></div>
-
-                            <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
-                        </div>
-                    </li>
-
-
-                         <li class="timeline-item period">
-                        <div class="timeline-info"></div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h2 class="timeline-title">January 2014</h2> </div>
-                    </li>
-
-
-                    <li class="timeline-item">
-                        <div class="timeline-info"> <span>April 2013 - January 2014</span> </div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">TEDxYouth@SanDiego</h3>
-                                                        <div class="timeline-item-banner"></div>
-
-                            <p>• Worked with students and mentors from Canyon Crest Academy to develop our third TEDxYouth program for students within the San Diego Area.
-                                <br>
-                                <br> • As a team member of the Sponsors/Partnership team, I worked with 4 other students and also mentors to raise $60,000 in funds for our event.
-                                <br>
-                                <br> • Cooperated with local companies such as Life Technologies, PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC San Diego Extension.</p>
-                        </div>
-                    </li>
-
-
-     <li class="timeline-item period">
-                        <div class="timeline-info"></div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h2 class="timeline-title">May 2013</h2> </div>
-                    </li>
-
-                    <li class="timeline-item">
-                        <div class="timeline-info"> <span>May 2013</span><br>Health </div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">American Liver Foundation</h3>
-                                                        <div class="timeline-item-banner"></div>
-
-                            <p>
-Working with my Rotary organization, I assisted the American Liver Foundation's annual Liver Life Walk which is a national fundraiser that brings much needed awareness and financial support to the needs of millions of Americans who are battling more than 100 different types of liver disease. My responsibilities included organized a group of Canyon Crest Academy students to assist in the facilitation of the event and also the guiding of runners to proper paths, providing support to runners, organizing registration tables, and also distributing water and supplies.</p>
-                        </div>
-                    </li>
-
-
-     <li class="timeline-item">
-                        <div class="timeline-info"> <span>May 2013</span><br>Disaster and Humanitarian Relief </div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">TPHS Community Service Club</h3>
-                                                        <div class="timeline-item-banner"></div>
-
-                            <p>Working with my Rotary club, I collaborated with the TPHS community service club Interact in order to host a Walk for Water to raise money in support of Water For South Sudan, Inc.<br><br>
-
-“Water for South Sudan empowers people in remote villages of South Sudan to change their lives. By providing access to clean, safe water and facilitating hygiene education, Water for South Sudan sows the seeds for growth. Once a well is drilled, schools, markets, and clinics spring up, and life changes, especially for women and girls.” -WFSS</p>
-                        </div>
-                    </li>
-
-
-                             <li class="timeline-item">
-                        <div class="timeline-info"> <span>May 2013</span><br>Poverty Alleviation </div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">Rotary Club of Del Mar</h3>
-                                                        <div class="timeline-item-banner"></div>
-
-                            <p>Working with the CCA Interact Rotary club, I assisted Del-Mar/Solana Beach’s Rotary Club’s biggest annual fundraiser benefiting youth and humanitarian program. My responsibilities included directing parking, setting up booths, providing games for children, and also organizing registration.</p>
-                        </div>
-                    </li>
-
-
-                         <li class="timeline-item period">
-                        <div class="timeline-info"></div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h2 class="timeline-title">January 2013</h2> </div>
-                    </li>
-
-                             <li class="timeline-item">
-                        <div class="timeline-info"> <span>January 2013</span><br>Health</div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">Tri-City Medical Center</h3>
-                                                        <div class="timeline-item-banner"></div>
-
-                            <p>Working with my Rotary club, I volunteered at the Carlsbad Marathon for Tri-City Medical Center. My responsibilities were to provide key support to the over 10,000 participants as they reach their goal of completing the Tri-City Medical Center Carlsbad Marathon or Half Marathon. I also organized booths, assisted with registration, distributed refreshments/food snacks, and encouraged runners.</p>
-                        </div>
-                    </li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-     <li class="timeline-item period">
-                        <div class="timeline-info"></div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h2 class="timeline-title">December 2012</h2> </div>
-                    </li>
-
-
-                          <li class="timeline-item">
-                        <div class="timeline-info"> <span>December 2012</span><br>Poverty Alleviation</div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">Community Resource Center</h3>
-                                                        <div class="timeline-item-banner"></div>
-
-                            <p>While volunteering at my local Community Resource Center (CRC) with my Rotary club, I was responsible for the collection and set up of food, outerwear, blankets, toys and baby items for approximately 1,500 families during December. I also assisted in creating a mock shopping mall and distribute food and clothing to impoverished families in San Diego.
-</p>
-                        </div>
-                    </li>
-                    <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                </ul>
-            </div>
+    <div
+      class="sectionContainer border-bottom"
+      id="zoomSectionContainer"
+      style="display: none !important"
+    >
+      <div id="zoomContainer">
+        <div id="zoomCanvasEntry">
+          <canvas id="zoomCanvas" style="display: none"></canvas>
         </div>
+      </div>
+
+      <button
+        id="zoomExitBtn"
+        class="arrowButtons"
+        style="margin-bottom: 4rem !important; left: 10% !important"
+      >
+        <span
+          class="bounce icon-asset material-symbols-outlined"
+          style="font-size: 48px"
+          ><span _ngcontent-ng-c2377212316="">keyboard_return</span></span
+        ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+          >Return</span
+        >
+      </button>
     </div>
 
-
-     <div class="container-fluid" id="empty">
-
-
-
+    <div class="sectionContainer" id="introSectionContainer">
+      <div id="intro_body">
+                    <div id="aboutme-text">
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+              <span id="MajokRingName">Majok Ring |</span>
+              Software Engineer.
+            </h1>
+            <p class="lead">
+              <!-- Artist. Skateboarder. Messy Solderer. Kind <br /><br /> -->
+              Intuitive. Artistic. Practical. Efficient. <br /><br />
+              A highly skilled software engineer that specializes in designing
+              and developing cutting-edge applications that solve complex
+              problems and enhance user experiences. With years of experience in
+              the industry, I have a proven track record of delivering quality
+              software solutions for clients across various domains.
+              <br /><br />
+            </p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+              <a onclick="linkScroll('skillsSectionContainer')">
+                <button
+                  id="journeyBtn"
+                  type="button"
+                  class="btn btn-primary btn-lg px-4 me-md-2"
+                >
+                  Start our journey!
+                </button>
+              </a>
             </div>
+          </div>
+          <div id="profile_container">
+            <img
+              src="src/assets/Images/Majok12.webp"
+              class="d-block mx-lg-auto img-fluid"
+              id="profile_img"
+              alt="Majok Ring"
+              width="700"
+              height="500"
+              loading="eager"
+            />
+          </div>
 
-              <div class="container" id="footer">
-                  <div class="tint2">
-                  <p id="thanks">Let's get to work!</p>
+      </div>
 
-<!--
-                  <ul id="contacts-list">
-                      <li><a href="https://www.linkedin.com/in/majok-ring-4b1936110/"><img src="Resources/Logos/linkedin.png" class="contact-img linkedinLogo"></a></li>
-                       <li><a href="https://github.com/ringmaj"><img src="Resources/Logos/GitHub_Logo.png" class="contact-img gitLogo"></a></li>
-                  </ul>
--->
+      <div id="intro_footer">
+      <div id="intro_job_container">
+        <div class="job-container">
+              <img
+              src="src/assets/Icons/favicon-rtx.webp"
+              class="white-filter"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="job-title">Raytheon</div>
+        </div>
 
-                          <ul id="user-links">
-                            <li><a href="https://www.linkedin.com/in/majok-ring-4b1936110/"><img src="Resources/Logos/linkedin.png" class="contact-img linkedin-logo"></a></li>
-                       <li><a href="https://github.com/ringmaj"><img src="Resources/Logos/GitHub_Logo.png" class="contact-img git-logo"></a></li>
-                        </ul>
+                <div id="NG-container" class="job-container">
+              <img
+              src="src/assets/Icons/NGC.png"
+              class="white-filter"
+              alt="Raytheon"
+              width="48"
+              height="32"
+              loading="eager"
+            />
+            <div class="job-title">Northrop Grumman</div>
+        </div>
 
-                  <p id="closing-statement">I have a strong interest in software development and have the discipline and communication skills to be successful in a team environment.</p>
+                <div class="job-container">
+              <img
+              src="src/assets/Icons/jpl.svg"
+              class="white-filter"
+              alt="Raytheon"
+              width="48"
+              height="32"
+              loading="eager"
+            />
+            <div class="job-title">JPL</div>
+        </div>
+
+                <div class="job-container">
+              <img
+              src="src/assets/Icons/UCM.png"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="job-title">HackMerced</div>
+        </div>
+
+                <div class="job-container">
+              <img
+              src="src/assets/Icons/MACES.png"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="job-title">Merced Nanomaterials Center for Energy and Sensing</div>
+        </div>
+
+                <div class="job-container">
+              <img
+              src="src/assets/Icons/favicon-rtx.webp"
+              class="white-filter"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="job-title">TEDxUC Merced</div>
+        </div>
+
+                <div class="job-container">
+              <img
+              src="src/assets/Icons/favicon-rtx.webp"
+              class="white-filter"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="job-title">TEDxYouthSD</div>
+        </div>
 
 
+      </div>
+      </div>
+            <a onclick="linkScroll('skillsSectionContainer')">
+        <button class="white arrowButtons" style="margin-bottom: 4rem !important">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
 
+    <div class="border-bottom sectionContainer" id="skillsSectionContainer">
+      <div class="pt-4 text-center">
+        <h1 class="display-5 fw-bold text-body-emphasis">
+          Embedded. DevOps. Fullstack.
+        </h1>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4">
+            A wide range of skills to fit any team and develop on many different
+            platforms.
+          </p>
+        </div>
+
+        <div id="skillsListContainer">
+          <div class="border-bottom skills_section">
+            <div class="icons_section_title">Programming</div>
+            <div class="skills_icon_list">
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-python.svg"
+                    alt="Python"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> Python </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-c-programming.svg"
+                    alt="C"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> C </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-c++.svg"
+                    alt="C++"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> C++ </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-c-sharp-logo.svg"
+                    alt="C#"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> C# </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-javascript.svg"
+                    alt="JavaScript"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> JavaScript </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-react-native.svg"
+                    alt=""
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> ReactJS </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-react-native.svg"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> React Native </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-code-html-48.png"
+                    alt="HTML/CSS"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> HTML/CSS </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/Ada_horizon_green_logo_with_slogan.svg"
+                    alt="Ada"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> Ada </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-matlab.svg"
+                    alt="MATLAB"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> MATLAB </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/icons8-java.svg"
+                    alt="Java"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> Java </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/database-svgrepo-com.svg"
+                    alt="SQL"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> SQL </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/opengl-svgrepo-com.svg"
+                    alt="OpenGL"
+                    width="60"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> OpenGL </span></div>
+              </div>
+
+              <div class="programming-card">
+                <div>
+                  <img
+                    style="margin-inline: 20px"
+                    src="src/assets/Icons/vb-file-svgrepo-com (1).svg"
+                    alt="VB.NET"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="programming-span"><span> VB.NET </span></div>
+              </div>
+
+              <div
+                class="programming-card blank-icon"
+                style="display: none"
+              ></div>
+            </div>
+          </div>
+
+          <!-- space -->
+          <div class="border-bottom skills_section">
+            <div class="icons_section_title">Technical Skills</div>
+            <div class="skills_icon_list">
+              <div id="programming_icons">
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/Tux.svg"
+                      alt="Linux"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
                   </div>
-   </div>
+                  <div class="programming-span"><span> Linux </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/Git-Icon.svg"
+                      alt="Git"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Git </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-docker.svg"
+                      alt="Docker"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Docker </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-jenkins.svg"
+                      alt="Jenkins"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Jenkins </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/Autodesk_Logo_A_only.svg"
+                      alt="Autodesk"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Autodesk </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-android-studio.svg"
+                      alt="Android-Studio"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span">
+                    <span> Android Studio </span>
+                  </div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/LibGDX.png"
+                      alt="LibGDX"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> LibGDX </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/green-hills-logo.png"
+                      alt="Green Hills Software"
+                      width="60"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span">
+                    <span> GHS Integrity </span>
+                  </div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/VxWorks_icon.svg"
+                      alt="VxWorks"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> VxWorks </span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- space -->
+          <div class="border-bottom skills_section">
+            <div class="icons_section_title">Workflows</div>
+            <div class="skills_icon_list">
+              <div id="programming_icons">
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-jira.svg"
+                      alt="Jira"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Jira </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-confluence.svg"
+                      alt="Confluence"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Confluence </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-bitbucket.svg"
+                      alt="BitBucket"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> BitBucket </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/crucible-svgrepo-com.svg"
+                      alt="Crucible"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Crucible </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/ClearQuest.webp"
+                      alt="ClearQuest"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> ClearQuest </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-agile-64.png"
+                      alt="Agile"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Agile </span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- space -->
+          <div class="skills_section">
+            <div class="icons_section_title">Creativity</div>
+            <div class="overflow-hidden skills_icon_list">
+              <div id="programming_icons">
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-adobe-photoshop.svg"
+                      alt="Photoshop"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Photoshop </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-adobe-illustrator.svg"
+                      alt="Illustrator"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Illustrator </span></div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-adobe-after-effects.svg"
+                      alt="After Effects"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span">
+                    <span> After Effects </span>
+                  </div>
+                </div>
+
+                <div class="programming-card">
+                  <div>
+                    <img
+                      style="margin-inline: 20px"
+                      src="src/assets/Icons/icons8-blender-3d.svg"
+                      alt="Blender"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="programming-span"><span> Blender </span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a onclick="linkScroll('terminalSectionContainer')">
+        <button class="arrowButtons" style="margin-bottom: 4rem !important">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="border-bottom sectionContainer" id="terminalSectionContainer">
+      <div id="terminalContainer">
+        <div id="terminalHero">
+          <h1 class="display-5 fw-bold lh-1 text-body-emphasis mb-3">
+            Everybody loves terminals right?
+          </h1>
+          <p class="lead">A brief intro, sweet and headless.</p>
+        </div>
+
+        <div id="terminal_container">
+          <div id="terminal_title_bar">
+            <span class="dot" style="background-color: #ff605c"></span>
+            <span class="dot" style="background-color: #ffbd44"></span>
+            <span class="dot" style="background-color: #00ca4e"></span>
+          </div>
+          <div id="terminal_body">
+            <p id="username1">
+              <span style="color: #adf447">ring@ring</span
+              ><span style="color: #ffffff">:</span
+              ><span style="color: #7fd8ff">~</span
+              ><span style="color: #ffffff">$ </span>
+            </p>
+            <p1 id="terminal_ls"> </p1>
+          </div>
+        </div>
+      </div>
+
+      <a onclick="linkScroll('jetSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div id="root"></div>
+    <div class="sectionContainer border-bottom" id="jetSectionContainer">
+      <div id="jetContainer">
+        <div id="jetCanvasEntry">
+         <!-- <canvas id="renderCanvas"></canvas> -->
+         <canvas id="jetCanvas"></canvas>
+        </div>
+        <div class="col-lg-6 hero" id="jetHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            Worked on one of these.
+          </h1>
+          <p class="lead">
+            APG79/APG82. F-15 Eagle, F/A-18 Hornet. <br /><br />
+
+            <!-- <div class="plus-list-item">
+
+Developed software for APG79/APG82 Active Electronically Scanned
+            Array Radar. Delivered builds for U.S, Japan, Kuwait, and Qatar
+            radar systems.
+            </div> -->
+
+            Developed software for APG79/APG82 Active Electronically Scanned
+            Array Radar. Delivered builds for U.S, Japan, Kuwait, and Qatar
+            radar systems.<br /><br />
+
+            Mode development including Air-to-Air, Sea Surface Search, GTMI
+            (Ground Moving Target Indicator), Air-to-Ground, SAR Maps (Synthetic
+            Aperture Radar), Attack modes, and more modes.
+            <br /><br />
+            The 3D models on this site are interactive! Click around and see
+            what you can find.
+          </p>
+          <button id="jetZoomBtn" class="searchButtons">
+            <span
+              class="icon-asset material-symbols-outlined"
+              style="font-size: 25px"
+              ><span _ngcontent-ng-c2377212316="">search</span></span
+            ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+              >Zoom</span
+            >
+          </button>
+        </div>
+      </div>
+
+      <a onclick="linkScroll('radarSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="sectionContainer" id="radarSectionContainer">
+      <div id="radarContainer">
+        <div id="radarCanvasEntry">
+          <canvas id="radarCanvas"></canvas>
+        </div>
+        <div class="col-lg-6 hero" id="radarHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            MFD (Multi Functional Display)
+          </h1>
+          <p class="lead">
+            Developed software features and updates for mission critical
+            computer display/modeling for OFP (Operational Flight Plan) builds.
+            <br /><br />
+            Streamlined Development Processes: Recognizing the importance of
+            efficiency in defense projects, I led initiatives to streamline the
+            software development processes. I introduced agile methodologies,
+            automated testing frameworks, and continuous integration/continuous
+            deployment (CI/CD) pipelines, reducing development time and ensuring
+            faster delivery of software updates. This enabled quicker responses
+            to evolving defense requirements and facilitated iterative
+            improvements to the systems. <br /><br />
+            Trusted with testing, integrating, and delivering critical build
+            images.
+          </p>
+          <button
+            id="radarZoomBtn"
+            class="searchButtons"
+            style="margin-left: 94%"
+          >
+            <span
+              class="icon-asset material-symbols-outlined"
+              style="font-size: 25px"
+              ><span _ngcontent-ng-c2377212316="">search</span></span
+            ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+              >Zoom</span
+            >
+          </button>
+        </div>
+      </div>
+
+      <a onclick="linkScroll('satSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+        <div class="sectionContainer" id="seniorSectionContainer">
+      <div id="seniorContainer">
+        <div id="seniorCanvasEntry">
+                   <canvas id="renderCanvas"></canvas>
+          <canvas id="seniorCanvas"></canvas>
+        </div>
+        <div class="col-lg-6 hero" id="seniorHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            Spearheaded project to accelerate build integration
+          </h1>
+          <p class="lead">
+Developed a system to speed up the processing of Mission
+            files, decreased wait time from 2-3 days to less than a minute using
+            a framework I developed in house.
+            <br /><br />
+
+            Exemplified exceptional senior software leadership qualities by spearheading extensive research and testing efforts, while fostering collaborative relationships with vendors. This proactive approach, coupled with a strong commitment to automation and DevOps practices, resulted in a remarkable reduction of build integration time from 2-3 days to under a minute.
 
 
-            <script>
-
-$(document).ready(function() {
-  $(".timeline-item-banner").css({
-    'width': ($(".first_div").width() + 'px')
-  });
-     $('footer').footerReveal();
 
 
-    var repeater;
+            Streamlined Development Processes: Recognizing the importance of
+            efficiency in defense projects, I led initiatives to streamline the
+            software development processes. I introduced agile methodologies,
+            automated testing frameworks, and continuous integration/continuous
+            deployment (CI/CD) pipelines, reducing development time and ensuring
+            faster delivery of software updates. This enabled quicker responses
+            to evolving defense requirements and facilitated iterative
+            improvements to the systems. <br /><br />
+            Trusted with testing, integrating, and delivering critical build
+            images.
+          </p>
+          <button
+            id="seniorZoomBtn"
+            class="searchButtons"
+            style="margin-left: 94%"
+          >
+            <span
+              class="icon-asset material-symbols-outlined"
+              style="font-size: 25px"
+              ><span _ngcontent-ng-c2377212316="">search</span></span
+            ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+              >Zoom</span
+            >
+          </button>
+        </div>
+      </div>
 
-function checkLocation() {
- if($('.nav .active').text() == "Timeline") {
+      <a onclick="linkScroll('satSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
 
-            $('#footer').show();
-      $('#empty2-background').hide();
 
+    <div class="sectionContainer border-bottom" id="satSectionContainer">
+      <div id="satContainer">
+        <div id="satCanvasEntry">
+          <canvas id="satCanvas"></canvas>
+        </div>
+        <div class="col-lg-6 hero" id="satHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            And one of these.
+          </h1>
+          <p class="lead">
+            Next-Generation Overhead Persistent Infrared (OPIR) polar-orbiting
+            satellites <br /><br />
+            "Missile warning mission into a more capable next generation: their
+            modernized sensors will provide excellent coverage of the entire
+            northern hemisphere and are fitted with new resiliency features to
+            stay in the fight in contested scenarios."
+            <br /><br />
+            Investigated performance improvements of analysis/processing scripts
+            and successfully decreased total processing time from 2.5 hours to 3
+            minutes and 45 seconds. An improvement of 96% in efficiency.
+          </p>
+          <button
+            id="satZoomBtn"
+            class="searchButtons"
+            style="margin-left: 94%; color: white"
+          >
+            <span
+              class="icon-asset material-symbols-outlined"
+              style="font-size: 25px"
+              ><span _ngcontent-ng-c2377212316="">search</span></span
+            ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+              >Zoom</span
+            >
+          </button>
+        </div>
+      </div>
+
+      <a onclick="linkScroll('awardSectionContainer')">
+        <button class="white arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="sectionContainer border-bottom" id="awardSectionContainer">
+      <div id="desktop-layout">
+        <div id="top_cards">
+          <div class="card-container">
+            <img
+              src="src/assets/Icons/favicon-rtx.webp"
+              class="card-logo"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="card-content">
+              <p id="award_name">Achievement Award: Accountability</p>
+              <p>
+                "Majok helped deliver the first Build of the DFO effort on the
+                Qatar program. He came up to speed quickly and developed much of
+                the functionality. He worked independently to complete the last
+                few issues, and delivered on time. Great job!"
+              </p>
+              <p class="award_sender">Eric A Engle · Oct 2021</p>
+            </div>
+          </div>
+          <!-- ------------------------------------------------------------------------------- -->
+          <div class="card-container">
+            <img
+              src="src/assets/Icons/favicon-rtx.webp"
+              class="card-logo"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+
+            <div class="card-content">
+              <p id="award_name">Leadership-Sponsored Achievement Award</p>
+              <p>
+                "Majok Ring has provided above and beyond support of BIT code
+                changes in order to make progress to our customer milestones"
+              </p>
+              <p class="award_sender">Yeni H Fernandez · May 2020</p>
+            </div>
+          </div>
+
+          <!-- ------------------------------------------------------------------------------- -->
+          <div class="card-container">
+            <img
+              src="src/assets/Icons/favicon-rtx.webp"
+              class="card-logo"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="card-content">
+              <p id="award_name">Spot Award: Innovation</p>
+              <p>
+                "Thank you Majok for a job well done on the front end work for
+                the structure comparison tool. That was above and beyond what
+                was asked and was excellent work. Thank you"
+              </p>
+              <p class="award_sender">Condor Chou · Jul 2019</p>
+            </div>
+          </div>
+
+          <!-- ------------------------------------------------------------------------------- -->
+          <div class="ms-lg-auto col-lg-6 hero" id="awardHero">
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+              Some recognition I've received.
+            </h1>
+            <p class="lead">
+              Enjoyed my time working with these teams and the many things I've
+              learned.
+              <br /><br />
+            </p>
+          </div>
+        </div>
+
+        <div id="bottom_cards">
+          <!-- <div class="card"> -->
+
+          <!-- ------------------------------------------------------------------------------- -->
+
+          <div class="card-container">
+            <img
+              src="src/assets/Icons/favicon-rtx.webp"
+              class="card-logo"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="card-content">
+              <p id="award_name">Spot Award: Collaboration</p>
+              <p>
+                "The MNU team has worked extremely hard and overcome many
+                hurdles to get the MNUs deployed to all the program areas. They
+                have made great progress over the past year developing MNU
+                capabilities for the programs. Each team member has contributed
+                to the successes we've had this year and their efforts are
+                appreciated. Thank you for your support Majok!"
+              </p>
+              <p class="award_sender">Rori M Ramirez · Feb 2020</p>
+            </div>
+          </div>
+          <!-- ------------------------------------------------------------------------------- -->
+
+          <div class="card-container">
+            <img
+              src="src/assets/Icons/favicon-rtx.webp"
+              class="card-logo"
+              alt="Raytheon"
+              width="32"
+              height="32"
+              loading="eager"
+            />
+            <div class="card-content">
+              <p id="award_name">Spot Award: Collaboration</p>
+              <p>
+                "Thank you to the F-15 Qatar Software Team for all your hard
+                work these past few months in getting the critical Build 109 and
+                Deploy 1.5 OFP delivered to the customer on time. The team did
+                an amazing job towards the end of 2021 and into January and
+                February in getting all the critical Must Fix PRs and all of
+                SHAPE completed and incorporated into these OFP deliveries. F-15
+                Qatar would not be successful without all your hard work! Thank
+                you again for doing a great job!!"
+              </p>
+              <p class="award_sender">Omer A Faghfoor · Mar 2022</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ----------------------------------------MOBILE--------------------------------------- -->
+      <div id="mobile-layout" style="display: none">
+        <div class="ms-lg-auto col-lg-6 hero" id="awardHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            Some recognition<br />
+            I've received.
+          </h1>
+          <p class="lead">
+            Enjoyed my time working with these teams and the many things I've
+            learned.
+            <br /><br />
+          </p>
+        </div>
+        <!-- ------------------------------------------------------------------------------- -->
+        <div class="card-container">
+          <img
+            src="src/assets/Icons/favicon-rtx.webp"
+            class="card-logo"
+            alt="Raytheon"
+            width="32"
+            height="32"
+            loading="eager"
+          />
+          <div class="card-content">
+            <p id="award_name">Achievement Award: Accountability</p>
+            <p>
+              "Majok helped deliver the first Build of the DFO effort on the
+              Qatar program. He came up to speed quickly and developed much of
+              the functionality. He worked independently to complete the last
+              few issues, and delivered on time. Great job!"
+            </p>
+            <p class="award_sender">Eric A Engle · Oct 2021</p>
+          </div>
+        </div>
+        <!-- ------------------------------------------------------------------------------- -->
+        <div class="card-container">
+          <img
+            src="src/assets/Icons/favicon-rtx.webp"
+            class="card-logo"
+            alt="Raytheon"
+            width="32"
+            height="32"
+            loading="eager"
+          />
+          <div class="card-content">
+            <p id="award_name">Leadership-Sponsored Achievement Award</p>
+            <p>
+              "Majok Ring has provided above and beyond support of BIT code
+              changes in order to make progress to our customer milestones"
+            </p>
+            <p class="award_sender">Yeni H Fernandez · May 2020</p>
+          </div>
+        </div>
+        <!-- ------------------------------------------------------------------------------- -->
+        <div class="card-container">
+          <img
+            src="src/assets/Icons/favicon-rtx.webp"
+            class="card-logo"
+            alt="Raytheon"
+            width="32"
+            height="32"
+            loading="eager"
+          />
+          <div class="card-content">
+            <p id="award_name">Spot Award: Innovation</p>
+            <p>
+              "Thank you Majok for a job well done on the front end work for the
+              structure comparison tool. That was above and beyond what was
+              asked and was excellent work. Thank you"
+            </p>
+            <p class="award_sender">Condor Chou · Jul 2019</p>
+          </div>
+        </div>
+        <!-- ------------------------------------------------------------------------------- -->
+        <div class="card-container">
+          <img
+            src="src/assets/Icons/favicon-rtx.webp"
+            class="card-logo"
+            alt="Raytheon"
+            width="32"
+            height="32"
+            loading="eager"
+          />
+          <div class="card-content">
+            <p id="award_name">Spot Award: Collaboration</p>
+            <p>
+              "The MNU team has worked extremely hard and overcome many hurdles
+              to get the MNUs deployed to all the program areas. They have made
+              great progress over the past year developing MNU capabilities for
+              the programs. Each team member has contributed to the successes
+              we've had this year and their efforts are appreciated. Thank you
+              for your support Majok!"
+            </p>
+            <p class="award_sender">Rori M Ramirez · Feb 2020</p>
+          </div>
+        </div>
+        <!-- ------------------------------------------------------------------------------- -->
+
+        <div class="card-container">
+          <img
+            src="src/assets/Icons/favicon-rtx.webp"
+            class="card-logo"
+            alt="Raytheon"
+            width="32"
+            height="32"
+            loading="eager"
+          />
+          <div class="card-content">
+            <p id="award_name">Spot Award: Collaboration</p>
+            <p>
+              "Thank you to the F-15 Qatar Software Team for all your hard work
+              these past few months in getting the critical Build 109 and Deploy
+              1.5 OFP delivered to the customer on time. The team did an amazing
+              job towards the end of 2021 and into January and February in
+              getting all the critical Must Fix PRs and all of SHAPE completed
+              and incorporated into these OFP deliveries. F-15 Qatar would not
+              be successful without all your hard work! Thank you again for
+              doing a great job!!"
+            </p>
+            <p class="award_sender">Omer A Faghfoor · Mar 2022</p>
+          </div>
+        </div>
+      </div>
+
+      <a onclick="linkScroll('workSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="sectionContainer border-bottom" id="workSectionContainer">
+      <div id="workContainer">
+        <div class="col-lg-7 text-center text-lg-start hero" id="workHero">
+          <h1 class="display-5 fw-bold lh-1 text-body-emphasis mb-3">
+            My humble abode.
+          </h1>
+          <p class="lead">
+            Home Office. Quiet. Maximum desk room. <br />Multitasking
+            perfection..
+          </p>
+          <button id="workZoomBtn" class="searchButtons">
+            <span
+              class="icon-asset material-symbols-outlined"
+              style="font-size: 25px"
+              ><span _ngcontent-ng-c2377212316="">search</span></span
+            ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+              >Zoom</span
+            >
+          </button>
+        </div>
+        <div id="workCanvasEntry"><canvas id="workCanvas"></canvas></div>
+      </div>
+
+      <a onclick="linkScroll('carItemsSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="sectionContainer border-bottom" id="carItemsSectionContainer">
+      <div id="carItemsContainer">
+        <div id="carItemsCanvasEntry">
+          <canvas id="carItemsCanvas"></canvas>
+        </div>
+        <div class="col-lg-6 hero" id="carItemsHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            Modded my car with sensors and cameras
+          </h1>
+          <p class="lead">
+            Decided to change out the Head Unit in my car one day to add in a
+            touchscreen display and ended up seeing the potential for much more!
+            <br /><br />With a bit of investigation and engineering I added 4
+            cameras, 2 mini LIDAR modules for range detection (parking
+            assistance), DPST (Double Pole Double Throw) toggle switches for
+            instant feed switching functionality and an ESP32 chip to manage
+            video and processing.
+          </p>
+          <button id="carItemsZoomBtn" class="searchButtons">
+            <span
+              class="icon-asset material-symbols-outlined"
+              style="font-size: 25px"
+              ><span _ngcontent-ng-c2377212316="">search</span></span
+            ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+              >Zoom</span
+            >
+          </button>
+        </div>
+
+        <div id="carouselContainer">
+          <div id="carousel-nav">
+            <button id="carouselLeft" class="carouselButtons">
+              <span
+                class="icon-asset material-symbols-outlined"
+                style="font-size: 30px"
+                ><span _ngcontent-ng-c2377212316="">arrow_back_ios</span></span
+              ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+                >Previous</span
+              >
+            </button>
+            <div id="lidar_module_title" class="carousel-title">
+              TFmini Plus Micro
+            </div>
+            <div
+              id="display_module_title"
+              class="carousel-title"
+              style="display: none"
+            >
+              Custom Display
+            </div>
+            <div
+              id="esp32_module_title"
+              class="carousel-title"
+              style="display: none"
+            >
+              ESP32-WROOM-32
+            </div>
+            <div
+              id="camera_module_title"
+              class="carousel-title"
+              style="display: none"
+            >
+              L002 HD 170
+            </div>
+
+            <button id="carouselRight" class="carouselButtons">
+              <span
+                class="icon-asset material-symbols-outlined"
+                style="font-size: 30px"
+                ><span _ngcontent-ng-c2377212316=""
+                  >arrow_forward_ios</span
+                ></span
+              ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+                >Next</span
+              >
+            </button>
+          </div>
+
+          <div id="carousel-item-lidar" class="carousel-info">
+            <p class="carousel-subheader">LIDAR Module</p>
+            <p>
+              Single point short-range LIDAR. IP65 Enclosure, waterproof for
+              rainy days. Detectable range of 0.1-12 meters at 1000Hz and 3.6°
+              FOV. Communication handled via UART/I2C.
+            </p>
+          </div>
+
+          <div
+            id="carousel-item-camera"
+            class="carousel-info"
+            style="display: none"
+          >
+            <p class="carousel-subheader">Camera Module</p>
+            <p>
+              170° HD Wide angle lens to provide maximum coverage and give a
+              clear image of surroundings. Interfaces via RCA output. IP69
+              rating reliably waterproof for rain/washdowns.
+            </p>
+          </div>
+
+          <div
+            id="carousel-item-display"
+            class="carousel-info"
+            style="display: none"
+          >
+            <p class="carousel-subheader">Display Module</p>
+            <p>
+              4 different camera angles to provide maximum coverage and give you
+              a clear image of your surroundings.
+            </p>
+          </div>
+
+          <div
+            id="carousel-item-esp32"
+            class="carousel-info"
+            style="display: none"
+          >
+            <p class="carousel-subheader">ESP32 Module</p>
+            <p>
+              ESP32-WROOM-32 chip. Low-power device operating at 3.3V with
+              240Mhz CPU and 4MB FLASH, 28 GPIO pins. Interfaces with composite
+              video libraries and manages camera/LIDAR outputs to send
+              information to the display module.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <a onclick="linkScroll('skateSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="sectionContainer border-bottom" id="skateSectionContainer">
+      <div id="skateContainer">
+        <div class="col-lg-6 hero" id="skateHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            A knack for analysis tools and beautiful GUIs
+          </h1>
+          <p class="lead">
+            Designed and developed a program in OpenGL engine to simulate and
+            analyze skateboarding tricks in 3D with custom interlocking parts,
+            simulated gravity, interpolated Bézier/Lagrange curves, and
+            environment interaction.
+          </p>
+        </div>
+        <div id="skateCanvasEntry">
+          </canvas><canvas id="skateCanvas"></canvas>
+        </div>
+      </div>
+
+      <div id="graphContainer">
+        <div class="bezierTitle">Vertical Position</div>
+        <div class="bezierGraph"></div>
+        <div class="timeStepContainer">
+          <div class="timeStepVal">0s</div>
+          <div class="timeStepVal endTimeStepVal">1s</div>
+        </div>
+        <div class="bezierTitle">X-Axis Rotation</div>
+        <div class="bezierGraph"><div class="graphMidLine"></div></div>
+        <div class="timeStepContainer">
+          <div class="timeStepVal">0s</div>
+          <div class="timeStepVal endTimeStepVal">1s</div>
+        </div>
+        <div class="bezierTitle">Y-Axis Rotation</div>
+        <div class="bezierGraph"><div class="graphMidLine"></div></div>
+        <div class="timeStepContainer">
+          <div class="timeStepVal">0s</div>
+          <div class="timeStepVal endTimeStepVal">1s</div>
+        </div>
+        <div class="bezierTitle">Z-Axis Rotation</div>
+        <div class="bezierGraph"><div class="graphMidLine"></div></div>
+        <div class="timeStepContainer">
+          <div class="timeStepVal">0s</div>
+          <div class="timeStepVal endTimeStepVal">1s</div>
+        </div>
+      </div>
+
+      <a onclick="linkScroll('photoSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="sectionContainer border-bottom" id="photoSectionContainer">
+      <div id="photoContainer">
+        <div class="col-lg-6 hero" id="photoHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            A peek into my life.
+          </h1>
+          <p class="lead">
+            I call it a Photo Vortex. A tornado of experiences and moments.
+            Click a few!
+          </p>
+        </div>
+        <div id="photoCanvasEntry"><canvas id="photoCanvas"></canvas></div>
+      </div>
+
+      <a onclick="linkScroll('laptopSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="sectionContainer border-bottom" id="laptopSectionContainer">
+      <div id="laptopContainer">
+        <div id="laptopCanvasEntry">
+          <canvas id="laptopCanvas"></canvas>
+        </div>
+        <div class="col-lg-6 hero" id="laptopHero">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            A few hobbies here and there.
+          </h1>
+          <p class="lead">Cruisin! Hoopin! Up for anything fun.</p>
+          <button id="laptopZoomBtn" class="searchButtons">
+            <span
+              class="icon-asset material-symbols-outlined"
+              style="font-size: 25px"
+              ><span _ngcontent-ng-c2377212316="">search</span></span
+            ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+              >Zoom</span
+            >
+          </button>
+        </div>
+
+        <video
+          loop
+          id="video"
+          playsinline
+          webkit-playsinline
+          muted
+          loop
+          autoplay
+          width="320"
+          height="240"
+          src="src/assets/Videos/pexels-artem-podrez-5752729-3840x2160-30fps.mp4"
+          style="display: none"
+        ></video>
+      </div>
+
+      <a onclick="linkScroll('timelineSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div
+      class="row sectionContainer border-bottom"
+      id="timelineSectionContainer"
+    >
+      <div class="col-lg-6 hero" id="timelineHero">
+        <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+          My Journey so far.
+        </h1>
+        <p class="lead">
+          Let's take a look at where I've been, and where I'm going.
+          <br /><br />
+        </p>
+      </div>
+      <div
+        class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2"
+        id="timeline-background"
+      >
+        <ul class="timeline timeline-centered" id="timelineObj">
+          <!--    September 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+          <li class="timeline-item period" id="present">
+            <div class="timeline-info"></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h2 class="timeline-title">Present</h2>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>July 2022 - March 2023</span>
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Northrop Grumman Space Systems</h3>
+              <div class="timeline-item-banner"></div>
+              <strong>Software Engineer</strong>
+              <br />
+              <br />
+              <ul class="list-group">
+                <li class="list-group-item">
+                  Develop tools for Satellite Systems and integrate software
+                  changes into NGGSTE (Special Test Equipment) codebase.
+                </li>
+                <li class="list-group-item">
+                  Establish changes based on Spacecraft Simulator software and
+                  various simulators which also process telemetry packets,
+                  manage networking processes, and are run on real hardware in a
+                  lab environment.
+                </li>
+
+                <li class="list-group-item">
+                  Investigated performance improvements of analysis scripts and
+                  processing to decrease total processing time from 2.5 hours to
+                  3 minutes and 45 seconds. An improvement of 96% in efficiency.
+                </li>
+                <li class="list-group-item">
+                  Developed automation tooling to create fast startup scripts in
+                  terms of setting up stable, consistent build environments
+                  combined with hardware in the loop testing.
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>January 2019 - May 2022</span>
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">
+                Raytheon Space and Airborne Systems
+              </h3>
+              <div class="timeline-item-banner"></div>
+              <strong>Software Engineer</strong>
+              <br />
+              <br />
+              <ul class="list-group">
+                <li class="list-group-item">
+                  Develop tools and write embedded software for airborne radar
+                  systems for several programs. Work with designated teams to
+                  detect hardware failures and design software/testing
+                  procedures to address critical areas.
+                </li>
+                <li class="list-group-item">
+                  Debug module specific changes corresponding to lower-level
+                  networking TCP/IP connections and ensure data
+                  transport/messaging pathways are timely and accurate.
+                </li>
+                <li class="list-group-item">
+                  Wrote an internal tool to solve mission file development
+                  issues and simplified development wait times from days to
+                  minutes and incorporated my tool into the DevOps pipeline to
+                  auto generate these mission files on a nightly basis. Trained
+                  current and new engineers in the RSIL (Radar Systems
+                  Integration Lab) to use my tool and developed an accompanying
+                  GUI for ease of use which received awards from leadership for
+                  program impact.
+                </li>
+                <li class="list-group-item">
+                  Maintain and optimize legacy systems dealing with radar
+                  Built-In-Tests (BIT) and monitor performance to align with
+                  program requirements/customer contract specifications.
+                </li>
+                <li class="list-group-item">
+                  Experience in Radar Systems Integration Lab working with real
+                  radar hardware. Able to load and test development software
+                  builds on APG-79/APG-82 radars and communicate with RSIL lab
+                  technicians to modify hardware for mode compatibility and
+                  further testing.
+                </li>
+                <li class="list-group-item">
+                  Conduct code peer reviews and write accompanying
+                  documentation/design presentations for software changes and
+                  communicate with engineering board for change approvals.
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>January 2018 - May 2018</span>
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">MESA Lab</h3>
+              <div class="timeline-item-banner"></div>
+              <strong>JPL Software Development Technical Intern</strong>
+              <br />
+              <br />
+              <ul class="list-group">
+                <li class="list-group-item">
+                  Worked with the UC Merced Mechatronics, Embedded Systems and
+                  Automation (MESA) Lab in developing a UI to control a methane
+                  sniffing drone to create/plot a map of key areas of interest
+                  and record and analyze flight data.
+                </li>
+                <li class="list-group-item">
+                  Presented my developments on the updated UI and software to
+                  panel of industry executives, faculty researchers, and
+                  students. Explained purpose, potential outcomes, and future
+                  plans; Drone swarming
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>June 2017 - January 2018</span>
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">HackMerced</h3>
+              <div class="timeline-item-banner"></div>
+
+              <strong>Software Engineer Intern</strong>
+              <br />
+              <br />
+              <ul class="list-group">
+                <li class="list-group-item">
+                  HackMerced, is a 36 hour yearly programming competition that
+                  occurs in Merced, California with attendance of around 400
+                  students from all over the world.
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>September 2014 - May 2018</span>
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Quantitative Project at UC Merced</h3>
+              <div class="timeline-item-banner"></div>
+
+              <strong>Secretary</strong>
+              <br />
+              <br />
+              <ul class="list-group">
+                <li class="list-group-item">
+                  The Q Project’s mission is to foster investigative research of
+                  fundamental and applied questions across disciplines using big
+                  data analytics and appropriate computational methods; to
+                  discover big data analytics of complex questions; and to
+                  encourage broader participation in understanding the
+                  importance of cross-disciplinary research using big data
+                  analytics. The Q Project (“Q”) is a graduate student run
+                  organization furthering the diversity and advancement of the
+                  analyses of very large data sets in the sciences
+                </li>
+              </ul>
+            </div>
+          </li>
+          <!--    August 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+          <li class="timeline-item period">
+            <div class="timeline-info"></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h2 class="timeline-title">August 2014</h2>
+            </div>
+          </li>
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>August 2014 - May 2018</span>
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">University of California, Merced</h3>
+              <div class="timeline-item-banner"></div>
+
+              <p>Bachelor’s Degree, Computer Science and Engineering</p>
+            </div>
+          </li>
+          <!--    June 2014   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+          <li class="timeline-item period">
+            <div class="timeline-info"></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h2 class="timeline-title">June 2014</h2>
+            </div>
+          </li>
+          <li class="timeline-item">
+            <div class="timeline-info"><span>June 13, 2014</span></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Canyon Crest Academy High School</h3>
+              <div class="timeline-item-banner"></div>
+
+              <p>Graduated Canyon Crest Academy High School: 3.8 GPA</p>
+            </div>
+          </li>
+
+          <li class="timeline-item period">
+            <div class="timeline-info"></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h2 class="timeline-title">January 2014</h2>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>April 2013 - January 2014</span>
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">TEDxYouth@SanDiego</h3>
+              <div class="timeline-item-banner"></div>
+              <strong>Sponsors/Partnerships Team Member</strong>
+              <br />
+              <br />
+
+              <ul class="list-group">
+                <li class="list-group-item">
+                  Worked with students and mentors from Canyon Crest Academy to
+                  develop our third TEDxYouth program for students within the
+                  San Diego Area.
+                </li>
+                <li class="list-group-item">
+                  As a team member of the Sponsors/Partnership team, I worked
+                  with 4 other students and also mentors to raise $60,000 in
+                  funds for our event.
+                </li>
+                <li class="list-group-item">
+                  Cooperated with local companies such as Life Technologies,
+                  PIRCH, Sodexo, DPR, SDG&E, Westreich Foundation, and the UC
+                  San Diego Extension.
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="timeline-item period">
+            <div class="timeline-info"></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h2 class="timeline-title">May 2013</h2>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info"><span>May 2013</span><br />Health</div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">American Liver Foundation</h3>
+              <div class="timeline-item-banner"></div>
+              <strong>Rotary Chairman</strong>
+              <br />
+              <br />
+              <p>
+                Working with my Rotary organization, I assisted the American
+                Liver Foundation's annual Liver Life Walk which is a national
+                fundraiser that brings much needed awareness and financial
+                support to the needs of millions of Americans who are battling
+                more than 100 different types of liver disease. My
+                responsibilities included organized a group of Canyon Crest
+                Academy students to assist in the facilitation of the event and
+                also the guiding of runners to proper paths, providing support
+                to runners, organizing registration tables, and also
+                distributing water and supplies.
+              </p>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>May 2013</span><br />Disaster and Humanitarian Relief
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">TPHS Community Service Club</h3>
+              <div class="timeline-item-banner"></div>
+              <strong>Rotary Chairman</strong>
+              <br />
+              <br />
+
+              <ul class="list-group">
+                <li class="list-group-item">
+                  Working with my Rotary club, I collaborated with the TPHS
+                  community service club Interact in order to host a Walk for
+                  Water to raise money in support of Water For South Sudan, Inc.
+                </li>
+                <li class="list-group-item">
+                  “Water for South Sudan empowers people in remote villages of
+                  South Sudan to change their lives. By providing access to
+                  clean, safe water and facilitating hygiene education, Water
+                  for South Sudan sows the seeds for growth. Once a well is
+                  drilled, schools, markets, and clinics spring up, and life
+                  changes, especially for women and girls.” -WFSS
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>May 2013</span><br />Poverty Alleviation
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Rotary Club of Del Mar</h3>
+              <div class="timeline-item-banner"></div>
+              <strong>Rotary Chairman</strong>
+              <br />
+              <br />
+              <p>
+                Working with the CCA Interact Rotary club, I assisted
+                Del-Mar/Solana Beach’s Rotary Club’s biggest annual fundraiser
+                benefiting youth and humanitarian program. My responsibilities
+                included directing parking, setting up booths, providing games
+                for children, and also organizing registration.
+              </p>
+            </div>
+          </li>
+
+          <li class="timeline-item period">
+            <div class="timeline-info"></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h2 class="timeline-title">January 2013</h2>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>January 2013</span><br />Health
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Tri-City Medical Center</h3>
+              <div class="timeline-item-banner"></div>
+              <strong>Rotary Chairman</strong>
+              <br />
+              <br />
+              <p>
+                Working with my Rotary club, I volunteered at the Carlsbad
+                Marathon for Tri-City Medical Center. My responsibilities were
+                to provide key support to the over 10,000 participants as they
+                reach their goal of completing the Tri-City Medical Center
+                Carlsbad Marathon or Half Marathon. I also organized booths,
+                assisted with registration, distributed refreshments/food
+                snacks, and encouraged runners.
+              </p>
+            </div>
+          </li>
+
+          <li class="timeline-item period">
+            <div class="timeline-info"></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h2 class="timeline-title">December 2012</h2>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-info">
+              <span>December 2012</span><br />Poverty Alleviation
+            </div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Community Resource Center</h3>
+              <div class="timeline-item-banner"></div>
+              <strong>Rotary Chairman</strong>
+              <br />
+              <br />
+              <p>
+                While volunteering at my local Community Resource Center (CRC)
+                with my Rotary club, I was responsible for the collection and
+                set up of food, outerwear, blankets, toys and baby items for
+                approximately 1,500 families during December. I also assisted in
+                creating a mock shopping mall and distribute food and clothing
+                to impoverished families in San Diego.
+              </p>
+            </div>
+          </li>
+          <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        </ul>
+      </div>
+      <a onclick="linkScroll('contactSectionContainer')">
+        <button class="arrowButtons">
+          <span
+            class="bounce icon-asset material-symbols-outlined"
+            style="font-size: 48px"
+            ><span _ngcontent-ng-c2377212316="">expand_more</span></span
+          ><span _ngcontent-ng-c2377212316="" class="icon-name mat-caption"
+            >Next</span
+          >
+        </button>
+      </a>
+    </div>
+
+    <div class="sectionContainer" id="contactSectionContainer">
+      <!-- <div id="radarContainer"> -->
+      <!-- <div id="radarCanvasEntry">
+          <canvas id="radarCanvas"></canvas>
+        </div> -->
+      <div class="col-lg-6 hero speech-bubble pbottom aleft" id="contactHero">
+        <h1 class="title display-5 fw-bold text-body-emphasis lh-1 mb-3">
+          Let's talk!
+        </h1>
+        <!-- <p class="lead">
+          <br />
+          Developed software features and updates for mission critical computer
+          display/modeling for OFP (Operational Flight Plan) builds.
+          <br />
+        </p> -->
+      </div>
+
+      <div id="formContainer">
+        <form
+          action="https://formsubmit.co/9bd916966277ffee0988085f3547c6ff"
+          method="POST"
+        >
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_subject" value="Portfolio Email" />
+          <label for="nameEntry">Name*</label>
+          <input id="nameEntry" type="text" name="name" required />
+          <label for="emailEntry">Email*</label>
+          <input id="emailEntry" type="email" name="email" required />
+          <input type="hidden" name="_next" />
+          <label for="messageEntry">Message*</label>
+          <textarea
+            placeholder="What's on your mind?"
+            id="messageEntry"
+            name="message"
+            required
+          ></textarea>
+          <!-- <input
+            id="messageEntry"
+            type="textarea"
+            name="message"
+            placeholder="What's on your mind?"
+            required
+          /> -->
+          <button id="contactButton" type="submit">Send</button>
+        </form>
+      </div>
+      <!-- </div> -->
+    </div>
+
+    <!-- <script type="module" src="/src/SceneTest.js" async></script> -->
+    <!-- <script type="module" src="/src/offscreen/offscreen_render.js"></script> -->
+    <script type="module" src="/src/offscreen/WorkerManager.js"></script>
+    <!-- Web Worker scripts -->
+    <!-- <script type="module">
+      function main() {
+        const offscreen = canvas.transferControlToOffscreen();
+        const worker = new Worker("/src/offscreen/offscreen_jet.js", {
+          type: "module",
+        });
+        worker.postMessage({ type: "main", canvas: offscreen }, [offscreen]);
+        console.log(worker);
+        function sendSize() {
+          worker.postMessage({
+            type: "size",
+            width: canvas.clientWidth,
+            height: canvas.clientHeight,
+          });
+        }
+        sendSize();
+        // ---------------------
+
+        const canvas2 = document.querySelector("#photoCanvas");
+        const offscreen2 = canvas2.transferControlToOffscreen();
+        const worker2 = new Worker("/src/offscreen/offscreen_jet.js", {
+          type: "module",
+        });
+        worker2.postMessage({ type: "main", canvas: offscreen2 }, [offscreen2]);
+        console.log(worker2);
+        function sendSize2() {
+          worker2.postMessage({
+            type: "size",
+            width: canvas2.clientWidth,
+            height: canvas2.clientHeight,
+          });
         }
 
-     if($('.nav .active').text() == "Resume") {
+        window.addEventListener("resize", sendSize);
+        sendSize2();
 
-            $('#footer').hide();
-            $('#empty2-background').show();
+        // function jank() {
+        //   let number = 0;
+        //   let result;
 
+        //   for (let i = 0; i < 10000000; i++) {
+        //     number += Math.random();
+        //     // console.log(number);
+        //   }
 
+        //   result = number;
+        // }
+        // let interval = setInterval(jank, 1000 / 60);
+      }
+      main();
+    </script> -->
+  </body>
+
+  <!-- scroll-padding-top -->
+  <script>
+    var html = document.documentElement;
+    var navHeight = document.getElementById("nav").offsetHeight;
+    html.style.scrollPaddingTop = navHeight + "px";
+    console.log(html);
+
+    var linkScroll = function (id) {
+      var navHeight = document.getElementById("nav").offsetHeight;
+      var reqId = "#" + id;
+      window.scrollTo(0, $(reqId).offset().top - navHeight);
+    };
+  </script>
+
+  <script>
+    let userName =
+      '<span style="color: #adf447">ring@ring</span>' +
+      '<span style="color: #ffffff">:</span>' +
+      '<span style="color: #7fd8ff">~</span>' +
+      '<span style="color: #ffffff">$ </span>';
+
+    let fileList =
+      '<span style="color: #a3a3f8"><br/>' +
+      "introduction.sh<br/>" +
+      "resume.pdf<br/>" +
+      "cover_letter.pdf<br/>" +
+      '<span style="color: #f8f8a3">work_experience</span><br/>' +
+      "projects.txt<br/>" +
+      "</span>";
+
+    let raytheonFileList =
+      '<span style="color: #a3a3f8"><br/>' +
+      "Mission_File_Generator_Tool.sh<br/>" +
+      "DevOps_CI_CD_Pipeline.txt<br/>" +
+      '<span style="color: #f8f8a3">F15_F18_Domestic</span><br/>' +
+      '<span style="color: #f8f8a3">program_awards</span><br/>' +
+      '<span style="color: #f8f8a3">Japan_Radar</span><br/>' +
+      '<span style="color: #f8f8a3">Kuwait_Radar</span><br/>' +
+      '<span style="color: #f8f8a3">Qatar_Radar</span><br/>' +
+      "BIT_Built_In_Test.txt" +
+      "</span>";
+
+    let workList =
+      '<span style="color: #f8f8a3"><br/>' +
+      "Northrop_Grumman_SWE_2022_2023<br/>" +
+      "Raytheon_SWE_2019_2022<br/>" +
+      "JPL_SWE_Intern_2017_2017<br>" +
+      "HackMerced_SWE_Intern_2017_2017" +
+      "</span>";
+
+    function cdFolder(directory) {
+      let numChars = userName.length - userName.indexOf("~");
+      let outputPath =
+        "<br>" + userName.substring(0, userName.length - numChars);
+      outputPath +=
+        "~/" + directory + "</span>" + '<span style="color: #ffffff">$ </span>';
+      return outputPath;
+    }
+
+    let workspaceFolder = cdFolder("work_experience");
+    let raytheonFolder = cdFolder("work_experience/Raytheon_SWE_2019_2022");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      function scrollTerminal() {
+        let scroll_to_bottom = document.getElementById("terminal_body");
+        scroll_to_bottom.scrollTop = scroll_to_bottom.scrollHeight;
+      }
+
+      function isScrolledIntoView(elem) {
+        var docViewTop = $(window).scrollTop();
+        var docViewBottom = docViewTop + $(window).height();
+
+        var elemTop = $(elem).offset().top;
+        var elemBottom = elemTop + $(elem).height();
+
+        return elemBottom <= docViewBottom && elemTop >= docViewTop;
+      }
+
+      $(window).on("scroll", function () {
+        if (isScrolledIntoView($("#terminal_body"))) {
+          typeAnimation();
+          $(window).off("scroll");
         }
- repeater = setTimeout(checkLocation, 100);
-}
+      });
 
-checkLocation();
-
-
-
-
-});
-
-
-
-            </script>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-</body>
-
-
-
-
+      function typeAnimation() {
+        new TypeIt("#terminal_ls", {
+          speed: 100,
+          lifeLike: true,
+          delay: 1000,
+          afterComplete: async (step, instance) => {
+            // Will fire after the entire instance has completed typing.
+            // NOTE: If "loop" is enabled, this will never fire.
+            scrollTerminal();
+          },
+        })
+          .pause(650)
+          .type("ls", { speed: 10, delay: 500 })
+          .pause(500)
+          .type(fileList, { instant: true })
+          .type(userName, { instant: true, delay: 800 })
+          .type("./introduction.sh", { speed: 10, delay: 500 })
+          .type("<br>Name:<br>> ", { instant: true, delay: 800 })
+          .type("Majok Francis Ring", { delay: 400 })
+          .type("<br>College:<br>> ", { instant: true, delay: 800 })
+          .type("University of California, Merced", { delay: 400 })
+          .type("<br>Field of Study:<br>> ", { instant: true, delay: 800 })
+          .type("B.S Computer Science and Engineering 2014-2018", {
+            delay: 500,
+          })
+          .type("<br>" + userName, { instant: true, delay: 800 })
+          .type("cd workexpe", { speed: 50, delay: 500 })
+          .delete(4)
+          .type("_experience", { delay: 800 })
+          .type(workspaceFolder, { instant: true, delay: 800 })
+          .type("ls", { delay: 800 })
+          .type(workList, { instant: true })
+          .type(workspaceFolder, { instant: true, delay: 800 })
+          .type("cd Rayt", { delay: 200 })
+          .type("heon_SWE_2019_2022", { instant: true, delay: 800 })
+          .type(raytheonFolder, { instant: true, delay: 800 })
+          .type("ls", { delay: 800 })
+          .type(raytheonFileList, { instant: true })
+          .type(raytheonFolder, { instant: true })
+          .go();
+      }
+    });
+  </script>
 </html>
