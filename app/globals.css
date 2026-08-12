@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  /* --main-accent-color: #c0c0c0; */
+  /* --main-accent-color: #ff7300;
+  --main-accent-color-dark: #db6300; */
+  /* --main-accent-color: #00a6ff;
+  --main-accent-color-dark: #0094e3; */
+  --main-accent-color: #ff7300;
+  --main-accent-color-dark: #db6300;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--bs-font-sans-serif);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+/* 1. Ensure html and body take up full height */
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+/* 2. Flex container for the whole page */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3. Natural height for the nav */
+body > nav {
+  /* background-color: #333;
+  color: white; */
+  padding: 1rem;
+}
+
+/* 4. Make the main section take up the remaining space */
+main {
+  position: relative;
+  min-height: 0;
+  flex: 1 1 0 !important;
+  overflow: hidden;
+  isolation: isolate;
+  view-transition-name: portfolio-page;
+}
+
+body > nav {
+  view-transition-name: portfolio-navigation;
+}
+
+::view-transition-old(root),
+::view-transition-new(root),
+::view-transition-old(portfolio-navigation),
+::view-transition-new(portfolio-navigation) {
+  animation: none;
+}
+
+::view-transition-image-pair(portfolio-page) {
+  overflow: clip;
+  isolation: isolate;
+}
+
+::view-transition-old(portfolio-page),
+::view-transition-new(portfolio-page) {
+  animation-duration: 620ms;
+  animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+  background: white;
+  backface-visibility: hidden;
+}
+
+html[data-page-direction="next"]::view-transition-old(portfolio-page) {
+  animation-name: portfolio-page-out-up;
+}
+
+html[data-page-direction="next"]::view-transition-new(portfolio-page) {
+  animation-name: portfolio-page-in-up;
+}
+
+html[data-page-direction="previous"]::view-transition-old(portfolio-page) {
+  animation-name: portfolio-page-out-down;
+}
+
+html[data-page-direction="previous"]::view-transition-new(portfolio-page) {
+  animation-name: portfolio-page-in-down;
+}
+
+html[data-page-transition="leaving"] main,
+html[data-page-transition="entering"] main {
+  pointer-events: none;
+  will-change: transform;
+}
+
+html[data-page-transition="leaving"][data-page-direction="next"] main {
+  animation: portfolio-page-out-up 180ms ease-in both;
+}
+
+html[data-page-transition="leaving"][data-page-direction="previous"] main {
+  animation: portfolio-page-out-down 180ms ease-in both;
+}
+
+html[data-page-transition="entering"][data-page-direction="next"] main {
+  animation: portfolio-page-in-up 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+html[data-page-transition="entering"][data-page-direction="previous"] main {
+  animation: portfolio-page-in-down 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes portfolio-page-out-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+@keyframes portfolio-page-in-up {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes portfolio-page-out-down {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes portfolio-page-in-down {
+  from {
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(portfolio-page),
+  ::view-transition-new(portfolio-page),
+  html[data-page-transition] main {
+    animation-duration: 1ms !important;
+  }
+}
+
+@font-face {
+  font-family: "SB-Eina";
+  src: url("../public/Fonts/Eina01-SemiBold.ttf");
+}
+
+.lead {
+  justify-content: center; /* Centers child elements horizontally */
+  align-items: center; /* Centers child elements vertically */
+  width: 100% !important;
+  padding: 1em;
+  font-size: 0.8em;
+}

@@ -1,0 +1,8 @@
+Model Information:
+* title:	F/A-18 B/D Hornet
+* source:	https://sketchfab.com/3d-models/fa-18-bd-hornet-ec3b72e281b3478199775a0e96368943
+* author:	Tim Samedov (https://sketchfab.com/citizensnip)
+
+Model License:
+* license type:	SKETCHFAB Editorial (https://sketchfab.com/licenses)
+* requirements:	Use only in connection with events that are newsworthy or of public interest
