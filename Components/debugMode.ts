@@ -1,4 +1,4 @@
-export const DEBUG_MODE = true;
+export const DEBUG_MODE = process.env.NEXT_PUBLIC_DEBUG === "true";
 
 declare global {
   interface Window {

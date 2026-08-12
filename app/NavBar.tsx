@@ -9,6 +9,7 @@ import { usePageNavigation } from "@/Components/PageNavigationController";
 import PerformanceStats from "@/Components/PerformanceStats";
 import { PositionInfoToggle } from "@/Components/PositionInfo";
 import { KeyframingToggle } from "@/Components/Keyframing";
+import { DEBUG_MODE } from "@/Components/debugMode";
 
 const links = [
   { label: "Home", href: "/" },
@@ -22,14 +23,19 @@ const NavBar = () => {
 
   return (
     <nav className="relative flex border-b border-b-[#00296a28] px-5 py-2 items-center text-[0.8em] font-SbEina">
-      <div className="absolute left-0 top-1/2 z-10 flex -translate-y-1/2 items-center gap-1">
-        <PerformanceStats />
-        <PositionInfoToggle />
-        <KeyframingToggle />
-      </div>
+      {DEBUG_MODE && (
+        <div className="absolute left-0 top-1/2 z-10 flex -translate-y-1/2 items-center gap-1">
+          <PerformanceStats />
+          <PositionInfoToggle />
+          <KeyframingToggle />
+        </div>
+      )}
       <div
         id="nav-items-container"
-        className="mx-auto flex w-full max-w-[1296px] items-center pl-32 sm:pl-[15rem] md:pl-[25rem]"
+        className={classnames(
+          "mx-auto flex w-full max-w-[1296px] items-center",
+          DEBUG_MODE && "pl-32 sm:pl-[15rem] md:pl-[25rem]",
+        )}
       >
         <ul className="flex h-3/4 items-center">
           {links.map((link) => (
