@@ -5,6 +5,7 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -12,8 +13,13 @@ import {
   type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from "react";
-import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
-import { Canvas, useThree } from "@react-three/fiber";
+import {
+  OrbitControls,
+  OrthographicCamera,
+  useGLTF,
+  useTexture,
+} from "@react-three/drei";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   CuboidCollider,
   Physics,
@@ -179,6 +185,11 @@ interface SkateMotionState {
   progress: number;
   restartDelayRemaining: number;
   paused: boolean;
+  previewQuaternion: THREE.Quaternion;
+  previewLeftShoePosition: THREE.Vector3;
+  previewLeftShoeQuaternion: THREE.Quaternion;
+  previewRightShoePosition: THREE.Vector3;
+  previewRightShoeQuaternion: THREE.Quaternion;
 }
 
 interface PlayheadElements {
@@ -1203,36 +1214,41 @@ function FootCatchEditor({
           className="pointer-events-none absolute inset-y-1 w-px bg-black/25"
           style={{ left: "3%" }}
         />
-        {(["left", "right"] as const).map((foot, index) => (
+        {(
+          [
+            { label: "left", stateKey: "right" },
+            { label: "right", stateKey: "left" },
+          ] as const
+        ).map(({ label, stateKey }, index) => (
           <button
-            key={foot}
+            key={label}
             type="button"
             role="slider"
-            aria-label={`${foot} foot catch time`}
+            aria-label={`${label} foot catch time`}
             aria-valuemin={MIN_FOOT_CATCH_TIME}
             aria-valuemax={0.98}
-            aria-valuenow={Number(value[foot].toFixed(2))}
-            aria-valuetext={`${Math.round(value[foot] * 1000)} milliseconds`}
+            aria-valuenow={Number(value[stateKey].toFixed(2))}
+            aria-valuetext={`${Math.round(value[stateKey] * 1000)} milliseconds`}
             className={`absolute size-3 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize rounded-full border-2 border-white shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-orange-500 ${index === 0 ? "bg-[#ec6a46]" : "bg-[#8b5cb8]"}`}
             style={{
-              left: `${value[foot] * 100}%`,
+              left: `${value[stateKey] * 100}%`,
               top: index === 0 ? "30%" : "70%",
             }}
             onPointerDown={(event) => {
               event.stopPropagation();
-              activeFoot.current = foot;
+              activeFoot.current = stateKey;
               event.currentTarget.setPointerCapture(event.pointerId);
-              updateFromPointer(event, foot);
+              updateFromPointer(event, stateKey);
             }}
             onPointerMove={(event) => {
-              if (activeFoot.current !== foot) return;
-              updateFromPointer(event, foot);
+              if (activeFoot.current !== stateKey) return;
+              updateFromPointer(event, stateKey);
             }}
             onPointerUp={(event) => {
               activeFoot.current = null;
               event.currentTarget.releasePointerCapture(event.pointerId);
             }}
-            onKeyDown={(event) => updateFromKeyboard(event, foot)}
+            onKeyDown={(event) => updateFromKeyboard(event, stateKey)}
           />
         ))}
       </div>
@@ -1382,7 +1398,7 @@ function SkateMotionEditor({
     <section
       data-page-navigation-ignore
       aria-label="Skate motion editor"
-      className="skate-motion-editor absolute right-[4.5rem] top-4 z-30 w-[24rem] select-none border border-black/10 bg-white/92 px-3 py-2.5 text-black shadow-lg backdrop-blur-sm max-lg:right-12 max-lg:w-[22rem] max-sm:top-auto max-sm:right-8 max-sm:bottom-[4.5rem] max-sm:left-12 max-sm:w-auto max-sm:px-2"
+      className="skate-motion-editor w-full select-none border border-black/10 bg-white/92 px-3 py-2.5 text-black shadow-lg backdrop-blur-sm max-sm:px-2"
       onPointerDown={(event) => event.stopPropagation()}
     >
       <header className="mb-1.5 flex items-center justify-between border-b border-black/10 pb-2">
@@ -1541,6 +1557,16 @@ function SkateModel({
       ),
     [],
   );
+  const previewPresentationInverse = useMemo(
+    () => presentationQuaternion.clone().invert(),
+    [presentationQuaternion],
+  );
+  const previewBoardWorldPosition = useRef(new THREE.Vector3());
+  const previewBoardWorldQuaternion = useRef(new THREE.Quaternion());
+  const previewLeftWorldPosition = useRef(new THREE.Vector3());
+  const previewLeftWorldQuaternion = useRef(new THREE.Quaternion());
+  const previewRightWorldPosition = useRef(new THREE.Vector3());
+  const previewRightWorldQuaternion = useRef(new THREE.Quaternion());
   const {
     scene,
     board,
@@ -2731,9 +2757,43 @@ function SkateModel({
   });
 
   useAfterPhysicsStep(() => {
-    // Keep the exported debug data and raycasting transforms in sync with the
-    // Rapier-owned presentation bodies.
-    scene.updateMatrixWorld();
+    // Mirror the final rendered transforms, not just the Rapier bodies. Each
+    // shoe has an authored local pose inside its body; omitting that pose made
+    // the aerial feet disagree with the main scene during preparation/flicks.
+    if (board) {
+      board.updateWorldMatrix(true, false);
+      leftShoe.updateWorldMatrix(true, false);
+      rightShoe.updateWorldMatrix(true, false);
+      board.getWorldPosition(previewBoardWorldPosition.current);
+      board.getWorldQuaternion(previewBoardWorldQuaternion.current);
+      leftShoe.getWorldPosition(previewLeftWorldPosition.current);
+      leftShoe.getWorldQuaternion(previewLeftWorldQuaternion.current);
+      rightShoe.getWorldPosition(previewRightWorldPosition.current);
+      rightShoe.getWorldQuaternion(previewRightWorldQuaternion.current);
+
+      motion.current.previewQuaternion
+        .copy(previewBoardWorldQuaternion.current)
+        .premultiply(previewPresentationInverse)
+        .normalize();
+      motion.current.previewLeftShoePosition
+        .copy(previewLeftWorldPosition.current)
+        .sub(previewBoardWorldPosition.current)
+        .applyQuaternion(previewPresentationInverse)
+        .divideScalar(presentationScale);
+      motion.current.previewLeftShoeQuaternion
+        .copy(previewLeftWorldQuaternion.current)
+        .premultiply(previewPresentationInverse)
+        .normalize();
+      motion.current.previewRightShoePosition
+        .copy(previewRightWorldPosition.current)
+        .sub(previewBoardWorldPosition.current)
+        .applyQuaternion(previewPresentationInverse)
+        .divideScalar(presentationScale);
+      motion.current.previewRightShoeQuaternion
+        .copy(previewRightWorldQuaternion.current)
+        .premultiply(previewPresentationInverse)
+        .normalize();
+    }
   });
 
   return (
@@ -2828,6 +2888,229 @@ function SkateModel({
   );
 }
 
+function AerialPreviewCamera() {
+  const cameraRef = useRef<THREE.OrthographicCamera>(null);
+  const invalidate = useThree((state) => state.invalidate);
+
+  useLayoutEffect(() => {
+    const camera = cameraRef.current;
+    if (!camera) return;
+    camera.up.set(0, 0, -1);
+    camera.lookAt(0, 0, 0);
+    camera.updateProjectionMatrix();
+    invalidate();
+  }, [invalidate]);
+
+  return (
+    <OrthographicCamera
+      ref={cameraRef}
+      makeDefault
+      position={[0, 6, 0]}
+      zoom={42}
+      near={0.1}
+      far={100}
+    />
+  );
+}
+
+function AerialSkateModel({
+  modelUrl,
+  motion,
+}: {
+  modelUrl: string;
+  motion: RefObject<SkateMotionState>;
+}) {
+  const { scene: sourceScene } = useGLTF(modelUrl);
+  const { scene: sourceShoeScene } = useGLTF(SHOE_MODEL_URL);
+  const boardGraphicTexture = useTexture(BOARD_GRAPHIC_TEXTURE_URL);
+  const boardRef = useRef<THREE.Group>(null);
+  const leftShoeRef = useRef<THREE.Group>(null);
+  const rightShoeRef = useRef<THREE.Group>(null);
+  const { board, scale, ownedMaterials } = useMemo(() => {
+    const clonedScene = sourceScene.clone(true);
+    const boardObject = clonedScene.getObjectByName("board");
+    const materials: THREE.Material[] = [];
+
+    if (!boardObject) {
+      return {
+        board: new THREE.Group(),
+        scale: 1,
+        ownedMaterials: materials,
+      };
+    }
+
+    boardObject.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      object.castShadow = false;
+      object.receiveShadow = false;
+      const prepareMaterial = (material: THREE.Material) => {
+        const clone = material.clone();
+        materials.push(clone);
+        if (
+          /^boardgraphics?$/i.test(clone.name) &&
+          clone instanceof THREE.MeshStandardMaterial
+        ) {
+          clone.map = boardGraphicTexture;
+          clone.color.set(0xffffff);
+          clone.needsUpdate = true;
+        }
+        return clone;
+      };
+      object.material = Array.isArray(object.material)
+        ? object.material.map(prepareMaterial)
+        : prepareMaterial(object.material);
+    });
+
+    clonedScene.updateMatrixWorld(true);
+    const bounds = new THREE.Box3().setFromObject(boardObject);
+    const center = bounds.getCenter(new THREE.Vector3());
+    const centerLocal = boardObject.worldToLocal(center.clone());
+    const size = bounds.getSize(new THREE.Vector3());
+    const previewScale = 2.35 / Math.max(size.x, size.z, 0.001);
+
+    boardObject.removeFromParent();
+    boardObject.position
+      .copy(centerLocal)
+      .multiply(boardObject.scale)
+      .multiplyScalar(-1);
+    boardObject.quaternion.identity();
+
+    return {
+      board: boardObject,
+      scale: previewScale,
+      ownedMaterials: materials,
+    };
+  }, [boardGraphicTexture, sourceScene]);
+
+  useEffect(
+    () => () => ownedMaterials.forEach((material) => material.dispose()),
+    [ownedMaterials],
+  );
+
+  const { leftShoe, rightShoe, shoeGeometries } = useMemo(() => {
+    const sourceMeshes: THREE.Mesh[] = [];
+    sourceShoeScene.traverse((object) => {
+      if (object instanceof THREE.Mesh) sourceMeshes.push(object);
+    });
+    const sourceMesh = sourceMeshes[0];
+    if (!sourceMesh) {
+      throw new Error("The skate shoe model contains no mesh.");
+    }
+
+    sourceShoeScene.updateMatrixWorld(true);
+    const geometries = splitShoePairGeometry(sourceMesh.geometry);
+    const worldPosition = new THREE.Vector3();
+    const worldQuaternion = new THREE.Quaternion();
+    const worldScale = new THREE.Vector3();
+    sourceMesh.matrixWorld.decompose(
+      worldPosition,
+      worldQuaternion,
+      worldScale,
+    );
+
+    const makeShoe = (geometry: THREE.BufferGeometry) => {
+      const mesh = new THREE.Mesh(geometry, sourceMesh.material);
+      mesh.position.copy(worldPosition);
+      mesh.quaternion.copy(worldQuaternion);
+      mesh.scale.copy(worldScale);
+      mesh.updateMatrixWorld(true);
+      const center = new THREE.Box3()
+        .setFromObject(mesh)
+        .getCenter(new THREE.Vector3());
+      mesh.position.sub(center);
+      const rig = new THREE.Group();
+      rig.scale.setScalar(SHOE_SCALE);
+      rig.add(mesh);
+      return rig;
+    };
+
+    return {
+      leftShoe: makeShoe(geometries.left),
+      rightShoe: makeShoe(geometries.right),
+      shoeGeometries: geometries,
+    };
+  }, [sourceShoeScene]);
+
+  useEffect(
+    () => () => {
+      shoeGeometries.left.dispose();
+      shoeGeometries.right.dispose();
+    },
+    [shoeGeometries],
+  );
+
+  useFrame(() => {
+    boardRef.current?.quaternion.copy(motion.current.previewQuaternion);
+    leftShoeRef.current?.position.copy(
+      motion.current.previewLeftShoePosition,
+    );
+    leftShoeRef.current?.quaternion.copy(
+      motion.current.previewLeftShoeQuaternion,
+    );
+    rightShoeRef.current?.position.copy(
+      motion.current.previewRightShoePosition,
+    );
+    rightShoeRef.current?.quaternion.copy(
+      motion.current.previewRightShoeQuaternion,
+    );
+  });
+
+  return (
+    <group scale={scale}>
+      <group ref={boardRef}>
+        <primitive object={board} dispose={null} />
+      </group>
+      <group ref={leftShoeRef}>
+        <primitive object={leftShoe} dispose={null} />
+      </group>
+      <group ref={rightShoeRef}>
+        <primitive object={rightShoe} dispose={null} />
+      </group>
+    </group>
+  );
+}
+
+function SkateAerialPreview({
+  modelUrl,
+  motion,
+}: {
+  modelUrl: string;
+  motion: RefObject<SkateMotionState>;
+}) {
+  return (
+    <aside
+      data-page-navigation-ignore
+      aria-label="Live top-down skateboard view"
+      className="skate-aerial-preview w-full select-none max-[1149px]:hidden"
+    >
+      <div className="relative h-[11.5rem] overflow-hidden rounded-[1rem] border-[3px] border-[#242529] bg-[radial-gradient(circle_at_50%_42%,#fff_0%,#f1f2f4_65%,#dfe1e5_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.68),inset_0_0_0_2px_rgba(0,0,0,0.12),0_1px_0_#0b0b0c,0_14px_30px_rgba(0,0,0,0.2)]">
+        <Canvas
+          orthographic
+          dpr={1}
+          frameloop="always"
+          gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+          style={{ pointerEvents: "none" }}
+        >
+          <AerialPreviewCamera />
+          <ambientLight intensity={1.25} />
+          <hemisphereLight intensity={1.1} groundColor="#9ca3af" />
+          <directionalLight position={[-3, 7, 4]} intensity={2.1} />
+          <Suspense fallback={null}>
+            <AerialSkateModel modelUrl={modelUrl} motion={motion} />
+          </Suspense>
+        </Canvas>
+        <div className="pointer-events-none absolute inset-[1px] rounded-[0.75rem] border border-white/70 shadow-[inset_0_0_18px_rgba(0,0,0,0.08)]" />
+        <div className="absolute left-2.5 top-2.5 flex items-center gap-2 rounded-full border border-white/15 bg-black/80 px-2.5 py-1.5 text-white shadow-md backdrop-blur-md">
+          <span className="size-1.5 rounded-full bg-orange-500 shadow-[0_0_7px_#f97316]" />
+          <strong className="text-[0.48rem] font-bold uppercase tracking-[0.16em]">
+            Aerial view
+          </strong>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
 function SkateCanvas({
   modelUrl,
   motion,
@@ -2916,16 +3199,38 @@ export function SkateAnalysisScene({ modelUrl }: { modelUrl: string }) {
     progress: 0,
     restartDelayRemaining: 0,
     paused: false,
+    previewQuaternion: new THREE.Quaternion(),
+    previewLeftShoePosition: new THREE.Vector3(),
+    previewLeftShoeQuaternion: new THREE.Quaternion(),
+    previewRightShoePosition: new THREE.Vector3(),
+    previewRightShoeQuaternion: new THREE.Quaternion(),
   });
 
   return (
     <>
       <SkateCanvas modelUrl={modelUrl} motion={motion} />
-      <SkateMotionEditor motion={motion} />
+      <div className="skate-tools-column absolute right-[4.5rem] top-4 z-30 flex w-[22rem] origin-top-right flex-col gap-3 max-[1149px]:right-12 max-sm:top-auto max-sm:right-8 max-sm:bottom-[4.5rem] max-sm:left-12 max-sm:w-auto">
+        <SkateMotionEditor motion={motion} />
+        <SkateAerialPreview modelUrl={modelUrl} motion={motion} />
+      </div>
       <style jsx global>{`
+        .skate-tools-column {
+          transform-origin: top right;
+        }
+
+        @media (min-width: 1150px) and (max-height: 900px) {
+          .skate-tools-column {
+            transform: scale(0.84);
+          }
+        }
+
         @media (min-width: 641px) and (max-height: 760px) {
-          .skate-motion-editor {
+          .skate-tools-column {
             top: 0.5rem;
+            transform: scale(0.76);
+          }
+
+          .skate-motion-editor {
             padding-bottom: 0.4rem;
             padding-top: 0.4rem;
           }
