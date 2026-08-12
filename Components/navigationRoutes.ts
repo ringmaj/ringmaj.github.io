@@ -30,7 +30,11 @@ export const NAVIGATION_ITEMS = [
   {
     href: "/skate-analysis",
     label: "Skate Analysis",
-    assets: ["/Models/skate.glb", "/Models/skate-shoe.glb"],
+    assets: [
+      "/Models/skate.glb",
+      "/Models/skate-shoe.glb",
+      "/Models/boardGraphics.jpg",
+    ],
   },
   {
     href: "/car-project",

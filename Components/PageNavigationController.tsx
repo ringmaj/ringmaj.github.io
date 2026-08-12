@@ -116,7 +116,7 @@ export default function PageNavigationController({
     (page: string) => {
       if (!NAVIGATION_ITEMS.some((item) => item.href === page)) return;
       router.prefetch(page);
-      preloadSceneAssets(page);
+      void preloadSceneAssets(page).catch(() => undefined);
     },
     [router],
   );
@@ -159,6 +159,9 @@ export default function PageNavigationController({
       ).matches;
       navigationLock.current = true;
       wheelGesture.current.delta = 0;
+      // Navigation must never wait for asset loading. RoutePreloader starts
+      // warming the forward page when the current route mounts; this is only
+      // a non-blocking safety net for direct jumps and unusually fast input.
       primePage(target);
       setTransitionState(direction, null);
 
