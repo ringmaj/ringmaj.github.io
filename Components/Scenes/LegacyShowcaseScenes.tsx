@@ -1228,9 +1228,3 @@ export function HobbiesScene({ modelUrl }: { modelUrl: string }) {
     </SceneShell>
   );
 }
-
-useGLTF.preload("/Models/senior-transformed.glb");
-useGLTF.preload("/Models/workdesk-window-transformed.glb");
-useGLTF.preload("/Models/caritems-carousel.glb");
-useGLTF.preload("/Models/polaroid-layout-transformed.glb");
-useGLTF.preload("/Models/macbook-transformed.glb");

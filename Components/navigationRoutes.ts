@@ -6,6 +6,7 @@ export const NAVIGATION_ITEMS = [
     href: "/fighter-jets",
     label: "Fighter Jets",
     assets: ["/Models/jet-test-transformed.glb"],
+    environmentPreset: "apartment",
   },
   {
     href: "/radar-display",
@@ -68,4 +69,11 @@ export function getNavigationIndex(pathname: string) {
 export function getSceneAssets(pathname: string): readonly string[] {
   const item = NAVIGATION_ITEMS.find((route) => route.href === pathname);
   return item && "assets" in item ? item.assets : [];
+}
+
+export function getEnvironmentPreset(pathname: string) {
+  const item = NAVIGATION_ITEMS.find((route) => route.href === pathname);
+  return item && "environmentPreset" in item
+    ? item.environmentPreset
+    : undefined;
 }

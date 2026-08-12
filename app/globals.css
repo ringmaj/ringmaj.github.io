@@ -181,6 +181,28 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
   }
 }
 
+@keyframes terminal-caret-blink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+
+  49%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.terminal-cursor {
+  animation: terminal-caret-blink 1s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-cursor {
+    animation: none;
+  }
+}
+
 @font-face {
   font-family: "SB-Eina";
   src: url("../public/Fonts/Eina01-SemiBold.ttf");

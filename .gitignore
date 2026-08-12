@@ -2,6 +2,14 @@
 Thumbs.db
 ehthumbs.db
 
+# Dependencies and generated Next.js output
+/node_modules/
+/.next/
+
+# Local environment overrides
+.env*
+!.env.example
+
 # Folder config file
 Desktop.ini
 

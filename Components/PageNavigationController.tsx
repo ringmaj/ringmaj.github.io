@@ -11,7 +11,7 @@ import {
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { NAVIGATION_ITEMS } from "./navigationRoutes";
-import { preloadSceneAssets } from "./routePreload";
+import { preloadRouteModule, preloadSceneAssets } from "./routePreload";
 import { usePositionInfoMode } from "./PositionInfo";
 import { useKeyframingMode } from "./Keyframing";
 
@@ -116,6 +116,7 @@ export default function PageNavigationController({
     (page: string) => {
       if (!NAVIGATION_ITEMS.some((item) => item.href === page)) return;
       router.prefetch(page);
+      void preloadRouteModule(page).catch(() => undefined);
       void preloadSceneAssets(page).catch(() => undefined);
     },
     [router],

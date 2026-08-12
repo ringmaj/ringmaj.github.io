@@ -1,8 +1,12 @@
 "use client";
 
-import { getSceneAssets } from "./navigationRoutes";
+import {
+  getEnvironmentPreset,
+  getSceneAssets,
+} from "./navigationRoutes";
 
 const routePreloads = new Map<string, Promise<void>>();
+const routeModulePreloads = new Map<string, Promise<void>>();
 let dreiModule: Promise<typeof import("@react-three/drei")> | null = null;
 
 function loadDrei() {
@@ -52,12 +56,18 @@ export function preloadSceneAssets(pathname: string) {
   if (existing) return existing;
 
   const assets = [...getSceneAssets(pathname)];
-  if (assets.length === 0) return Promise.resolve();
+  const environmentPreset = getEnvironmentPreset(pathname);
+  if (assets.length === 0 && !environmentPreset) {
+    return Promise.resolve();
+  }
 
   const preload = (async () => {
     const { useEnvironment, useGLTF, useTexture } = await loadDrei();
 
     useEnvironment.preload({ files: "/Images/neutral.hdr" });
+    if (environmentPreset) {
+      useEnvironment.preload({ preset: environmentPreset });
+    }
 
     await Promise.all(
       assets.map(async (assetUrl) => {
@@ -78,5 +88,28 @@ export function preloadSceneAssets(pathname: string) {
   });
 
   routePreloads.set(pathname, preload);
+  return preload;
+}
+
+/**
+ * The skate editor is substantially larger than the other page clients
+ * (physics, graphs, and editor controls). Next's route prefetch warms the RSC
+ * payload, but its client module can still be evaluated during the route swap.
+ * Parse that single hotspot while the PCB page is idle; importing the module
+ * does not mount a Canvas or compile any WebGL work.
+ */
+export function preloadRouteModule(pathname: string) {
+  if (pathname !== "/skate-analysis") return Promise.resolve();
+
+  const existing = routeModulePreloads.get(pathname);
+  if (existing) return existing;
+
+  const preload = import("./Scenes/SkateAnalysisScene")
+    .then(() => undefined)
+    .catch((error) => {
+      routeModulePreloads.delete(pathname);
+      throw error;
+    });
+  routeModulePreloads.set(pathname, preload);
   return preload;
 }
