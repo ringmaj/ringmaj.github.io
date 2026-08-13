@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Canvas } from "@react-three/fiber";
+import * as THREE from "three";
 import RadarModel from "../Models/RadarModel";
 import NeutralEnvironment from "./NeutralEnvironment";
 import { SceneOutline, useSceneInspector } from "../SceneInspector";
@@ -22,6 +23,10 @@ const RadarScene = () => {
         far: 1000,
       }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+      onCreated={({ gl }) => {
+        gl.toneMapping = THREE.NoToneMapping;
+        gl.toneMappingExposure = 1;
+      }}
       style={{
         width: "100vw",
         height: "100vh",

@@ -555,7 +555,7 @@ function PCBShadowLight() {
           PCB_SHADOW_TARGET_POSITION.z + 8,
         ]}
         color="#ffe2c2"
-        intensity={1.9}
+        intensity={4.693}
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={0.5}
@@ -577,17 +577,17 @@ export default function PCBModel() {
 
   return (
     <>
-      <ambientLight color="#edf3ff" intensity={0.1} />
+      <ambientLight color="#edf3ff" intensity={0.247} />
       <hemisphereLight
         color="#fff7ed"
         groundColor="#28344a"
-        intensity={0.34}
+        intensity={0.8398}
       />
       <PCBShadowLight />
       <directionalLight
         position={[-6, 4, -7]}
         color="#8db6ff"
-        intensity={0.62}
+        intensity={1.5314}
       />
       <SmoothOrbitControls
         target={PCB_ORBIT_TARGET}

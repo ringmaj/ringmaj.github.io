@@ -43,6 +43,7 @@ function SceneShell({
   dpr = [1, 1.5],
   environmentIntensity = 1,
   exposure = 1,
+  toneMapping,
 }: {
   children: React.ReactNode;
   orthographic?: boolean;
@@ -58,6 +59,7 @@ function SceneShell({
   dpr?: number | [number, number];
   environmentIntensity?: number;
   exposure?: number;
+  toneMapping?: THREE.ToneMapping;
 }) {
   const { viewerOpen } = useSceneInspector();
 
@@ -75,6 +77,7 @@ function SceneShell({
           powerPreference: "high-performance",
         }}
         onCreated={({ gl }) => {
+          if (toneMapping !== undefined) gl.toneMapping = toneMapping;
           gl.toneMappingExposure = exposure;
         }}
       >
@@ -175,11 +178,14 @@ export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
       animated
       camera={{ position: [-80, 0, 300], zoom: 1.5, near: 0.0001, far: 10000 }}
       shadows
+      environmentIntensity={1.32}
+      exposure={0.46}
+      toneMapping={THREE.ACESFilmicToneMapping}
     >
-      <ambientLight intensity={0.7} />
+      <ambientLight intensity={2.8} />
       <directionalLight
         position={[300, 500, -100]}
-        intensity={1.5}
+        intensity={6}
         castShadow
       />
       <SeniorModel modelUrl={modelUrl} />
@@ -377,7 +383,7 @@ function WorkspaceShadowLight() {
       <directionalLight
         position={[12, 24, 9]}
         target={target}
-        intensity={1.15}
+        intensity={1.012}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -406,19 +412,20 @@ export function WorkspaceScene({ modelUrl }: { modelUrl: string }) {
       }}
       shadows
       dpr={[1, 1.75]}
-      environmentIntensity={1}
-      exposure={1}
+      environmentIntensity={0.85}
+      exposure={0.05}
+      toneMapping={THREE.NoToneMapping}
     >
-      <ambientLight intensity={0.25} />
+      <ambientLight intensity={0.22} />
       <hemisphereLight
         color="#ffffff"
         groundColor="#4b5563"
-        intensity={0.35}
+        intensity={0.308}
       />
       <WorkspaceShadowLight />
       <directionalLight
         position={[-6, 2, -5]}
-        intensity={0.25}
+        intensity={0.22}
         color="#b8c9ed"
       />
       <WorkspaceModel modelUrl={modelUrl} />

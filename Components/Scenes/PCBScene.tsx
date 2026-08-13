@@ -1,6 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
+import * as THREE from "three";
 import PCBModel from "../Models/PCBModel";
 import { SceneOutline, useSceneInspector } from "../SceneInspector";
 import NeutralEnvironment from "./NeutralEnvironment";
@@ -20,9 +21,12 @@ export default function PCBScene() {
         near: 0.1,
         far: 100,
       }}
-      gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
-      onCreated={({ gl }) => {
-        gl.toneMappingExposure = 0.92;
+      gl={{
+        alpha: true,
+        antialias: true,
+        powerPreference: "high-performance",
+        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMappingExposure: 1.48,
       }}
       style={{
         width: "100vw",
@@ -45,7 +49,7 @@ export default function PCBScene() {
           depthWrite={false}
         />
       </mesh>
-      <NeutralEnvironment intensity={0.46} />
+      <NeutralEnvironment intensity={0.22} />
       <SceneOutline />
     </Canvas>
   );

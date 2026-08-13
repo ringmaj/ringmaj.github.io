@@ -44,8 +44,8 @@ const JetScene = () => {
       }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
-        gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.25;
+        gl.toneMapping = THREE.NoToneMapping;
+        gl.toneMappingExposure = 1.89;
       }}
       style={{
         width: "100vw",

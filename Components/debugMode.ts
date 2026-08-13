@@ -4,6 +4,7 @@ declare global {
   interface Window {
     __PORTFOLIO_DEBUG_MODE__?: boolean;
     __LAST_MATERIAL_DEBUG_EXPORT__?: unknown;
+    __LAST_LIGHTING_DEBUG_EXPORT__?: unknown;
   }
 }
 

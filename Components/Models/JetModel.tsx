@@ -111,23 +111,23 @@ const JetModel = () => {
 
   return (
     <>
-      <ambientLight color="#fff4e8" intensity={0.22} />
+      <ambientLight color="#fff4e8" intensity={0.1474} />
       <hemisphereLight
         color="#fff7ed"
         groundColor="#29344b"
-        intensity={0.45}
+        intensity={0.3015}
       />
       <directionalLight
         position={[100, 20, 30]}
-        intensity={4}
+        intensity={2.68}
         color="#ffc27d"
       />
       <directionalLight
         position={[0, 20, -50]}
-        intensity={1.5}
+        intensity={1.005}
         color="#ff8a3d"
       />
-      <Environment preset="apartment" environmentIntensity={1.25} />
+      <Environment preset="apartment" environmentIntensity={1.17} />
       <SmoothOrbitControls target={JET_ORBIT_TARGET} rotateObject={jet} />
       <Suspense fallback={null}>
         <LoadJetModel url="/Models/jet-test-transformed.glb" group={jet} />

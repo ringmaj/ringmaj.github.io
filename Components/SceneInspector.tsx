@@ -12,7 +12,7 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { ContactShadows, useGLTF } from "@react-three/drei";
+import { ContactShadows, useGLTF, useTexture } from "@react-three/drei";
 import {
   Canvas,
   type ThreeEvent,
@@ -24,17 +24,23 @@ import { FiSearch, FiSliders, FiX } from "react-icons/fi";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import * as THREE from "three";
 import MaterialEditor, {
+  installBaseTextureAdjustments,
   type TextureMapKey,
   type ViewerMaterialRecord,
   type ViewerMode,
   type ViewerShadowSettings,
 } from "./MaterialEditor";
 import { isPortfolioDebugMode } from "./debugMode";
-import { applyModelMaterialOverride } from "./modelMaterialOverrides";
+import {
+  applyModelMaterialOverride,
+  getModelMaterialBaseTextureAdjustments,
+  getModelMaterialTextureUrl,
+} from "./modelMaterialOverrides";
 import NeutralEnvironment from "./Scenes/NeutralEnvironment";
 import SmoothOrbitControls from "./Scenes/SmoothOrbitControls";
 import { ScenePositionProbe } from "./PositionInfo";
 import { SceneKeyframingProbe } from "./Keyframing";
+import { SceneLightingProbe } from "./LightingDebug";
 
 type InspectableResolver = (
   root: THREE.Object3D,
@@ -59,6 +65,8 @@ const INITIAL_VIEWER_SCENE: ViewerSceneData = {
 };
 
 const MATERIAL_DEBUG_HOLD_MS = 850;
+const EMPTY_OVERRIDE_TEXTURE =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Zl1sAAAAASUVORK5CYII=";
 const DEBUG_TEXTURE_KEYS: TextureMapKey[] = [
   "map",
   "normalMap",
@@ -225,6 +233,15 @@ function serializeDebugMaterialRecord(
     currentTextures,
     originalTextures,
   );
+  const currentBaseTexture = {
+    brightness: debugNumber(record.baseTextureBrightness),
+    contrast: debugNumber(record.baseTextureContrast),
+  };
+  const originalBaseTexture = { brightness: 1, contrast: 1 };
+  const baseTextureChanges = changedDebugValues(
+    currentBaseTexture,
+    originalBaseTexture,
+  );
 
   return {
     index,
@@ -233,18 +250,22 @@ function serializeDebugMaterialRecord(
     usage: record.usage,
     hasChanges:
       Object.keys(propertyChanges).length > 0 ||
-      Object.keys(textureChanges).length > 0,
+      Object.keys(textureChanges).length > 0 ||
+      Object.keys(baseTextureChanges).length > 0,
     changes: {
       properties: propertyChanges,
       textures: textureChanges,
+      baseTexture: baseTextureChanges,
     },
     current: {
       properties: currentProperties,
       textures: currentTextures,
+      baseTexture: currentBaseTexture,
     },
     original: {
       properties: originalProperties,
       textures: originalTextures,
+      baseTexture: originalBaseTexture,
     },
   };
 }
@@ -440,6 +461,10 @@ function IsolatedObject({
   onSelectMaterial: (materialId: string) => void;
 }) {
   const { scene: sourceScene } = useGLTF(modelUrl);
+  const overrideTextureUrl = getModelMaterialTextureUrl(modelUrl);
+  const overrideTexture = useTexture(
+    overrideTextureUrl ?? EMPTY_OVERRIDE_TEXTURE,
+  );
   const pathKey = selection.path.join(".");
   const payload = useMemo(() => {
     const scene = cloneSkinned(sourceScene);
@@ -473,7 +498,10 @@ function IsolatedObject({
         ) {
           material.normalScale.set(defaultNormalScale, defaultNormalScale);
         }
-        applyModelMaterialOverride(modelUrl, material);
+        applyModelMaterialOverride(modelUrl, material, {
+          texture: overrideTextureUrl ? overrideTexture : undefined,
+          installBaseTextureAdjustments: false,
+        });
         materialClones.set(source, material);
       }
       materialUsage.set(material, (materialUsage.get(material) ?? 0) + 1);
@@ -514,7 +542,9 @@ function IsolatedObject({
       originalMaterials.push(original);
       editableIndex += 1;
       const materialName = material.name.trim();
-      editableMaterials.push({
+      const baseTextureAdjustments =
+        getModelMaterialBaseTextureAdjustments(modelUrl, material.name);
+      const record: ViewerMaterialRecord = {
         id: material.uuid,
         label: materialName || `Material ${editableIndex}`,
         material,
@@ -522,7 +552,14 @@ function IsolatedObject({
         usage: materialUsage.get(material) ?? 1,
         ownedTextures: new Set(),
         textureOverrides: new Map(),
-      });
+        baseTextureBrightness: baseTextureAdjustments.brightness,
+        baseTextureContrast: baseTextureAdjustments.contrast,
+        baseTextureShaderUniforms: new Set(),
+        sourceOnBeforeCompile: material.onBeforeCompile,
+        sourceCustomProgramCacheKey: material.customProgramCacheKey,
+      };
+      installBaseTextureAdjustments(record);
+      editableMaterials.push(record);
     }
 
     const normalizedHeight = size.y * normalizedScale;
@@ -538,7 +575,14 @@ function IsolatedObject({
     };
     // The path key provides stable memoization without depending on an array.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultNormalScale, modelUrl, pathKey, sourceScene]);
+  }, [
+    defaultNormalScale,
+    modelUrl,
+    overrideTexture,
+    overrideTextureUrl,
+    pathKey,
+    sourceScene,
+  ]);
 
   useEffect(() => {
     onReady({
@@ -1212,6 +1256,7 @@ export function SceneOutline({ keyframing = true }: { keyframing?: boolean } = {
     <>
       <ScenePositionProbe />
       {keyframing && <SceneKeyframingProbe />}
+      <SceneLightingProbe />
       <EffectComposer
         enabled={active && outlineSelection.length > 0}
         multisampling={0}

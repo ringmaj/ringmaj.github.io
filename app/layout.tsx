@@ -6,6 +6,7 @@ import RoutePreloader from "@/Components/RoutePreloader";
 import PageNavigationController from "@/Components/PageNavigationController";
 import { PositionInfoProvider } from "@/Components/PositionInfo";
 import { KeyframingProvider } from "@/Components/Keyframing";
+import { LightingDebugProvider } from "@/Components/LightingDebug";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,13 +35,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <PositionInfoProvider>
-          <KeyframingProvider>
-            <PageNavigationController>
-              <NavBar />
-              <RoutePreloader />
-              <main>{children}</main>
-            </PageNavigationController>
-          </KeyframingProvider>
+          <LightingDebugProvider>
+            <KeyframingProvider>
+              <PageNavigationController>
+                <NavBar />
+                <RoutePreloader />
+                <main>{children}</main>
+              </PageNavigationController>
+            </KeyframingProvider>
+          </LightingDebugProvider>
         </PositionInfoProvider>
       </body>
     </html>

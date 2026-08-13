@@ -1,10 +1,14 @@
 "use client";
 
-import React, { Suspense, useMemo, useRef } from "react";
-import { useGLTF } from "@react-three/drei";
+import React, { Suspense, useEffect, useMemo, useRef } from "react";
+import { useGLTF, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import SmoothOrbitControls from "../Scenes/SmoothOrbitControls";
 import { useInspectableObject } from "../SceneInspector";
+import {
+  applyModelMaterialOverride,
+  getModelMaterialTextureUrl,
+} from "../modelMaterialOverrides";
 
 const LoadRadarModel = ({
   url,
@@ -14,12 +18,56 @@ const LoadRadarModel = ({
   group: React.RefObject<THREE.Group | null>;
 }) => {
   const { scene: sourceScene } = useGLTF(url);
-  const scene = useMemo(() => {
+  const overrideTexture = useTexture(getModelMaterialTextureUrl(url)!);
+  const { scene, ownedMaterials } = useMemo(() => {
     const clone = sourceScene.clone(true);
+    const materials = new Set<THREE.Material>();
+
+    clone.traverse((object) => {
+      if (object instanceof THREE.Light) {
+        const isConfiguredSpotlight =
+          object instanceof THREE.SpotLight && object.name === "Spot";
+        object.visible = isConfiguredSpotlight;
+        object.intensity = isConfiguredSpotlight ? 20 : 0;
+        if (isConfiguredSpotlight) {
+          object.color.set("#ffffff");
+          object.position.set(4.9749, 3.4675, 4.629);
+          object.target.position.set(-296.7693, -41.2036, -762.5355);
+          object.target.updateMatrix();
+          object.target.updateMatrixWorld(true);
+          object.castShadow = true;
+          object.angle = Math.PI / 2;
+          object.penumbra = 0.19;
+          object.distance = 0;
+          object.decay = 0;
+        }
+        return;
+      }
+      if (!(object instanceof THREE.Mesh)) return;
+      const sourceMaterials = Array.isArray(object.material)
+        ? object.material
+        : [object.material];
+      const clonedMaterials = sourceMaterials.map((sourceMaterial) => {
+        const material = sourceMaterial.clone();
+        applyModelMaterialOverride(url, material, {
+          texture: overrideTexture,
+        });
+        materials.add(material);
+        return material;
+      });
+      object.material = Array.isArray(object.material)
+        ? clonedMaterials
+        : clonedMaterials[0]!;
+    });
     clone.userData.zoomable = true;
-    return clone;
-  }, [sourceScene]);
+    return { scene: clone, ownedMaterials: [...materials] };
+  }, [overrideTexture, sourceScene, url]);
   const { inspectionHandlers } = useInspectableObject(scene);
+
+  useEffect(
+    () => () => ownedMaterials.forEach((material) => material.dispose()),
+    [ownedMaterials],
+  );
 
   return (
     <group
@@ -39,17 +87,6 @@ const RadarModel = () => {
 
   return (
     <>
-      <ambientLight color={"blue"} intensity={1} />
-      <directionalLight
-        position={[100, 20, 30]}
-        intensity={20}
-        color={"#ffddb9"}
-      />
-      <directionalLight
-        position={[0, 20, 10]}
-        intensity={0.5}
-        color={"#ffa546"}
-      />
       <SmoothOrbitControls
         target={[93.98587, 43.75356, -500]}
         rotateObject={radar}
@@ -76,3 +113,4 @@ const RadarModel = () => {
 export default RadarModel;
 
 useGLTF.preload("/Models/rmu-transformed.glb");
+useTexture.preload("/Images/radar-mfd-screen-v2.png");

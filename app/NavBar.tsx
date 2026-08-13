@@ -11,6 +11,7 @@ import { PositionInfoToggle } from "@/Components/PositionInfo";
 import { KeyframingToggle } from "@/Components/Keyframing";
 import { SkateMotionCurveExportButton } from "@/Components/SkateMotionCurveExport";
 import { DEBUG_MODE } from "@/Components/debugMode";
+import { LightingDebugToggle } from "@/Components/LightingDebug";
 
 const links = [
   { label: "Home", href: "/" },
@@ -29,6 +30,7 @@ const NavBar = () => {
           <PerformanceStats />
           <PositionInfoToggle />
           <KeyframingToggle />
+          <LightingDebugToggle />
           <SkateMotionCurveExportButton />
         </div>
       )}
@@ -36,7 +38,7 @@ const NavBar = () => {
         id="nav-items-container"
         className={classnames(
           "mx-auto flex w-full max-w-[1296px] items-center",
-          DEBUG_MODE && "pl-32 sm:pl-[15rem] md:pl-[34rem]",
+          DEBUG_MODE && "pl-32 sm:pl-[15rem] md:pl-[39rem] xl:pl-[43rem]",
         )}
       >
         <ul className="flex h-3/4 items-center">

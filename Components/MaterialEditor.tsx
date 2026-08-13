@@ -26,6 +26,11 @@ export type TextureMapKey =
   | "aoMap"
   | "bumpMap";
 
+interface BaseTextureShaderUniforms {
+  brightness: { value: number };
+  contrast: { value: number };
+}
+
 export interface ViewerMaterialRecord {
   id: string;
   label: string;
@@ -34,6 +39,11 @@ export interface ViewerMaterialRecord {
   usage: number;
   ownedTextures: Set<THREE.Texture>;
   textureOverrides: Map<TextureMapKey, THREE.Texture>;
+  baseTextureBrightness: number;
+  baseTextureContrast: number;
+  baseTextureShaderUniforms: Set<BaseTextureShaderUniforms>;
+  sourceOnBeforeCompile: THREE.Material["onBeforeCompile"];
+  sourceCustomProgramCacheKey: THREE.Material["customProgramCacheKey"];
 }
 
 export interface ViewerShadowSettings {
@@ -53,6 +63,54 @@ const MAP_OPTIONS: Array<{ key: TextureMapKey; label: string }> = [
 ];
 
 const MaterialEditorLightContext = createContext(false);
+
+const BASE_TEXTURE_FRAGMENT = THREE.ShaderChunk.map_fragment.replace(
+  "diffuseColor *= sampledDiffuseColor;",
+  `
+  sampledDiffuseColor.rgb = max(
+    vec3( 0.0 ),
+    ( sampledDiffuseColor.rgb - vec3( 0.5 ) ) * materialEditorMapContrast + vec3( 0.5 )
+  );
+  sampledDiffuseColor.rgb *= materialEditorMapBrightness;
+  diffuseColor *= sampledDiffuseColor;
+  `,
+);
+
+export function installBaseTextureAdjustments(record: ViewerMaterialRecord) {
+  const { material } = record;
+  material.onBeforeCompile = (shader, renderer) => {
+    record.sourceOnBeforeCompile.call(material, shader, renderer);
+    const brightness = { value: record.baseTextureBrightness };
+    const contrast = { value: record.baseTextureContrast };
+    shader.uniforms.materialEditorMapBrightness = brightness;
+    shader.uniforms.materialEditorMapContrast = contrast;
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <map_pars_fragment>",
+        `#include <map_pars_fragment>
+uniform float materialEditorMapBrightness;
+uniform float materialEditorMapContrast;`,
+      )
+      .replace("#include <map_fragment>", BASE_TEXTURE_FRAGMENT);
+    record.baseTextureShaderUniforms.add({ brightness, contrast });
+  };
+  material.customProgramCacheKey = () =>
+    `${record.sourceCustomProgramCacheKey.call(material)}|base-texture-adjustments-v1`;
+  material.needsUpdate = true;
+}
+
+function setBaseTextureAdjustments(
+  record: ViewerMaterialRecord,
+  brightness: number,
+  contrast: number,
+) {
+  record.baseTextureBrightness = brightness;
+  record.baseTextureContrast = contrast;
+  record.baseTextureShaderUniforms.forEach((uniforms) => {
+    uniforms.brightness.value = brightness;
+    uniforms.contrast.value = contrast;
+  });
+}
 
 const MATERIAL_EDITOR_SLIDER_CSS = `
   .material-editor-slider {
@@ -648,6 +706,8 @@ export default function MaterialEditor({
     if (!selected) return;
     disposeTextureOverrides(selected);
     selected.material.copy(selected.original);
+    setBaseTextureAdjustments(selected, 1, 1);
+    installBaseTextureAdjustments(selected);
     selected.material.needsUpdate = true;
     refresh(false, true);
   };
@@ -656,6 +716,8 @@ export default function MaterialEditor({
     materials.forEach((record) => {
       disposeTextureOverrides(record);
       record.material.copy(record.original);
+      setBaseTextureAdjustments(record, 1, 1);
+      installBaseTextureAdjustments(record);
       record.material.needsUpdate = true;
     });
     setRevision((revision) => revision + 1);
@@ -861,6 +923,38 @@ export default function MaterialEditor({
                   !selected.textureOverrides.has("map")
                 }
                 onChange={(checked) => setMapEnabled("map", checked)}
+              />
+              <Slider
+                label="Brightness"
+                min={0}
+                max={2}
+                step={0.01}
+                value={selected.baseTextureBrightness}
+                disabled={!material.map}
+                onChange={(value) => {
+                  setBaseTextureAdjustments(
+                    selected,
+                    value,
+                    selected.baseTextureContrast,
+                  );
+                  refresh();
+                }}
+              />
+              <Slider
+                label="Contrast"
+                min={0}
+                max={2}
+                step={0.01}
+                value={selected.baseTextureContrast}
+                disabled={!material.map}
+                onChange={(value) => {
+                  setBaseTextureAdjustments(
+                    selected,
+                    selected.baseTextureBrightness,
+                    value,
+                  );
+                  refresh();
+                }}
               />
             </EditorSection>
 

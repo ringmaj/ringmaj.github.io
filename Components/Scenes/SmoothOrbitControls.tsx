@@ -12,6 +12,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { usePositionInfoMode } from "../PositionInfo";
 import { useKeyframingMode } from "../Keyframing";
+import { useLightingDebug } from "../LightingDebug";
 
 const WHEEL_ZOOM_SENSITIVITY = 0.002;
 const WHEEL_ZOOM_DAMPING = 14;
@@ -49,6 +50,7 @@ export default function SmoothOrbitControls({
 }: SmoothOrbitControlsProps) {
   const { enabled: positionInfoEnabled } = usePositionInfoMode();
   const { enabled: keyframingEnabled } = useKeyframingMode();
+  const { enabled: lightingDebugEnabled } = useLightingDebug();
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const { camera, gl, invalidate } = useThree();
   const targetZoom = useRef(camera.zoom);
@@ -89,7 +91,13 @@ export default function SmoothOrbitControls({
   }, [camera]);
 
   useEffect(() => {
-    if (positionInfoEnabled || !enableRotate || !rotateObject) return;
+    if (
+      positionInfoEnabled ||
+      lightingDebugEnabled ||
+      !enableRotate ||
+      !rotateObject
+    )
+      return;
     const canvas = gl.domElement;
     let pointerId: number | null = null;
     let previousX = 0;
@@ -147,6 +155,7 @@ export default function SmoothOrbitControls({
     enableRotate,
     gl,
     invalidate,
+    lightingDebugEnabled,
     positionInfoEnabled,
     rotateObject,
     rotateRegion,

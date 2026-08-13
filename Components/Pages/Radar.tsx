@@ -3,10 +3,11 @@ import Lead, { Position } from "../Lead";
 import RadarScene from "../Scenes/RadarScene";
 import { SceneInspectorProvider } from "../SceneInspector";
 
-const header = "MFD (Multi Functional Display)";
+const header = "Built software for mission-critical flight displays.";
 const description = [
-  "Developed software features and updates for mission critical computer display/modeling for OFP (Operational Flight Plan) builds.",
-  "Streamlined Development Processes: Recognizing the importance of efficiency in defense projects, I led initiatives to streamline the software development processes. I introduced agile methodologies, automated testing frameworks, and continuous integration/continuous deployment (CI/CD) pipelines, reducing development time and ensuring faster delivery of software updates. This enabled quicker responses to evolving defense requirements and facilitated iterative improvements to the systems.",
+  "Developed and integrated display and modeling changes for Operational Flight Program builds, from initial implementation through final delivery.",
+  "Tested releases using RSIL (Radar Systems Integration Lab) hardware-in-the-loop systems to validate behavior against real radar hardware.",
+  "Improved delivery reliability through automated testing, streamlined integration, and CI/CD.",
   "Trusted with developing, testing, integrating, and delivering critical build images.",
 ];
 
