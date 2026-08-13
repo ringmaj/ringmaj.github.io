@@ -11,7 +11,7 @@ export default function ResumePage() {
           </p>
         </div>
         <Link
-          href="/Majok_Ring_Resume.pdf"
+          href="/Henry_Ring_Resume.pdf"
           download
           className="bg-[var(--main-accent-color)] px-4 py-2 text-sm font-bold text-white hover:bg-[var(--main-accent-color-dark)]"
         >
@@ -20,7 +20,7 @@ export default function ResumePage() {
       </header>
       <iframe
         title="Henry Ring resume"
-        src="/Majok_Ring_Resume.pdf"
+        src="/Henry_Ring_Resume.pdf"
         className="min-h-0 flex-1 border-0"
       />
     </section>

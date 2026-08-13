@@ -111,20 +111,10 @@ const JetModel = () => {
 
   return (
     <>
-      <ambientLight color="#fff4e8" intensity={0.1474} />
-      <hemisphereLight
-        color="#fff7ed"
-        groundColor="#29344b"
-        intensity={0.3015}
-      />
-      <directionalLight
-        position={[100, 20, 30]}
-        intensity={2.68}
-        color="#ffc27d"
-      />
+      <ambientLight color="#ffffff" intensity={1.03} />
       <directionalLight
         position={[0, 20, -50]}
-        intensity={1.005}
+        intensity={1.33}
         color="#ff8a3d"
       />
       <Environment preset="apartment" environmentIntensity={1.17} />

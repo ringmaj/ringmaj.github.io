@@ -5,13 +5,13 @@ const awards = [
   {
     title: "Achievement Award: Accountability",
     quote:
-      "Majok helped deliver the first build of the DFO effort on the Qatar program. He came up to speed quickly, worked independently, and delivered on time.",
+      "Henry helped deliver the first build of the DFO effort on the Qatar program. He came up to speed quickly, worked independently, and delivered on time.",
     sender: "Eric A. Engle · Oct 2021",
   },
   {
     title: "Leadership-Sponsored Achievement Award",
     quote:
-      "Majok Ring provided above-and-beyond support of BIT code changes to make progress toward our customer milestones.",
+      "Henry Ring provided above-and-beyond support of BIT code changes to make progress toward our customer milestones.",
     sender: "Yeni H. Fernandez · May 2020",
   },
   {

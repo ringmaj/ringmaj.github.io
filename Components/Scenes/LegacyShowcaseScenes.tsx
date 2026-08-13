@@ -443,7 +443,7 @@ function WorkspaceShadowLight() {
       <directionalLight
         position={[12, 24, 9]}
         target={target}
-        intensity={1.012}
+        intensity={2.1987}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -472,21 +472,23 @@ export function WorkspaceScene({ modelUrl }: { modelUrl: string }) {
       }}
       shadows
       dpr={[1, 1.75]}
-      environmentIntensity={0.85}
-      exposure={0.05}
-      toneMapping={THREE.NoToneMapping}
+      environmentIntensity={1.42}
+      exposure={1.38}
+      toneMapping={THREE.ACESFilmicToneMapping}
     >
-      <ambientLight intensity={0.22} />
+      <ambientLight intensity={0.22} visible={false} />
       <hemisphereLight
         color="#ffffff"
         groundColor="#4b5563"
         intensity={0.308}
+        visible={false}
       />
       <WorkspaceShadowLight />
       <directionalLight
         position={[-6, 2, -5]}
         intensity={0.22}
         color="#b8c9ed"
+        visible={false}
       />
       <WorkspaceModel modelUrl={modelUrl} />
       <SmoothOrbitControls

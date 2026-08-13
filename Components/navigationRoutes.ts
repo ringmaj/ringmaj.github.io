@@ -42,16 +42,16 @@ export const NAVIGATION_ITEMS = [
     label: "Car Project",
     assets: ["/Models/caritems-carousel.glb"],
   },
+  {
+    href: "/photo-vortex",
+    label: "Photo Vortex",
+    assets: ["/Models/polaroid-layout-transformed.glb"],
+  },
   { href: "/recognition", label: "Recognition" },
   {
     href: "/workspace",
     label: "Workspace",
     assets: ["/Models/workdesk-window-transformed.glb"],
-  },
-  {
-    href: "/photo-vortex",
-    label: "Photo Vortex",
-    assets: ["/Models/polaroid-layout-transformed.glb"],
   },
   {
     href: "/hobbies",
