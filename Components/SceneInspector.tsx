@@ -35,6 +35,7 @@ import {
   applyModelMaterialOverride,
   getModelMaterialBaseTextureAdjustments,
   getModelMaterialTextureUrl,
+  getModelMaterialTextureUrls,
 } from "./modelMaterialOverrides";
 import NeutralEnvironment from "./Scenes/NeutralEnvironment";
 import SmoothOrbitControls from "./Scenes/SmoothOrbitControls";
@@ -50,6 +51,8 @@ type InspectableResolver = (
 interface ObjectSelection {
   label: string;
   path: number[];
+  modelUrl?: string;
+  viewerRotation?: [number, number, number];
 }
 
 interface ViewerSceneData {
@@ -75,6 +78,7 @@ const DEBUG_TEXTURE_KEYS: TextureMapKey[] = [
   "emissiveMap",
   "aoMap",
   "bumpMap",
+  "displacementMap",
 ];
 
 function debugNumber(value: number) {
@@ -153,6 +157,8 @@ function serializeDebugMaterial(material: THREE.MeshStandardMaterial) {
       debugNumber(material.normalScale.y),
     ],
     bumpScale: debugNumber(material.bumpScale),
+    displacementScale: debugNumber(material.displacementScale),
+    displacementBias: debugNumber(material.displacementBias),
     emissive: `#${material.emissive.getHexString()}`,
     emissiveIntensity: debugNumber(material.emissiveIntensity),
     opacity: debugNumber(material.opacity),
@@ -462,9 +468,13 @@ function IsolatedObject({
 }) {
   const { scene: sourceScene } = useGLTF(modelUrl);
   const overrideTextureUrl = getModelMaterialTextureUrl(modelUrl);
-  const overrideTexture = useTexture(
-    overrideTextureUrl ?? EMPTY_OVERRIDE_TEXTURE,
-  );
+  const overrideTextureUrls = getModelMaterialTextureUrls(modelUrl);
+  const [overrideTexture, overrideMetalnessTexture, overrideBumpTexture] =
+    useTexture([
+      overrideTextureUrls.base ?? EMPTY_OVERRIDE_TEXTURE,
+      overrideTextureUrls.metalness ?? EMPTY_OVERRIDE_TEXTURE,
+      overrideTextureUrls.bump ?? EMPTY_OVERRIDE_TEXTURE,
+    ]);
   const pathKey = selection.path.join(".");
   const payload = useMemo(() => {
     const scene = cloneSkinned(sourceScene);
@@ -483,10 +493,17 @@ function IsolatedObject({
       selected.quaternion,
       selected.scale,
     );
+    if (selection.viewerRotation) {
+      const viewerOrientation = new THREE.Quaternion().setFromEuler(
+        new THREE.Euler(...selection.viewerRotation),
+      );
+      selected.quaternion.premultiply(viewerOrientation);
+    }
     selected.updateMatrixWorld(true);
 
     const materialClones = new Map<THREE.Material, THREE.Material>();
     const materialUsage = new Map<THREE.Material, number>();
+    const materialVertexCounts = new Map<THREE.Material, number>();
     const cloneMaterial = (source: THREE.Material) => {
       let material = materialClones.get(source);
       if (!material) {
@@ -500,6 +517,12 @@ function IsolatedObject({
         }
         applyModelMaterialOverride(modelUrl, material, {
           texture: overrideTextureUrl ? overrideTexture : undefined,
+          metalnessTexture: overrideTextureUrls.metalness
+            ? overrideMetalnessTexture
+            : undefined,
+          bumpTexture: overrideTextureUrls.bump
+            ? overrideBumpTexture
+            : undefined,
           installBaseTextureAdjustments: false,
         });
         materialClones.set(source, material);
@@ -513,6 +536,16 @@ function IsolatedObject({
         child.material = Array.isArray(child.material)
           ? child.material.map(cloneMaterial)
           : cloneMaterial(child.material);
+        const vertexCount = child.geometry.getAttribute("position")?.count ?? 0;
+        const childMaterials = Array.isArray(child.material)
+          ? child.material
+          : [child.material];
+        childMaterials.forEach((material) => {
+          materialVertexCounts.set(
+            material,
+            Math.max(materialVertexCounts.get(material) ?? 0, vertexCount),
+          );
+        });
         child.castShadow = true;
         child.receiveShadow = true;
       }
@@ -550,6 +583,9 @@ function IsolatedObject({
         material,
         original,
         usage: materialUsage.get(material) ?? 1,
+        supportsDisplacement:
+          (materialVertexCounts.get(material) ?? 0) >= 1024,
+        autoBumpFromDisplacement: null,
         ownedTextures: new Set(),
         textureOverrides: new Map(),
         baseTextureBrightness: baseTextureAdjustments.brightness,
@@ -579,8 +615,13 @@ function IsolatedObject({
     defaultNormalScale,
     modelUrl,
     overrideTexture,
+    overrideMetalnessTexture,
+    overrideBumpTexture,
     overrideTextureUrl,
+    overrideTextureUrls.bump,
+    overrideTextureUrls.metalness,
     pathKey,
+    selection.viewerRotation,
     sourceScene,
   ]);
 
@@ -1092,11 +1133,31 @@ export function SceneInspectorProvider({
       const path = getObjectPath(root, object);
       if (!path) return;
 
-      setSelection({ label: formatObjectName(object, label), path });
+      const selectedModelUrl =
+        typeof object.userData.inspectModelUrl === "string"
+          ? object.userData.inspectModelUrl
+          : typeof root.userData.inspectModelUrl === "string"
+            ? root.userData.inspectModelUrl
+            : modelUrl;
+      const rawViewerRotation =
+        object.userData.inspectViewerRotation ??
+        root.userData.inspectViewerRotation;
+      const viewerRotation =
+        Array.isArray(rawViewerRotation) &&
+        rawViewerRotation.length === 3 &&
+        rawViewerRotation.every((value) => typeof value === "number")
+          ? ([...rawViewerRotation] as [number, number, number])
+          : undefined;
+      setSelection({
+        label: formatObjectName(object, label),
+        path,
+        modelUrl: selectedModelUrl,
+        viewerRotation,
+      });
       setActive(false);
       clearHover();
     },
-    [active, clearHover, label, resolveObject],
+    [active, clearHover, label, modelUrl, resolveObject],
   );
 
   const closeViewer = useCallback(() => {
@@ -1193,7 +1254,7 @@ export function SceneInspectorProvider({
       </button>
       {selection && (
         <ZoomViewer
-          modelUrl={modelUrl}
+          modelUrl={selection.modelUrl ?? modelUrl}
           selection={selection}
           defaultNormalScale={defaultNormalScale}
           onClose={closeViewer}
@@ -1247,7 +1308,13 @@ export function SceneOutline({ keyframing = true }: { keyframing?: boolean } = {
 
     const meshes: THREE.Object3D[] = [];
     hoveredObject.traverse((child) => {
-      if (child instanceof THREE.Mesh && child.visible) meshes.push(child);
+      if (
+        child instanceof THREE.Mesh &&
+        child.visible &&
+        child.userData.noOutline !== true
+      ) {
+        meshes.push(child);
+      }
     });
     return meshes;
   }, [hoveredObject]);

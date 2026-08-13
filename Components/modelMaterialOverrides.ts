@@ -10,14 +10,19 @@ export type ModelMaterialOverride = {
   emissive?: THREE.ColorRepresentation;
   emissiveIntensity?: number;
   baseTextureUrl?: string;
+  metalnessTextureUrl?: string;
+  bumpTextureUrl?: string;
   baseTextureEnabled?: boolean;
   useBaseTextureAsEmissiveMap?: boolean;
   baseTextureBrightness?: number;
   baseTextureContrast?: number;
+  bumpScale?: number;
 };
 
 export type ModelMaterialApplyOptions = {
   texture?: THREE.Texture;
+  metalnessTexture?: THREE.Texture;
+  bumpTexture?: THREE.Texture;
   installBaseTextureAdjustments?: boolean;
 };
 
@@ -73,7 +78,37 @@ export const MODEL_MATERIAL_OVERRIDES: Record<
       color: "#424242",
     },
   },
+  "/Models/pcb-etched.glb": {
+    board: {
+      opacity: 0.94,
+    },
+    "pcb-texture": {
+      color: "#cde759",
+      metalness: 1,
+      roughness: 0.21,
+      baseTextureUrl: "/Images/pcb-etched/pcb-copper-texture.png",
+      metalnessTextureUrl: "/Images/pcb-etched/pcb-etch-texture.png",
+      bumpTextureUrl: "/Images/pcb-etched/pcb-etch-roughness.png",
+      bumpScale: -10,
+    },
+  },
 };
+
+export function getModelMaterialTextureUrls(modelUrl: string) {
+  const overrides = MODEL_MATERIAL_OVERRIDES[modelUrl];
+  const values = Object.values(overrides ?? {});
+  return {
+    base:
+      values.find((override) => override.baseTextureUrl)?.baseTextureUrl ??
+      null,
+    metalness:
+      values.find((override) => override.metalnessTextureUrl)
+        ?.metalnessTextureUrl ?? null,
+    bump:
+      values.find((override) => override.bumpTextureUrl)?.bumpTextureUrl ??
+      null,
+  };
+}
 
 function installModelBaseTextureAdjustments(
   material: THREE.MeshStandardMaterial,
@@ -100,12 +135,7 @@ uniform float modelOverrideMapContrast;`,
 }
 
 export function getModelMaterialTextureUrl(modelUrl: string) {
-  const overrides = MODEL_MATERIAL_OVERRIDES[modelUrl];
-  if (!overrides) return null;
-  return (
-    Object.values(overrides).find((override) => override.baseTextureUrl)
-      ?.baseTextureUrl ?? null
-  );
+  return getModelMaterialTextureUrls(modelUrl).base;
 }
 
 export function getModelMaterialBaseTextureAdjustments(
@@ -135,6 +165,9 @@ export function applyModelMaterialOverride(
     material.roughness = override.roughness;
   if (override.normalMapEnabled === false) material.normalMap = null;
   if (override.opacity !== undefined) material.opacity = override.opacity;
+  if (override.opacity !== undefined && override.opacity < 1) {
+    material.transparent = true;
+  }
   if (override.envMapIntensity !== undefined)
     material.envMapIntensity = override.envMapIntensity;
   if (override.emissive !== undefined) material.emissive.set(override.emissive);
@@ -149,6 +182,19 @@ export function applyModelMaterialOverride(
       material.emissiveMap = options.texture;
     }
   }
+  if (override.metalnessTextureUrl && options.metalnessTexture) {
+    options.metalnessTexture.flipY = false;
+    options.metalnessTexture.colorSpace = THREE.NoColorSpace;
+    options.metalnessTexture.needsUpdate = true;
+    material.metalnessMap = options.metalnessTexture;
+  }
+  if (override.bumpTextureUrl && options.bumpTexture) {
+    options.bumpTexture.flipY = false;
+    options.bumpTexture.colorSpace = THREE.NoColorSpace;
+    options.bumpTexture.needsUpdate = true;
+    material.bumpMap = options.bumpTexture;
+  }
+  if (override.bumpScale !== undefined) material.bumpScale = override.bumpScale;
   if (
     options.installBaseTextureAdjustments !== false &&
     (override.baseTextureBrightness !== undefined ||

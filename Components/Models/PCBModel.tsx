@@ -1,13 +1,15 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef } from "react";
-import { useGLTF } from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useInspectableObject } from "../SceneInspector";
 import SmoothOrbitControls from "../Scenes/SmoothOrbitControls";
+import { applyModelMaterialOverride } from "../modelMaterialOverrides";
 
 export const PCB_MODEL_URL = "/Models/PCB/pcb.gltf";
+export const ETCHED_PCB_MODEL_URL = "/Models/pcb-etched.glb";
 
 const PCB_POSITION = new THREE.Vector3(1.59042, 0.64523, -2.32668);
 const PCB_ROOT_ROTATION = [-0.12066, -0.58991, -0.05447] as const;
@@ -355,11 +357,7 @@ function normalizeAngle(angle: number) {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 }
 
-function LoadedPCB({
-  controlsRef,
-}: {
-  controlsRef: React.RefObject<THREE.Group | null>;
-}) {
+function LoadedPCB() {
   const { scene: sourceScene } = useGLTF(PCB_MODEL_URL);
   const glassMaterial = useMemo(
     () =>
@@ -573,7 +571,6 @@ function LoadedPCB({
   return (
     <group position={PCB_POSITION} rotation={PCB_ROOT_ROTATION}>
       <group
-        ref={controlsRef}
         scale={0.21}
         rotation={PCB_ROTATION}
         {...inspectionHandlers}
@@ -620,6 +617,87 @@ function PCBShadowLight() {
   );
 }
 
+function EtchedPCB() {
+  const { scene } = useGLTF(ETCHED_PCB_MODEL_URL);
+  const [baseTexture, metalnessTexture, bumpTexture] = useTexture([
+    "/Images/pcb-etched/pcb-copper-texture.png",
+    "/Images/pcb-etched/pcb-etch-texture.png",
+    "/Images/pcb-etched/pcb-etch-roughness.png",
+  ]);
+  const [selectionRoot, setSelectionRoot] = useState<THREE.Group | null>(null);
+  const models = useMemo(() => {
+    const prepared = scene.clone(true);
+    prepared.name = "Etched PCB";
+    const materialClones = new Map<THREE.Material, THREE.Material>();
+    prepared.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      const prepareMaterial = (source: THREE.Material) => {
+        let material = materialClones.get(source);
+        if (!material) {
+          material = source.clone();
+          applyModelMaterialOverride(ETCHED_PCB_MODEL_URL, material, {
+            texture: baseTexture,
+            metalnessTexture,
+            bumpTexture,
+          });
+          materialClones.set(source, material);
+        }
+        return material;
+      };
+      object.material = Array.isArray(object.material)
+        ? object.material.map(prepareMaterial)
+        : prepareMaterial(object.material);
+      object.castShadow = true;
+      object.receiveShadow = true;
+    });
+    return Array.from({ length: 4 }, () => prepared.clone(true));
+  }, [baseTexture, bumpTexture, metalnessTexture, scene]);
+  const { inspectionHandlers } = useInspectableObject(selectionRoot);
+
+  return (
+    <group
+      ref={setSelectionRoot}
+      name="Etched PCB"
+      userData={{
+        zoomable: true,
+        inspectModelUrl: ETCHED_PCB_MODEL_URL,
+        inspectViewerRotation: [Math.PI / 2, 0, 0],
+      }}
+      position={[0.05, -0.955, 0.25]}
+      rotation={[0, -0.3, 0]}
+      scale={0.48}
+    >
+      {models.map((model, index) => (
+        <primitive
+          key={index}
+          object={model}
+          dispose={null}
+          position={[
+            [0, 0.025, 0.22, 0.46][index],
+            index * 0.072,
+            [0, -0.015, 0.08, 0.18][index],
+          ]}
+          rotation={[0, [0, 0.01, 0.065, 0.13][index], 0]}
+        />
+      ))}
+      <mesh
+        name="Etched PCB selection surface"
+        position={[0, 0.145, 0]}
+        userData={{ noOutline: true }}
+        {...inspectionHandlers}
+      >
+        <boxGeometry args={[4.2, 0.34, 2.4]} />
+        <meshBasicMaterial
+          transparent
+          opacity={0}
+          depthWrite={false}
+          colorWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 export default function PCBModel() {
   const controlsRef = useRef<THREE.Group>(null);
 
@@ -640,14 +718,41 @@ export default function PCBModel() {
       <SmoothOrbitControls
         target={PCB_ORBIT_TARGET}
         rotateObject={controlsRef}
+        rotateObjectVertical={false}
         minDistance={7}
         maxDistance={22}
       />
-      <Suspense fallback={null}>
-        <LoadedPCB controlsRef={controlsRef} />
-      </Suspense>
+      <group ref={controlsRef} position={PCB_ORBIT_TARGET}>
+        <group
+          position={[
+            -PCB_ORBIT_TARGET[0],
+            -PCB_ORBIT_TARGET[1],
+            -PCB_ORBIT_TARGET[2],
+          ]}
+        >
+          <Suspense fallback={null}>
+            <LoadedPCB />
+            <EtchedPCB />
+          </Suspense>
+          <mesh
+            position={[1.56, -0.96, -2.085]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            receiveShadow
+            renderOrder={-1}
+          >
+            <planeGeometry args={[16, 16]} />
+            <shadowMaterial
+              color="#000000"
+              opacity={0.14}
+              transparent
+              depthWrite={false}
+            />
+          </mesh>
+        </group>
+      </group>
     </>
   );
 }
 
 useGLTF.preload(PCB_MODEL_URL);
+useGLTF.preload(ETCHED_PCB_MODEL_URL);

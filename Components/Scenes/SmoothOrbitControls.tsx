@@ -20,6 +20,7 @@ const WHEEL_ZOOM_DAMPING = 14;
 interface SmoothOrbitControlsProps {
   target?: [number, number, number];
   rotateObject?: RefObject<THREE.Object3D | null>;
+  rotateObjectVertical?: boolean;
   enableRotate?: boolean;
   enablePan?: boolean;
   enableZoom?: boolean;
@@ -36,6 +37,7 @@ interface SmoothOrbitControlsProps {
 export default function SmoothOrbitControls({
   target = [0, 0, 0],
   rotateObject,
+  rotateObjectVertical = true,
   enableRotate = true,
   enablePan = false,
   enableZoom = true,
@@ -125,11 +127,13 @@ export default function SmoothOrbitControls({
       previousX = event.clientX;
       previousY = event.clientY;
       rotateObject.current.rotation.y += deltaX * 0.006;
-      rotateObject.current.rotation.x = THREE.MathUtils.clamp(
-        rotateObject.current.rotation.x + deltaY * 0.006,
-        -Math.PI / 2,
-        Math.PI / 2,
-      );
+      if (rotateObjectVertical) {
+        rotateObject.current.rotation.x = THREE.MathUtils.clamp(
+          rotateObject.current.rotation.x + deltaY * 0.006,
+          -Math.PI / 2,
+          Math.PI / 2,
+        );
+      }
       invalidate();
     };
     const handlePointerUp = (event: PointerEvent) => {
@@ -158,6 +162,7 @@ export default function SmoothOrbitControls({
     lightingDebugEnabled,
     positionInfoEnabled,
     rotateObject,
+    rotateObjectVertical,
     rotateRegion,
   ]);
 

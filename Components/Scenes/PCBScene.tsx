@@ -36,20 +36,6 @@ export default function PCBScene() {
       }}
     >
       <PCBModel />
-      <mesh
-        position={[1.56, -0.96, -2.085]}
-        rotation={[-Math.PI / 2, 0, 0]}
-        receiveShadow
-        renderOrder={-1}
-      >
-        <planeGeometry args={[16, 16]} />
-        <shadowMaterial
-          color="#000000"
-          opacity={0.14}
-          transparent
-          depthWrite={false}
-        />
-      </mesh>
       <NeutralEnvironment intensity={0.22} />
       <SceneOutline />
     </Canvas>

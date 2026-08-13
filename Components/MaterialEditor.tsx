@@ -24,7 +24,8 @@ export type TextureMapKey =
   | "metalnessMap"
   | "emissiveMap"
   | "aoMap"
-  | "bumpMap";
+  | "bumpMap"
+  | "displacementMap";
 
 interface BaseTextureShaderUniforms {
   brightness: { value: number };
@@ -37,6 +38,8 @@ export interface ViewerMaterialRecord {
   material: THREE.MeshStandardMaterial;
   original: THREE.MeshStandardMaterial;
   usage: number;
+  supportsDisplacement: boolean;
+  autoBumpFromDisplacement: THREE.Texture | null;
   ownedTextures: Set<THREE.Texture>;
   textureOverrides: Map<TextureMapKey, THREE.Texture>;
   baseTextureBrightness: number;
@@ -60,6 +63,7 @@ const MAP_OPTIONS: Array<{ key: TextureMapKey; label: string }> = [
   { key: "emissiveMap", label: "Emissive map" },
   { key: "aoMap", label: "Occlusion map" },
   { key: "bumpMap", label: "Bump map" },
+  { key: "displacementMap", label: "Displacement map" },
 ];
 
 const MaterialEditorLightContext = createContext(false);
@@ -689,6 +693,7 @@ export default function MaterialEditor({
     record.ownedTextures.forEach((texture) => texture.dispose());
     record.ownedTextures.clear();
     record.textureOverrides.clear();
+    record.autoBumpFromDisplacement = null;
   };
 
   const releaseTextureOverride = (
@@ -700,6 +705,9 @@ export default function MaterialEditor({
     texture.dispose();
     record.ownedTextures.delete(texture);
     record.textureOverrides.delete(key);
+    if (record.autoBumpFromDisplacement === texture) {
+      record.autoBumpFromDisplacement = null;
+    }
   };
 
   const resetSelected = () => {
@@ -778,10 +786,36 @@ export default function MaterialEditor({
       const currentTexture = getMap(record.material, key);
       const repeat = currentTexture?.repeat.x ?? 1;
       texture.repeat.set(repeat, repeat);
+
+      if (
+        key === "displacementMap" &&
+        record.autoBumpFromDisplacement
+      ) {
+        releaseTextureOverride(record, "bumpMap");
+        record.material.bumpMap = null;
+      }
       releaseTextureOverride(record, key);
       record.ownedTextures.add(texture);
       record.textureOverrides.set(key, texture);
       record.material[key] = texture;
+      if (key === "displacementMap") {
+        record.material.displacementScale = 0.004;
+        record.material.displacementBias = 0;
+
+        // Fine PCB traces need fragment-level height detail in addition to
+        // bounded vertex displacement. Reuse the uploaded height source as a
+        // separate bump texture unless the user already supplied one.
+        if (!record.material.bumpMap) {
+          const bumpTexture = texture.clone();
+          bumpTexture.name = `${texture.name || "Displacement"} · bump detail`;
+          bumpTexture.needsUpdate = true;
+          record.ownedTextures.add(bumpTexture);
+          record.textureOverrides.set("bumpMap", bumpTexture);
+          record.material.bumpMap = bumpTexture;
+          record.material.bumpScale = 0.08;
+          record.autoBumpFromDisplacement = bumpTexture;
+        }
+      }
       record.material.needsUpdate = true;
       setRevision((revision) => revision + 1);
       onMaterialChange();
@@ -996,7 +1030,11 @@ export default function MaterialEditor({
 
             <EditorSection title="Texture maps" open>
               <div className="pb-2">
-                {MAP_OPTIONS.map(({ key, label }) => {
+                {MAP_OPTIONS.filter(
+                  ({ key }) =>
+                    key !== "displacementMap" ||
+                    selected.supportsDisplacement,
+                ).map(({ key, label }) => {
                   const availableTexture =
                     selected.textureOverrides.get(key) ??
                     getMap(original, key);
@@ -1050,7 +1088,11 @@ export default function MaterialEditor({
                   step={0.05}
                   value={material.normalScale.x}
                   onChange={(value) => {
-                    material.normalScale.set(value, value);
+                    const ySign =
+                      Math.sign(material.normalScale.y) ||
+                      Math.sign(original.normalScale.y) ||
+                      1;
+                    material.normalScale.set(value, value * ySign);
                     refresh();
                   }}
                 />
@@ -1058,9 +1100,9 @@ export default function MaterialEditor({
               {material.bumpMap && (
                 <Slider
                   label="Bump"
-                  min={-2}
-                  max={2}
-                  step={0.01}
+                  min={-10}
+                  max={10}
+                  step={0.05}
                   value={material.bumpScale}
                   onChange={(value) => {
                     material.bumpScale = value;
@@ -1068,6 +1110,33 @@ export default function MaterialEditor({
                   }}
                 />
               )}
+              {selected.supportsDisplacement &&
+                material.displacementMap && (
+                  <>
+                    <Slider
+                      label="Disp"
+                      min={-0.02}
+                      max={0.02}
+                      step={0.0005}
+                      value={material.displacementScale}
+                      onChange={(value) => {
+                        material.displacementScale = value;
+                        refresh();
+                      }}
+                    />
+                    <Slider
+                      label="Bias"
+                      min={-0.02}
+                      max={0.02}
+                      step={0.0005}
+                      value={material.displacementBias}
+                      onChange={(value) => {
+                        material.displacementBias = value;
+                        refresh();
+                      }}
+                    />
+                  </>
+                )}
             </EditorSection>
 
             <EditorSection title="Emissive">
