@@ -1257,22 +1257,23 @@ export function SceneOutline({ keyframing = true }: { keyframing?: boolean } = {
       <ScenePositionProbe />
       {keyframing && <SceneKeyframingProbe />}
       <SceneLightingProbe />
-      <EffectComposer
-        enabled={active && outlineSelection.length > 0}
-        multisampling={0}
-        resolutionScale={0.75}
-        autoClear={false}
-      >
-        <Outline
-          selection={outlineSelection}
-          visibleEdgeColor={0xff8a1f}
-          hiddenEdgeColor={0x3b1d08}
-          edgeStrength={6}
-          pulseSpeed={0}
-          blur={false}
-          xRay={false}
-        />
-      </EffectComposer>
+      {active && outlineSelection.length > 0 && (
+        <EffectComposer
+          multisampling={0}
+          resolutionScale={0.75}
+          autoClear={false}
+        >
+          <Outline
+            selection={outlineSelection}
+            visibleEdgeColor={0xff8a1f}
+            hiddenEdgeColor={0x3b1d08}
+            edgeStrength={6}
+            pulseSpeed={0}
+            blur={false}
+            xRay={false}
+          />
+        </EffectComposer>
+      )}
     </>
   );
 }

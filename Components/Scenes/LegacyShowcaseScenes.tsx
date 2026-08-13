@@ -34,6 +34,25 @@ const WORKSPACE_ORBIT_TARGET: [number, number, number] = [
   7.43514, -1.82757, 1.3221,
 ];
 
+function SceneRendererSettings({
+  exposure,
+  toneMapping,
+}: {
+  exposure: number;
+  toneMapping?: THREE.ToneMapping;
+}) {
+  const gl = useThree((state) => state.gl);
+  const invalidate = useThree((state) => state.invalidate);
+
+  useEffect(() => {
+    if (toneMapping !== undefined) gl.toneMapping = toneMapping;
+    gl.toneMappingExposure = exposure;
+    invalidate();
+  }, [exposure, gl, invalidate, toneMapping]);
+
+  return null;
+}
+
 function SceneShell({
   children,
   orthographic = false,
@@ -76,11 +95,11 @@ function SceneShell({
           antialias: true,
           powerPreference: "high-performance",
         }}
-        onCreated={({ gl }) => {
-          if (toneMapping !== undefined) gl.toneMapping = toneMapping;
-          gl.toneMappingExposure = exposure;
-        }}
       >
+        <SceneRendererSettings
+          exposure={exposure}
+          toneMapping={toneMapping}
+        />
         <Suspense fallback={null}>{children}</Suspense>
         <NeutralEnvironment intensity={environmentIntensity} />
         <SceneOutline />
@@ -171,6 +190,42 @@ function SeniorModel({ modelUrl }: { modelUrl: string }) {
   );
 }
 
+function BakedDirectionalLight({
+  position,
+  target,
+  intensity,
+}: {
+  position: [number, number, number];
+  target: [number, number, number];
+  intensity: number;
+}) {
+  const scene = useThree((state) => state.scene);
+  const [targetX, targetY, targetZ] = target;
+  const targetObject = useMemo(() => {
+    const object = new THREE.Object3D();
+    object.name = "Baked directional light target";
+    object.position.set(targetX, targetY, targetZ);
+    return object;
+  }, [targetX, targetY, targetZ]);
+
+  useEffect(() => {
+    scene.add(targetObject);
+    targetObject.updateMatrixWorld(true);
+    return () => {
+      scene.remove(targetObject);
+    };
+  }, [scene, targetObject]);
+
+  return (
+    <directionalLight
+      color="#ffffff"
+      position={position}
+      target={targetObject}
+      intensity={intensity}
+    />
+  );
+}
+
 export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
   return (
     <SceneShell
@@ -178,15 +233,20 @@ export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
       animated
       camera={{ position: [-80, 0, 300], zoom: 1.5, near: 0.0001, far: 10000 }}
       shadows
-      environmentIntensity={1.32}
-      exposure={0.46}
+      environmentIntensity={1.17}
+      exposure={0.34}
       toneMapping={THREE.ACESFilmicToneMapping}
     >
-      <ambientLight intensity={2.8} />
+      <ambientLight intensity={0} />
       <directionalLight
         position={[300, 500, -100]}
-        intensity={6}
+        intensity={9.67113}
         castShadow
+      />
+      <BakedDirectionalLight
+        position={[486.0488, 393.2103, -31.8139]}
+        target={[142.1962, 49.3577, -469.4445]}
+        intensity={18.08919}
       />
       <SeniorModel modelUrl={modelUrl} />
       <SmoothOrbitControls

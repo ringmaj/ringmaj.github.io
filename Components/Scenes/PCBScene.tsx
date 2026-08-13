@@ -11,12 +11,12 @@ export default function PCBScene() {
 
   return (
     <Canvas
-      shadows
+      shadows="soft"
       dpr={[1, 1.5]}
       frameloop={viewerOpen ? "never" : "demand"}
       performance={{ min: 0.5 }}
       camera={{
-        position: [-1.77438, 1.54985, 10.57456],
+        position: [-6.16164, 3.7758, 5.9373],
         fov: 48,
         near: 0.1,
         far: 100,
@@ -37,14 +37,15 @@ export default function PCBScene() {
     >
       <PCBModel />
       <mesh
-        position={[3.65, -1.9, 0]}
+        position={[1.56, -0.96, -2.085]}
         rotation={[-Math.PI / 2, 0, 0]}
         receiveShadow
+        renderOrder={-1}
       >
-        <planeGeometry args={[7.5, 7.5]} />
+        <planeGeometry args={[16, 16]} />
         <shadowMaterial
           color="#000000"
-          opacity={0.1}
+          opacity={0.14}
           transparent
           depthWrite={false}
         />

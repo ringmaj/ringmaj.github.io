@@ -9,16 +9,16 @@ import SmoothOrbitControls from "../Scenes/SmoothOrbitControls";
 
 export const PCB_MODEL_URL = "/Models/PCB/pcb.gltf";
 
-const PCB_POSITION = new THREE.Vector3(1.59042, 1.73295, -2.32668);
-const PCB_ROOT_ROTATION = [0.04973, -0.58991, -0.05447] as const;
-const PCB_SHADOW_TARGET_POSITION = new THREE.Vector3(3.65, -0.45, 0);
+const PCB_POSITION = new THREE.Vector3(1.59042, 0.64523, -2.32668);
+const PCB_ROOT_ROTATION = [-0.12066, -0.58991, -0.05447] as const;
+const PCB_SHADOW_TARGET_POSITION = new THREE.Vector3(1.56, 0.81, -2.085);
 const PCB_ORBIT_TARGET: [number, number, number] = [
-  0.93165, 1.11503, 0.0796,
+  1.19415, 0.71187, -1.42209,
 ];
 const PCB_ROTATION = [
-  THREE.MathUtils.degToRad(16),
-  THREE.MathUtils.degToRad(-141),
-  THREE.MathUtils.degToRad(0),
+  -3.02145,
+  -0.46646,
+  3.14158,
 ] as const;
 // The exported GLTF batches disconnected Fusion bodies by material. These are
 // the original shaft/joint coordinates in the model, so every moving part must
@@ -60,6 +60,54 @@ const COMPONENT_MESHES = new Set([
 
 function createFinish(source: THREE.Material) {
   const name = source.name.toLowerCase();
+
+  // Material-editor exports are baked by exact GLTF material name. Keep these
+  // ahead of the family fallbacks so similarly named parts retain their
+  // original finish.
+  if (name === "abs_(white).002") {
+    return new THREE.MeshPhysicalMaterial({
+      name: source.name,
+      color: "#f2f3f1",
+      metalness: 0,
+      roughness: 0,
+      clearcoat: 0.12,
+      clearcoatRoughness: 0.34,
+      envMapIntensity: 0.78,
+    });
+  }
+
+  if (
+    name ===
+    "hp_3d_hr_cb_pa_12_(with_hp_jet_fusion_580_color_3d_printer).002"
+  ) {
+    return new THREE.MeshPhysicalMaterial({
+      name: source.name,
+      color: "#f2f3f1",
+      metalness: 0,
+      roughness: 0,
+      clearcoat: 0.12,
+      clearcoatRoughness: 0.34,
+      envMapIntensity: 0.78,
+    });
+  }
+
+  if (name === "powder_coat_-_rough_(red).002") {
+    return new THREE.MeshStandardMaterial({
+      name: source.name,
+      color: "#d84832",
+      metalness: 0.38,
+      roughness: 0.74,
+    });
+  }
+
+  if (name === "nylon_12_(with_formlabs_fuse_1_3d_printer).002") {
+    return new THREE.MeshStandardMaterial({
+      name: source.name,
+      color: "#e6e6e6",
+      metalness: 0.52,
+      roughness: 0.48,
+    });
+  }
 
   if (name.includes("abs") || name.includes("hp_3d")) {
     return new THREE.MeshPhysicalMaterial({
@@ -559,14 +607,14 @@ function PCBShadowLight() {
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={0.5}
-        shadow-camera-far={40}
-        shadow-camera-left={-4.5}
-        shadow-camera-right={4.5}
-        shadow-camera-top={4.5}
-        shadow-camera-bottom={-4.5}
-        shadow-bias={-0.0002}
-        shadow-normalBias={0.035}
-        shadow-radius={3}
+        shadow-camera-far={50}
+        shadow-camera-left={-7.5}
+        shadow-camera-right={7.5}
+        shadow-camera-top={7.5}
+        shadow-camera-bottom={-7.5}
+        shadow-bias={-0.00025}
+        shadow-normalBias={0.02}
+        shadow-radius={4}
       />
     </>
   );

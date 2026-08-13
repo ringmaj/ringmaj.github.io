@@ -690,6 +690,7 @@ function LightingDebugPanel() {
                 <button
                   type="button"
                   role="switch"
+                  data-page-navigation-ignore
                   aria-label={`${light.name} enabled`}
                   aria-checked={light.enabled}
                   className={`relative block h-5 w-9 shrink-0 rounded-full border ${
@@ -697,9 +698,16 @@ function LightingDebugPanel() {
                       ? "border-neutral-900 bg-neutral-900"
                       : "border-neutral-300 bg-neutral-200"
                   }`}
-                  onClick={() =>
-                    context.updateLight(light.id, { enabled: !light.enabled })
-                  }
+                  onPointerDownCapture={(event) => event.stopPropagation()}
+                  onPointerDown={(event) => event.stopPropagation()}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    context.selectLight(light.id);
+                    context.updateLight(light.id, {
+                      enabled: !light.enabled,
+                    });
+                  }}
                 >
                   <span
                     className={`absolute left-0.5 top-0.5 size-3.5 rounded-full bg-white transition-transform ${

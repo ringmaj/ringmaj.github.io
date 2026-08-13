@@ -17,7 +17,7 @@ const RadarScene = () => {
       performance={{ min: 0.5 }}
       orthographic
       camera={{
-        position: [93.98587, 43.75356, 0],
+        position: [140.35173, -180.45407, -55.49899],
         zoom: 2.06983,
         near: 0.01,
         far: 1000,
@@ -36,7 +36,7 @@ const RadarScene = () => {
       }}
     >
       <RadarModel />
-      <NeutralEnvironment />
+      <NeutralEnvironment intensity={0.09} />
       <SceneOutline />
     </Canvas>
   );

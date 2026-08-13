@@ -28,7 +28,7 @@ const LoadRadarModel = ({
         const isConfiguredSpotlight =
           object instanceof THREE.SpotLight && object.name === "Spot";
         object.visible = isConfiguredSpotlight;
-        object.intensity = isConfiguredSpotlight ? 20 : 0;
+        object.intensity = isConfiguredSpotlight ? 11.67 : 0;
         if (isConfiguredSpotlight) {
           object.color.set("#ffffff");
           object.position.set(4.9749, 3.4675, 4.629);
@@ -37,7 +37,7 @@ const LoadRadarModel = ({
           object.target.updateMatrixWorld(true);
           object.castShadow = true;
           object.angle = Math.PI / 2;
-          object.penumbra = 0.19;
+          object.penumbra = 0.47;
           object.distance = 0;
           object.decay = 0;
         }
