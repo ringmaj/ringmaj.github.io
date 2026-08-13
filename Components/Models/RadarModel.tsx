@@ -2,6 +2,7 @@
 
 import React, { Suspense, useEffect, useMemo, useRef } from "react";
 import { useGLTF, useTexture } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import SmoothOrbitControls from "../Scenes/SmoothOrbitControls";
 import { useInspectableObject } from "../SceneInspector";
@@ -9,6 +10,17 @@ import {
   applyModelMaterialOverride,
   getModelMaterialTextureUrl,
 } from "../modelMaterialOverrides";
+
+const RADAR_BASE_POSITION: [number, number, number] = [-15, 50, -500];
+const RADAR_BASE_ROTATION: [number, number, number] = [
+  THREE.MathUtils.degToRad(10),
+  THREE.MathUtils.degToRad(50),
+  0,
+];
+const RADAR_FLOAT_SPEED = 0.7;
+const RADAR_FLOAT_HEIGHT = 1.9;
+const RADAR_FLOAT_DRIFT = 0.6;
+const RADAR_FLOAT_TILT = THREE.MathUtils.degToRad(0.19);
 
 const LoadRadarModel = ({
   url,
@@ -62,7 +74,24 @@ const LoadRadarModel = ({
     clone.userData.zoomable = true;
     return { scene: clone, ownedMaterials: [...materials] };
   }, [overrideTexture, sourceScene, url]);
+  const floatingGroup = useRef<THREE.Group>(null);
   const { inspectionHandlers } = useInspectableObject(scene);
+
+  useFrame(({ clock, invalidate }) => {
+    if (!floatingGroup.current) return;
+    const phase = clock.getElapsedTime() * RADAR_FLOAT_SPEED;
+    floatingGroup.current.position.x =
+      RADAR_BASE_POSITION[0] + Math.cos(phase * 0.8) * RADAR_FLOAT_DRIFT;
+    floatingGroup.current.position.y =
+      RADAR_BASE_POSITION[1] + Math.sin(phase) * RADAR_FLOAT_HEIGHT;
+    floatingGroup.current.rotation.x =
+      Math.sin(phase * 0.75) * RADAR_FLOAT_TILT;
+    floatingGroup.current.rotation.y =
+      Math.cos(phase * 0.65) * RADAR_FLOAT_TILT;
+    floatingGroup.current.rotation.z =
+      Math.sin(phase * 0.55) * RADAR_FLOAT_TILT * 0.6;
+    invalidate();
+  });
 
   useEffect(
     () => () => ownedMaterials.forEach((material) => material.dispose()),
@@ -71,13 +100,13 @@ const LoadRadarModel = ({
 
   return (
     <group
-      ref={group}
-      scale={65}
-      position={[-15, 50, -500]}
-      rotation={[THREE.MathUtils.degToRad(10), THREE.MathUtils.degToRad(50), 0]}
+      ref={floatingGroup}
+      position={RADAR_BASE_POSITION}
       {...inspectionHandlers}
     >
-      <primitive object={scene} dispose={null} />
+      <group ref={group} scale={65} rotation={RADAR_BASE_ROTATION}>
+        <primitive object={scene} dispose={null} />
+      </group>
     </group>
   );
 };
