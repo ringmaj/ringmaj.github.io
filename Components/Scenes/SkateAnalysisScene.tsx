@@ -57,6 +57,17 @@ import {
   useKeyframePosePresets,
   useKeyframingMode,
 } from "../Keyframing";
+import {
+  clearSkateMotionCurveSnapshot,
+  publishSkateMotionCurveSnapshot,
+  type SkateMotionCurveSnapshot,
+} from "../SkateMotionCurveExport";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "../ui/context-menu";
 
 const DEG = Math.PI / 180;
 const PLAYBACK_DURATION = 1;
@@ -65,6 +76,8 @@ const TRICK_PREPARATION_DURATION = 0.75;
 const LEFT_FOOT_PREPARATION_DELAY = 0.25;
 const PHYSICS_LANDING_DURATION = 2.5;
 const MIN_FOOT_CATCH_TIME = 0.05;
+const FOOT_CATCH_APPROACH_DURATION = 0.18;
+const MIN_SECOND_FOOT_HANDOFF_DURATION = 0.04;
 // Catch adds a controlled downward velocity. Gravity and rider mass provide
 // the sustained load after that; a mass-scaled off-center impulse would add
 // enough torque to spear the board into the floor.
@@ -73,6 +86,8 @@ const PHYSICS_GRAVITY_SCALE = 1.45;
 const BOARD_JUMP_HEIGHT = 1.5;
 const ROTATION_STEP = 180;
 const MAX_ROTATION = 1440;
+const SCOOP_ROTATION_THRESHOLD_DEGREES = 25;
+const MIN_CURVE_POINTS = 3;
 const MAX_CURVE_POINTS = 8;
 const SHOE_MODEL_URL = "/Models/skate-shoe.glb";
 const BOARD_GRAPHIC_TEXTURE_URL = "/Models/boardGraphics.jpg";
@@ -146,9 +161,8 @@ const RIDER_MASS = 75;
 const BOARD_COLLISION_GROUP = 0;
 const SHOE_COLLISION_GROUP = 1;
 const GROUND_COLLISION_GROUP = 2;
-const BOARD_FLIGHT_GROUPS = interactionGroups(BOARD_COLLISION_GROUP, [
-  GROUND_COLLISION_GROUP,
-]);
+const BOARD_AUTHORED_GROUPS = interactionGroups(BOARD_COLLISION_GROUP, []);
+const SHOE_AUTHORED_GROUPS = interactionGroups(SHOE_COLLISION_GROUP, []);
 const BOARD_LANDING_GROUPS = interactionGroups(BOARD_COLLISION_GROUP, [
   SHOE_COLLISION_GROUP,
   GROUND_COLLISION_GROUP,
@@ -269,6 +283,8 @@ const KICKFLIP_RIGHT_FOOT_VERTICAL_SCALE = 0.4;
 const HEELFLIP_RIGHT_FOOT_VERTICAL_SCALE = 0.4;
 const HEELFLIP_PARENT_CLEARANCE = 0.06;
 const AUTHORED_RIGHT_FOOT_RECOVERY_LEAD = 0.04;
+const AUTHORED_RIGHT_FOOT_RECOVERY_DURATION = 0.12;
+const KICKFLIP_RIGHT_FOOT_START_LEAD = 0.25;
 
 const AUTHORED_SHOE_POSITION = new THREE.Vector3();
 const AUTHORED_SHOE_QUATERNION = new THREE.Quaternion();
@@ -418,28 +434,38 @@ function createDefaultRotationMax(): Record<RotationChannel, number> {
 }
 
 function createDefaultFootCatch() {
-  return { left: 0.72, right: 0.78 };
+  // Internal shoe-rig names are reversed. These values export and display as
+  // semantic left 0.6723063650306749s and semantic right
+  // 0.6519722967791411s.
+  return {
+    left: 0.6519722967791411,
+    right: 0.6723063650306749,
+  };
 }
 
 function createDefaultChannels(): Record<MotionChannel, MotionPoint[]> {
   return {
     height: [
       { time: 0, value: 0 },
-      { time: 0.64, value: 0.84 },
+      { time: 0.5317921423637915, value: 1.5 },
       { time: 1, value: 0 },
     ],
     speed: [
       { time: 0, value: 1 },
-      { time: 0.18, value: 0.08 },
+      { time: 0.19425456059805793, value: 0.3062499999999999 },
+      { time: 0.31828708406126843, value: 0 },
+      { time: 0.47208030309186205, value: 0 },
+      { time: 0.5843050420509487, value: 0.1343749999999999 },
+      { time: 0.6820557225856255, value: 2 },
       { time: 1, value: 1 },
     ],
     x: [
       { time: 0, value: 0 },
-      { time: 0.145, value: -0.28 },
-      { time: 0.27, value: -0.105 },
+      { time: 0.05019958964774712, value: -0.24492187499999996 },
+      { time: 0.15323203185308576, value: -0.18437499999999996 },
       { time: 0.35, value: 0.262 },
       { time: 0.68, value: 0 },
-      { time: 0.85, value: 0.262 },
+      { time: 0.8374487059683907, value: -0.27519531249999996 },
       { time: 1, value: 0 },
     ],
     y: [
@@ -457,9 +483,9 @@ function createDefaultChannels(): Record<MotionChannel, MotionPoint[]> {
     ],
     body: [
       { time: 0, value: 0 },
-      { time: 0.135, value: 0.6 },
-      { time: 0.27, value: 1 },
-      { time: 1, value: 1 },
+      { time: 0.135, value: 0 },
+      { time: 0.27, value: 0 },
+      { time: 1, value: 0 },
     ],
   };
 }
@@ -483,8 +509,8 @@ function createClearedChannels(): Record<MotionChannel, MotionPoint[]> {
 
 const GENERATED_TRICK_PRESETS: GeneratedTrickPreset[] = [
   {
-    id: "backside-kickflip",
-    label: "Backside Kickflip",
+    id: "kickflip",
+    label: "Kickflip",
     create: () => ({
       channels: createDefaultChannels(),
       rotationMax: createDefaultRotationMax(),
@@ -559,10 +585,7 @@ function sampleCurveAtTime(points: MotionPoint[], time: number) {
   // avoids allocating THREE.Curve objects every frame.
   for (let iteration = 0; iteration < 9; iteration += 1) {
     const candidate = (lower + upper) * 0.5;
-    const candidateTime = evaluateBezierScalar(
-      timeValues,
-      candidate,
-    );
+    const candidateTime = evaluateBezierScalar(timeValues, candidate);
     if (candidateTime < time) lower = candidate;
     else upper = candidate;
   }
@@ -612,9 +635,9 @@ function driveDynamicBody(
     currentRotation.z,
     currentRotation.w,
   );
-  const deltaQuaternion = DRIVE_DELTA_QUATERNION
-    .copy(targetQuaternion)
-    .multiply(currentQuaternion.invert());
+  const deltaQuaternion = DRIVE_DELTA_QUATERNION.copy(
+    targetQuaternion,
+  ).multiply(currentQuaternion.invert());
   if (deltaQuaternion.w < 0) {
     deltaQuaternion.x *= -1;
     deltaQuaternion.y *= -1;
@@ -648,20 +671,14 @@ function driveDynamicBody(
   );
 }
 
-function setBodyCollisionGroups(
-  body: RapierRigidBody | null,
-  groups: number,
-) {
+function setBodyCollisionGroups(body: RapierRigidBody | null, groups: number) {
   if (!body) return;
   for (let index = 0; index < body.numColliders(); index += 1) {
     body.collider(index).setCollisionGroups(groups);
   }
 }
 
-function createCurvePath(
-  points: MotionPoint[],
-  channel: MotionChannelConfig,
-) {
+function createCurvePath(points: MotionPoint[], channel: MotionChannelConfig) {
   const timeValues = points.map((point) => point.time);
   const motionValues = points.map((point) => point.value);
   const segments = Math.max(36, points.length * 12);
@@ -748,17 +765,12 @@ function classifyTrick(
   };
 }
 
-function graphPoint(
-  point: MotionPoint,
-  channel: MotionChannelConfig,
-) {
+function graphPoint(point: MotionPoint, channel: MotionChannelConfig) {
   const normalizedValue =
     (point.value - channel.min) / (channel.max - channel.min);
   return {
     x: GRAPH_PADDING_X + point.time * GRAPH_PLOT_WIDTH,
-    y:
-      GRAPH_PADDING_Y +
-      (1 - normalizedValue) * GRAPH_PLOT_HEIGHT,
+    y: GRAPH_PADDING_Y + (1 - normalizedValue) * GRAPH_PLOT_HEIGHT,
   };
 }
 
@@ -797,8 +809,7 @@ function splitShoePairGeometry(source: THREE.BufferGeometry) {
     const c = readIndex(offset + 2);
     const centroid =
       (position.getZ(a) + position.getZ(b) + position.getZ(c)) / 3;
-    const target =
-      centroid < splitMidpoint ? negativeIndices : positiveIndices;
+    const target = centroid < splitMidpoint ? negativeIndices : positiveIndices;
     target.push(a, b, c);
   }
 
@@ -875,8 +886,7 @@ function BezierEditor({
       const svg = svgRef.current;
       if (!svg) return;
       const bounds = svg.getBoundingClientRect();
-      const svgX =
-        ((event.clientX - bounds.left) / bounds.width) * GRAPH_WIDTH;
+      const svgX = ((event.clientX - bounds.left) / bounds.width) * GRAPH_WIDTH;
       const svgY =
         ((event.clientY - bounds.top) / bounds.height) * GRAPH_HEIGHT;
       const time = THREE.MathUtils.clamp(
@@ -895,20 +905,39 @@ function BezierEditor({
     [channel.max, channel.min, updatePoint],
   );
 
+  const removePoint = useCallback(
+    (index: number) => {
+      if (points.length <= MIN_CURVE_POINTS) return;
+      activePoint.current = null;
+      onChange(points.filter((_, pointIndex) => pointIndex !== index));
+    },
+    [onChange, points],
+  );
+
   const handleKeyDown = useCallback(
     (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
       const valueStep = (channel.max - channel.min) * 0.025;
       const timeStep = 0.02;
       const point = points[index];
-      if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key))
+      if (
+        !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
+      )
         return;
       event.preventDefault();
       updatePoint(
         index,
         point.time +
-          (event.key === "ArrowRight" ? timeStep : event.key === "ArrowLeft" ? -timeStep : 0),
+          (event.key === "ArrowRight"
+            ? timeStep
+            : event.key === "ArrowLeft"
+              ? -timeStep
+              : 0),
         point.value +
-          (event.key === "ArrowUp" ? valueStep : event.key === "ArrowDown" ? -valueStep : 0),
+          (event.key === "ArrowUp"
+            ? valueStep
+            : event.key === "ArrowDown"
+              ? -valueStep
+              : 0),
       );
     },
     [channel.max, channel.min, points, updatePoint],
@@ -921,7 +950,10 @@ function BezierEditor({
       <div className="mb-0.5 flex items-center justify-between">
         <h3
           className="rounded-sm px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em] max-sm:text-[0.48rem] max-sm:tracking-[0.08em]"
-          style={{ color: channel.color, backgroundColor: `${channel.color}14` }}
+          style={{
+            color: channel.color,
+            backgroundColor: `${channel.color}14`,
+          }}
         >
           {channel.title}
         </h3>
@@ -1082,49 +1114,66 @@ function BezierEditor({
         />
 
         {screenPoints.map((point, index) => (
-          <button
-            key={index}
-            type="button"
-            aria-label={`${channel.title} control point ${index + 1}`}
-            aria-valuemax={channel.max}
-            aria-valuemin={channel.min}
-            aria-valuenow={Number(points[index].value.toFixed(2))}
-            className="absolute size-[10px] -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-white bg-[#0062ff] p-0 shadow-sm outline-none transition-[box-shadow] focus-visible:ring-2 focus-visible:ring-orange-500 active:cursor-grabbing"
-            onKeyDown={(event) => handleKeyDown(event, index)}
-            onPointerCancel={() => {
-              activePoint.current = null;
-            }}
-            onPointerDown={(event) => {
-              event.stopPropagation();
-              activePoint.current = index;
-              event.currentTarget.setPointerCapture(event.pointerId);
-            }}
-            onPointerMove={(event) => {
-              if (activePoint.current !== index) return;
-              event.stopPropagation();
-              updateFromPointer(event, index);
-            }}
-            onPointerUp={(event) => {
-              activePoint.current = null;
-              event.currentTarget.releasePointerCapture(event.pointerId);
-            }}
-            role="slider"
-            style={{
-              left: `${(point.x / GRAPH_WIDTH) * 100}%`,
-              top: `${(point.y / GRAPH_HEIGHT) * 100}%`,
-            }}
-          >
-            <span
-              aria-hidden="true"
-              className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[7px] font-bold leading-none text-black/50 ${
-                point.y < GRAPH_PADDING_Y + 10
-                  ? "top-[calc(100%+4px)]"
-                  : "bottom-[calc(100%+4px)]"
-              }`}
-            >
-              p{index}
-            </span>
-          </button>
+          <ContextMenu key={index}>
+            <ContextMenuTrigger asChild>
+              <button
+                type="button"
+                aria-label={`${channel.title} control point ${index + 1}`}
+                aria-valuemax={channel.max}
+                aria-valuemin={channel.min}
+                aria-valuenow={Number(points[index].value.toFixed(2))}
+                className="absolute size-[10px] -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-white bg-[#0062ff] p-0 shadow-sm outline-none transition-[box-shadow] focus-visible:ring-2 focus-visible:ring-orange-500 active:cursor-grabbing"
+                title="Drag to edit · Right-click for options"
+                onKeyDown={(event) => handleKeyDown(event, index)}
+                onPointerCancel={() => {
+                  activePoint.current = null;
+                }}
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                  if (event.button !== 0) return;
+                  activePoint.current = index;
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                }}
+                onPointerMove={(event) => {
+                  if (activePoint.current !== index) return;
+                  event.stopPropagation();
+                  updateFromPointer(event, index);
+                }}
+                onPointerUp={(event) => {
+                  activePoint.current = null;
+                  if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                    event.currentTarget.releasePointerCapture(event.pointerId);
+                  }
+                }}
+                role="slider"
+                style={{
+                  left: `${(point.x / GRAPH_WIDTH) * 100}%`,
+                  top: `${(point.y / GRAPH_HEIGHT) * 100}%`,
+                }}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[7px] font-bold leading-none text-black/50 ${
+                    point.y < GRAPH_PADDING_Y + 10
+                      ? "top-[calc(100%+4px)]"
+                      : "bottom-[calc(100%+4px)]"
+                  }`}
+                >
+                  p{index}
+                </span>
+              </button>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem
+                disabled={points.length <= MIN_CURVE_POINTS}
+                className="text-red-600 focus:bg-red-50 focus:text-red-700"
+                onSelect={() => removePoint(index)}
+              >
+                <FiTrash2 aria-hidden="true" />
+                Delete point
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
         ))}
       </div>
       <div className="motion-curve-axis-labels flex justify-between pl-2 pr-1 text-[0.5rem] font-medium tabular-nums text-black/35 max-sm:hidden">
@@ -1162,10 +1211,7 @@ function FootCatchEditor({
   );
 
   const updateFromKeyboard = useCallback(
-    (
-      event: ReactKeyboardEvent<HTMLButtonElement>,
-      foot: "left" | "right",
-    ) => {
+    (event: ReactKeyboardEvent<HTMLButtonElement>, foot: "left" | "right") => {
       const direction =
         event.key === "ArrowLeft" || event.key === "ArrowDown"
           ? -1
@@ -1394,6 +1440,46 @@ function SkateMotionEditor({
     setSelectedTrickId("custom");
   }, [motion]);
 
+  useEffect(() => {
+    const snapshot: SkateMotionCurveSnapshot = {
+      route: "/skate-analysis",
+      trick: {
+        source: selectedTrick ? "generated-preset" : "custom",
+        presetId: selectedTrick?.id ?? "custom",
+        label: selectedTrick?.label ?? trick.name,
+        detectedName: trick.name,
+        rotationCombination: trick.combination,
+      },
+      timing: {
+        playbackDurationSeconds: PLAYBACK_DURATION,
+        restartDelaySeconds: PLAYBACK_RESTART_DELAY,
+        preparationDurationSeconds: TRICK_PREPARATION_DURATION,
+        leftFootPreparationDelaySeconds: LEFT_FOOT_PREPARATION_DELAY,
+      },
+      curveChannels: Object.fromEntries(
+        MOTION_CHANNELS.map((channel) => [
+          channel.key,
+          {
+            label: channel.title,
+            minimum: channel.min,
+            maximum: channel.max,
+            points: channels[channel.key].map((point) => ({ ...point })),
+          },
+        ]),
+      ),
+      rotationMaximumDegrees: { ...rotationMax },
+      // The source shoe rig is semantically reversed. Export the labels as the
+      // user sees them, so pasted trick data always says left/right correctly.
+      footCatchSeconds: {
+        left: footCatch.right,
+        right: footCatch.left,
+      },
+    };
+
+    publishSkateMotionCurveSnapshot(snapshot);
+    return () => clearSkateMotionCurveSnapshot(snapshot);
+  }, [channels, footCatch, rotationMax, selectedTrick, trick]);
+
   return (
     <section
       data-page-navigation-ignore
@@ -1427,7 +1513,11 @@ function SkateMotionEditor({
             className="grid size-8 place-items-center border border-black/15 bg-white text-sm transition hover:border-orange-500 hover:text-orange-600"
             onClick={() => setPaused((current) => !current)}
           >
-            {paused ? <FiPlay aria-hidden="true" /> : <FiPause aria-hidden="true" />}
+            {paused ? (
+              <FiPlay aria-hidden="true" />
+            ) : (
+              <FiPause aria-hidden="true" />
+            )}
           </button>
           <button
             type="button"
@@ -1509,9 +1599,7 @@ function SkateMotionEditor({
                 if (preset) applyTrickPreset(preset);
               }}
             >
-              {!selectedTrick && (
-                <option value="custom">{trick.name}</option>
-              )}
+              {!selectedTrick && <option value="custom">{trick.name}</option>}
               {GENERATED_TRICK_PRESETS.map((preset) => (
                 <option key={preset.id} value={preset.id}>
                   {preset.label}
@@ -1577,106 +1665,106 @@ function SkateModel({
     deckTopOffset,
     floorColliderPosition,
     boardGraphicMaterials,
-  } =
-    useMemo(() => {
-      const clonedScene = sourceScene.clone(true);
-      const boardObject = clonedScene.getObjectByName("board");
-      const floor = clonedScene.getObjectByName("floor");
-      const graphicMaterials: THREE.Material[] = [];
-      const shadowMaterial = new THREE.ShadowMaterial({
-        color: 0x777777,
-        opacity: 0.24,
-        transparent: true,
-      });
+  } = useMemo(() => {
+    const clonedScene = sourceScene.clone(true);
+    const boardObject = clonedScene.getObjectByName("board");
+    const floor = clonedScene.getObjectByName("floor");
+    const graphicMaterials: THREE.Material[] = [];
+    const shadowMaterial = new THREE.ShadowMaterial({
+      color: 0x777777,
+      opacity: 0.24,
+      transparent: true,
+    });
 
-      clonedScene.traverse((object) => {
-        if (!(object instanceof THREE.Mesh)) return;
-        const replaceBoardGraphic = (material: THREE.Material) => {
-          if (!/^boardgraphics?$/i.test(material.name)) return material;
-          const replacement = material.clone();
-          if (replacement instanceof THREE.MeshStandardMaterial) {
-            replacement.map = boardGraphicTexture;
-            replacement.color.set(0xffffff);
-            replacement.needsUpdate = true;
-          }
-          graphicMaterials.push(replacement);
-          return replacement;
-        };
-        object.material = Array.isArray(object.material)
-          ? object.material.map(replaceBoardGraphic)
-          : replaceBoardGraphic(object.material);
-        object.castShadow = object !== floor;
-        object.receiveShadow = true;
-      });
-
-      if (floor instanceof THREE.Mesh) {
-        floor.material = shadowMaterial;
-        floor.receiveShadow = true;
-        // The board is animated after the model is scaled 10x, so its shadow
-        // footprint can extend far beyond the compact floor shipped in the GLB.
-        floor.scale.x *= 20;
-        floor.scale.z *= 20;
-      }
-
-      // Keep the deck casting onto the floor, but do not let the directional
-      // light project the board's own undercarriage onto its top surface.
-      // That self-shadow was the dark shape that appeared to cover the deck
-      // during steep flips.
-      boardObject?.traverse((object) => {
-        if (!(object instanceof THREE.Mesh)) return;
-        object.castShadow = true;
-        object.receiveShadow = false;
-      });
-
-      if (boardObject && floor) {
-        const floorDistance = boardObject.position.y - floor.position.y;
-        boardObject.position.y = 0;
-        floor.position.y = -floorDistance + 0.01;
-      }
-
-      clonedScene.updateMatrixWorld(true);
-      const boardBounds = boardObject
-        ? new THREE.Box3().setFromObject(boardObject)
-        : new THREE.Box3();
-      const centerWorld = boardObject
-        ? boardBounds.getCenter(new THREE.Vector3())
-        : new THREE.Vector3();
-      const centerLocal = boardObject
-        ? boardObject.worldToLocal(centerWorld.clone())
-        : new THREE.Vector3();
-      const centerInParent = boardObject?.parent
-        ? boardObject.parent.worldToLocal(centerWorld.clone())
-        : centerWorld;
-      const topLocal = boardObject
-        ? boardObject.worldToLocal(
-            new THREE.Vector3(centerWorld.x, boardBounds.max.y, centerWorld.z),
-          )
-        : new THREE.Vector3(0, 0.18, 0);
-      const floorPosition = floor?.position.clone() ?? new THREE.Vector3(0, -0.18, 0);
-      if (boardObject) {
-        boardObject.removeFromParent();
-        boardObject.position
-          .copy(centerLocal)
-          .multiply(boardObject.scale)
-          .multiplyScalar(-1);
-        boardObject.quaternion.identity();
-      }
-      return {
-        scene: clonedScene,
-        board: boardObject,
-        floorMaterial: shadowMaterial,
-        baseQuaternion: boardObject?.quaternion.clone() ?? new THREE.Quaternion(),
-        boardCenterLocal: centerLocal,
-        boardCenterInParent: centerInParent,
-        deckTopOffset: Math.max(0.16, topLocal.y - centerLocal.y),
-        floorColliderPosition: [
-          floorPosition.x,
-          floorPosition.y,
-          floorPosition.z,
-        ] as [number, number, number],
-        boardGraphicMaterials: graphicMaterials,
+    clonedScene.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      const replaceBoardGraphic = (material: THREE.Material) => {
+        if (!/^boardgraphics?$/i.test(material.name)) return material;
+        const replacement = material.clone();
+        if (replacement instanceof THREE.MeshStandardMaterial) {
+          replacement.map = boardGraphicTexture;
+          replacement.color.set(0xffffff);
+          replacement.needsUpdate = true;
+        }
+        graphicMaterials.push(replacement);
+        return replacement;
       };
-    }, [boardGraphicTexture, sourceScene]);
+      object.material = Array.isArray(object.material)
+        ? object.material.map(replaceBoardGraphic)
+        : replaceBoardGraphic(object.material);
+      object.castShadow = object !== floor;
+      object.receiveShadow = true;
+    });
+
+    if (floor instanceof THREE.Mesh) {
+      floor.material = shadowMaterial;
+      floor.receiveShadow = true;
+      // The board is animated after the model is scaled 10x, so its shadow
+      // footprint can extend far beyond the compact floor shipped in the GLB.
+      floor.scale.x *= 20;
+      floor.scale.z *= 20;
+    }
+
+    // Keep the deck casting onto the floor, but do not let the directional
+    // light project the board's own undercarriage onto its top surface.
+    // That self-shadow was the dark shape that appeared to cover the deck
+    // during steep flips.
+    boardObject?.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      object.castShadow = true;
+      object.receiveShadow = false;
+    });
+
+    if (boardObject && floor) {
+      const floorDistance = boardObject.position.y - floor.position.y;
+      boardObject.position.y = 0;
+      floor.position.y = -floorDistance + 0.01;
+    }
+
+    clonedScene.updateMatrixWorld(true);
+    const boardBounds = boardObject
+      ? new THREE.Box3().setFromObject(boardObject)
+      : new THREE.Box3();
+    const centerWorld = boardObject
+      ? boardBounds.getCenter(new THREE.Vector3())
+      : new THREE.Vector3();
+    const centerLocal = boardObject
+      ? boardObject.worldToLocal(centerWorld.clone())
+      : new THREE.Vector3();
+    const centerInParent = boardObject?.parent
+      ? boardObject.parent.worldToLocal(centerWorld.clone())
+      : centerWorld;
+    const topLocal = boardObject
+      ? boardObject.worldToLocal(
+          new THREE.Vector3(centerWorld.x, boardBounds.max.y, centerWorld.z),
+        )
+      : new THREE.Vector3(0, 0.18, 0);
+    const floorPosition =
+      floor?.position.clone() ?? new THREE.Vector3(0, -0.18, 0);
+    if (boardObject) {
+      boardObject.removeFromParent();
+      boardObject.position
+        .copy(centerLocal)
+        .multiply(boardObject.scale)
+        .multiplyScalar(-1);
+      boardObject.quaternion.identity();
+    }
+    return {
+      scene: clonedScene,
+      board: boardObject,
+      floorMaterial: shadowMaterial,
+      baseQuaternion: boardObject?.quaternion.clone() ?? new THREE.Quaternion(),
+      boardCenterLocal: centerLocal,
+      boardCenterInParent: centerInParent,
+      deckTopOffset: Math.max(0.16, topLocal.y - centerLocal.y),
+      floorColliderPosition: [
+        floorPosition.x,
+        floorPosition.y,
+        floorPosition.z,
+      ] as [number, number, number],
+      boardGraphicMaterials: graphicMaterials,
+    };
+  }, [boardGraphicTexture, sourceScene]);
 
   useEffect(() => {
     boardGraphicTexture.colorSpace = THREE.SRGBColorSpace;
@@ -1712,10 +1800,7 @@ function SkateModel({
       worldScale,
     );
 
-    const createShoeRig = (
-      geometry: THREE.BufferGeometry,
-      name: string,
-    ) => {
+    const createShoeRig = (geometry: THREE.BufferGeometry, name: string) => {
       const mesh = new THREE.Mesh(geometry, sourceMesh.material);
       mesh.position.copy(worldPosition);
       mesh.quaternion.copy(worldQuaternion);
@@ -1746,11 +1831,15 @@ function SkateModel({
     const rightRig = createShoeRig(subsets.right, "right_skate_shoe");
 
     // Source rig roles are opposite the semantic feet (see inspector mapping).
-    rightRig.rig.position.set(...TRICK_FOOT_POSES.boltPosition.left.localPosition);
+    rightRig.rig.position.set(
+      ...TRICK_FOOT_POSES.boltPosition.left.localPosition,
+    );
     rightRig.rig.quaternion
       .set(...TRICK_FOOT_POSES.boltPosition.left.localQuaternion)
       .normalize();
-    leftRig.rig.position.set(...TRICK_FOOT_POSES.boltPosition.right.localPosition);
+    leftRig.rig.position.set(
+      ...TRICK_FOOT_POSES.boltPosition.right.localPosition,
+    );
     leftRig.rig.quaternion
       .set(...TRICK_FOOT_POSES.boltPosition.right.localQuaternion)
       .normalize();
@@ -1812,6 +1901,20 @@ function SkateModel({
   const secondCatchIsLeft = useRef(false);
   const secondCatchLocalOffset = useRef(new THREE.Vector3());
   const secondCatchWorldQuaternion = useRef(new THREE.Quaternion());
+  const secondCatchStartPosition = useRef(new THREE.Vector3());
+  const secondCatchStartLocalOffset = useRef(new THREE.Vector3());
+  const secondCatchStartQuaternion = useRef(new THREE.Quaternion());
+  const secondCatchTargetPosition = useRef(new THREE.Vector3());
+  const secondCatchTargetQuaternion = useRef(new THREE.Quaternion());
+  const landingBoltAssignmentLocked = useRef(false);
+  const leftLandingBoltLocal = useRef(new THREE.Vector3());
+  const rightLandingBoltLocal = useRef(new THREE.Vector3());
+  const leftLandingAnchor = useRef(new THREE.Vector3());
+  const rightLandingAnchor = useRef(new THREE.Vector3());
+  const leftVisualPosition = useRef(new THREE.Vector3());
+  const rightVisualPosition = useRef(new THREE.Vector3());
+  const shoeLocalOffset = useRef(new THREE.Vector3());
+  const landingShoeQuaternion = useRef(new THREE.Quaternion());
   const leftCatchJoint = useRef<ReturnType<
     (typeof rapier.World.prototype)["createImpulseJoint"]
   > | null>(null);
@@ -1891,7 +1994,11 @@ function SkateModel({
   useBeforePhysicsStep((world) => {
     if (!board) return;
     if (keyframingEnabled) {
-      for (const body of [boardBody.current, leftShoeBody.current, rightShoeBody.current]) {
+      for (const body of [
+        boardBody.current,
+        leftShoeBody.current,
+        rightShoeBody.current,
+      ]) {
         if (!body) continue;
         body.setLinvel({ x: 0, y: 0, z: 0 }, false);
         body.setAngvel({ x: 0, y: 0, z: 0 }, false);
@@ -1913,8 +2020,7 @@ function SkateModel({
     // Clear All is a true static inspection state. Freeze curve time at its
     // neutral pose and bypass preparation, physics handoff, and restart delay.
     // Editing any motion channel makes this false and playback resumes.
-    const clearedDuringPhysics =
-      !hasAuthoredMotion && physicsReleased.current;
+    const clearedDuringPhysics = !hasAuthoredMotion && physicsReleased.current;
     if (!hasAuthoredMotion) {
       state.progress = 0;
       state.preparationElapsed = TRICK_PREPARATION_DURATION;
@@ -1982,10 +2088,7 @@ function SkateModel({
       shoe.setAngvel({ x: 0, y: 0, z: 0 }, true);
       shoe.setEnabledRotations(false, false, false, true);
       jointRef.current = world.createImpulseJoint(
-        rapier.JointData.spherical(
-          localOffset,
-          { x: 0, y: 0, z: 0 },
-        ),
+        rapier.JointData.spherical(localOffset, { x: 0, y: 0, z: 0 }),
         caughtBoard,
         shoe,
         true,
@@ -1994,31 +2097,61 @@ function SkateModel({
 
     if (physicsReleased.current && secondCatchPending.current) {
       secondCatchElapsed.current += frameDelta;
-      if (secondCatchElapsed.current >= secondCatchDelay.current) {
+      const caughtBoard = boardBody.current;
+      const secondShoe = secondCatchIsLeft.current
+        ? leftShoeBody.current
+        : rightShoeBody.current;
+      const secondShoeGroup = secondCatchIsLeft.current
+        ? leftShoe
+        : rightShoe;
+      const boardPosition = caughtBoard?.translation();
+      const boardRotation = caughtBoard?.rotation();
+      if (secondShoe && boardPosition && boardRotation) {
+        centerPosition.current.set(
+          boardPosition.x,
+          boardPosition.y,
+          boardPosition.z,
+        );
+        boardTargetQuaternion.current.set(
+          boardRotation.x,
+          boardRotation.y,
+          boardRotation.z,
+          boardRotation.w,
+        );
+        secondCatchTargetPosition.current
+          .copy(secondCatchLocalOffset.current)
+          .applyQuaternion(boardTargetQuaternion.current)
+          .add(centerPosition.current);
+        const handoffDuration = Math.max(
+          MIN_SECOND_FOOT_HANDOFF_DURATION,
+          secondCatchDelay.current,
+        );
+        const approachBlend = THREE.MathUtils.smootherstep(
+          secondCatchElapsed.current,
+          0,
+          handoffDuration,
+        );
+        caughtPosition.current
+          .copy(secondCatchStartLocalOffset.current)
+          .lerp(secondCatchLocalOffset.current, approachBlend)
+          .applyQuaternion(boardTargetQuaternion.current)
+          .add(centerPosition.current);
+        landingShoeQuaternion.current
+          .copy(secondCatchStartQuaternion.current)
+          .slerp(secondCatchWorldQuaternion.current, approachBlend)
+          .normalize();
+        secondShoe.setTranslation(caughtPosition.current, true);
+        secondShoe.setRotation(landingShoeQuaternion.current, true);
+        secondShoe.setLinvel({ x: 0, y: 0, z: 0 }, true);
+        secondShoe.setAngvel({ x: 0, y: 0, z: 0 }, true);
+      }
+      if (
+        secondCatchElapsed.current >=
+        Math.max(MIN_SECOND_FOOT_HANDOFF_DURATION, secondCatchDelay.current)
+      ) {
         secondCatchPending.current = false;
-        const caughtBoard = boardBody.current;
-        const secondShoe = secondCatchIsLeft.current
-          ? leftShoeBody.current
-          : rightShoeBody.current;
-        const boardPosition = caughtBoard?.translation();
-        const boardRotation = caughtBoard?.rotation();
         if (secondShoe && boardPosition && boardRotation) {
-          centerPosition.current.set(
-            boardPosition.x,
-            boardPosition.y,
-            boardPosition.z,
-          );
-          boardTargetQuaternion.current.set(
-            boardRotation.x,
-            boardRotation.y,
-            boardRotation.z,
-            boardRotation.w,
-          );
-          caughtPosition.current
-            .copy(secondCatchLocalOffset.current)
-            .applyQuaternion(boardTargetQuaternion.current)
-            .add(centerPosition.current);
-          secondShoe.setTranslation(caughtPosition.current, true);
+          secondShoe.setTranslation(secondCatchTargetPosition.current, true);
           secondShoe.setRotation(secondCatchWorldQuaternion.current, true);
           const liveBoardVelocity = caughtBoard?.linvel() ?? {
             x: 0,
@@ -2063,6 +2196,25 @@ function SkateModel({
       }
     }
 
+    // Once catch hands the rig to Rapier, leave the baked shoe children
+    // untouched. Re-running preparation here used to reapply their local
+    // offsets on top of the physical bodies, which looked like feet sliding
+    // to (or remaining bound to) a particular half of a 180-degree board.
+    if (physicsReleased.current) {
+      for (const body of [
+        boardBody.current,
+        leftShoeBody.current,
+        rightShoeBody.current,
+      ]) {
+        body?.setGravityScale(
+          presentationScale * PHYSICS_GRAVITY_SCALE,
+          true,
+        );
+      }
+      previousProgress.current = state.progress;
+      return;
+    }
+
     if (
       hasAuthoredMotion &&
       !state.paused &&
@@ -2088,8 +2240,7 @@ function SkateModel({
           2,
         );
         const nextProgress =
-          state.progress +
-          (frameDelta * playbackSpeed) / PLAYBACK_DURATION;
+          state.progress + (frameDelta * playbackSpeed) / PLAYBACK_DURATION;
         if (nextProgress >= 1) {
           state.progress = 1;
           state.restartDelayRemaining = PLAYBACK_RESTART_DELAY;
@@ -2111,13 +2262,27 @@ function SkateModel({
       const bolt = TRICK_FOOT_POSES.boltPosition[foot];
       const generic = TRICK_FOOT_POSES.genericStart[foot];
       shoe.position.set(
-        THREE.MathUtils.lerp(bolt.localPosition[0], generic.localPosition[0], blend),
-        THREE.MathUtils.lerp(bolt.localPosition[1], generic.localPosition[1], blend),
-        THREE.MathUtils.lerp(bolt.localPosition[2], generic.localPosition[2], blend),
+        THREE.MathUtils.lerp(
+          bolt.localPosition[0],
+          generic.localPosition[0],
+          blend,
+        ),
+        THREE.MathUtils.lerp(
+          bolt.localPosition[1],
+          generic.localPosition[1],
+          blend,
+        ),
+        THREE.MathUtils.lerp(
+          bolt.localPosition[2],
+          generic.localPosition[2],
+          blend,
+        ),
       );
       shoe.quaternion.set(...bolt.localQuaternion);
       preparationTargetQuaternion.current.set(...generic.localQuaternion);
-      shoe.quaternion.slerp(preparationTargetQuaternion.current, blend).normalize();
+      shoe.quaternion
+        .slerp(preparationTargetQuaternion.current, blend)
+        .normalize();
       shoe.updateMatrix();
     };
     const rightFootPreparation = THREE.MathUtils.smoothstep(
@@ -2143,12 +2308,9 @@ function SkateModel({
     const zValue = sampleCurveAtTime(state.channels.z, state.progress);
     const bodyValue = sampleCurveAtTime(state.channels.body, state.progress);
     const height = heightValue * BOARD_JUMP_HEIGHT;
-    const xRotation =
-      xValue * THREE.MathUtils.degToRad(state.rotationMax.x);
-    const yRotation =
-      yValue * THREE.MathUtils.degToRad(state.rotationMax.y);
-    const zRotation =
-      zValue * THREE.MathUtils.degToRad(state.rotationMax.z);
+    const xRotation = xValue * THREE.MathUtils.degToRad(state.rotationMax.x);
+    const yRotation = yValue * THREE.MathUtils.degToRad(state.rotationMax.y);
+    const zRotation = zValue * THREE.MathUtils.degToRad(state.rotationMax.z);
     const bodyRotation =
       bodyValue * THREE.MathUtils.degToRad(state.rotationMax.body);
 
@@ -2195,10 +2357,7 @@ function SkateModel({
     const shoveDegrees = authoredShove * state.rotationMax.y;
     const bodyDegrees = authoredBody * state.rotationMax.body;
     const flipTurns = Math.abs(flipDegrees) / 360;
-    const spinTurns = Math.max(
-      Math.abs(shoveDegrees) / 360,
-      Math.abs(bodyDegrees) / 720,
-    );
+    const spinTurns = Math.abs(shoveDegrees) / 360;
     const hasFlipFootwork = Math.abs(flipDegrees) >= 45;
     const authoredRightFootKeyframes =
       flipDegrees >= 45
@@ -2208,8 +2367,11 @@ function SkateModel({
           : null;
     const useAuthoredRightHeelflip = flipDegrees <= -45;
     const useAuthoredRightFlip = authoredRightFootKeyframes !== null;
+    // Only a board-local Y rotation calls for a rear-foot scoop. A body turn
+    // or a flip by itself must not trigger the semantic left/back foot's
+    // lateral travel and ankle roll.
     const hasSpinFootwork =
-      Math.max(Math.abs(shoveDegrees), Math.abs(bodyDegrees)) >= 45;
+      Math.abs(shoveDegrees) >= SCOOP_ROTATION_THRESHOLD_DEGREES;
     // A valid flip needs a visibly decisive flick even at 90–180°. Extra
     // rotations continue to increase travel and ankle articulation without
     // letting extreme curves throw a foot off-screen.
@@ -2225,8 +2387,21 @@ function SkateModel({
     );
 
     if (authoredRightFootKeyframes && !physicsReleased.current) {
+      // Begin the semantic right-foot kickflip flick during the final 250 ms
+      // of stance preparation. The board curves still begin at progress 0;
+      // only this authored shoe sequence receives the negative-time lead.
+      const authoredStartLead = useAuthoredRightHeelflip
+        ? 0
+        : KICKFLIP_RIGHT_FOOT_START_LEAD;
+      const preparationLeadProgress = Math.max(
+        0,
+        state.preparationElapsed -
+          (TRICK_PREPARATION_DURATION - authoredStartLead),
+      );
+      const authoredRightFootProgress =
+        state.progress + preparationLeadProgress;
       const authoredRightFootBlend = THREE.MathUtils.smoothstep(
-        state.progress,
+        authoredRightFootProgress,
         0,
         authoredRightFootKeyframes[1].time,
       );
@@ -2235,7 +2410,7 @@ function SkateModel({
       // it was posed, while the parent continues to follow the overall trick.
       sampleAuthoredShoeKeyframes(
         authoredRightFootKeyframes,
-        state.progress,
+        authoredRightFootProgress,
         AUTHORED_SHOE_POSITION,
         AUTHORED_SHOE_QUATERNION,
       );
@@ -2247,15 +2422,24 @@ function SkateModel({
         : KICKFLIP_RIGHT_FOOT_VERTICAL_SCALE;
       AUTHORED_SHOE_POSITION.y =
         authoredStartY +
-        (AUTHORED_SHOE_POSITION.y - authoredStartY) *
-          authoredVerticalScale;
+        (AUTHORED_SHOE_POSITION.y - authoredStartY) * authoredVerticalScale;
+      // `left` is the visible semantic right shoe in the legacy rig mapping.
+      // Hold the completed flick pose after its early animation, then recover
+      // only immediately before that shoe's own catch. Using firstCatchTime
+      // here made the right foot fold down when the opposite foot caught.
+      const semanticRightCatchInAuthoredTime =
+        state.footCatch.left + authoredStartLead;
       const recoveryEnd = Math.max(
-        authoredEnd + 0.08,
-        firstCatchTime - AUTHORED_RIGHT_FOOT_RECOVERY_LEAD,
+        authoredEnd + AUTHORED_RIGHT_FOOT_RECOVERY_DURATION,
+        semanticRightCatchInAuthoredTime - AUTHORED_RIGHT_FOOT_RECOVERY_LEAD,
+      );
+      const recoveryStart = Math.max(
+        authoredEnd,
+        recoveryEnd - AUTHORED_RIGHT_FOOT_RECOVERY_DURATION,
       );
       const recoveryBlend = THREE.MathUtils.smootherstep(
-        state.progress,
-        authoredEnd,
+        authoredRightFootProgress,
+        recoveryStart,
         recoveryEnd,
       );
       // The recorded sequence ends in the airborne flick pose. Blend the
@@ -2283,7 +2467,10 @@ function SkateModel({
     const catchBlend = (catchTime: number) =>
       THREE.MathUtils.smoothstep(
         state.progress,
-        Math.max(MIN_FOOT_CATCH_TIME, catchTime - 0.08),
+        Math.max(
+          MIN_FOOT_CATCH_TIME,
+          catchTime - FOOT_CATCH_APPROACH_DURATION,
+        ),
         catchTime,
       );
     const leftCatchBlend = catchBlend(state.footCatch.left);
@@ -2300,11 +2487,7 @@ function SkateModel({
         firstCatchTime - 0.04,
       ),
     );
-    const setupBlend = THREE.MathUtils.smoothstep(
-      state.progress,
-      0,
-      setupEnd,
-    );
+    const setupBlend = THREE.MathUtils.smoothstep(state.progress, 0, setupEnd);
     const boardCatchBlend = Math.max(leftCatchBlend, rightCatchBlend);
     if (boardCatchBlend > 0) {
       // Catching a flip means arresting roll/pitch and bringing the deck back
@@ -2339,8 +2522,7 @@ function SkateModel({
       Math.sin(
         Math.PI *
           THREE.MathUtils.clamp(
-            (state.progress - setupEnd) /
-              Math.max(0.12, flickEnd - setupEnd),
+            (state.progress - setupEnd) / Math.max(0.12, flickEnd - setupEnd),
             0,
             1,
           ),
@@ -2349,7 +2531,7 @@ function SkateModel({
     const scoopEnd = THREE.MathUtils.clamp(
       Math.min(
         firstCatchTime - 0.08,
-        0.34 + Math.max(spinDemand, flipDemand * 0.45) * 0.1,
+        0.34 + spinDemand * 0.1,
       ),
       0.2,
       0.78,
@@ -2359,8 +2541,7 @@ function SkateModel({
       Math.sin(
         Math.PI *
           THREE.MathUtils.clamp(
-            (state.progress - setupEnd) /
-              Math.max(0.16, scoopEnd - setupEnd),
+            (state.progress - setupEnd) / Math.max(0.16, scoopEnd - setupEnd),
             0,
             1,
           ),
@@ -2368,10 +2549,11 @@ function SkateModel({
     );
     const flipDirection = authoredFlip < 0 ? -1 : 1;
     const spinDirection =
-      Math.abs(authoredShove) > 0.01
+      hasSpinFootwork && Math.abs(authoredShove) > 0.001
         ? Math.sign(authoredShove)
-        : Math.sign(authoredBody || 1);
-    const rearFootDemand = Math.max(spinDemand, flipDemand * 0.65);
+        : 0;
+    const scoopPhase = hasSpinFootwork ? popPhase : 0;
+    const rearFootDemand = spinDemand;
     const frontSpinCounter = spinDirection * popPhase * spinDemand;
     const visibleMotionScale = 1.35;
     const proceduralFrontFlick = useAuthoredRightHeelflip ? 0 : flickPhase;
@@ -2396,8 +2578,7 @@ function SkateModel({
       GENERIC_REAR_FOOT_STANCE.x +
       spinDirection * rearSetupBlend * rearFootDemand * 0.065;
     const rearSetupZ =
-      GENERIC_REAR_FOOT_STANCE.z -
-      rearSetupBlend * rearFootDemand * 0.055;
+      GENERIC_REAR_FOOT_STANCE.z - rearSetupBlend * rearFootDemand * 0.055;
 
     // The front foot travels toward the deck edge to initiate a flip while
     // the rear foot supplies the earlier pop. Both return to stable stance
@@ -2411,9 +2592,7 @@ function SkateModel({
         frontSpinCounter * 0.1,
       soleHeight,
       frontSetupZ +
-        proceduralFrontFlick *
-          (0.18 + flipDemand * 0.2) *
-          visibleMotionScale,
+        proceduralFrontFlick * (0.18 + flipDemand * 0.2) * visibleMotionScale,
     );
     stanceOffset.current.applyQuaternion(footFrameQuaternion.current);
     leftTargetPosition.current
@@ -2425,9 +2604,7 @@ function SkateModel({
           ? flickPhase * HEELFLIP_PARENT_CLEARANCE
           : 0
         : clearance +
-          flickPhase *
-            (0.14 + flipDemand * 0.18) *
-            visibleMotionScale) *
+          flickPhase * (0.14 + flipDemand * 0.18) * visibleMotionScale) *
       (1 - leftCatchBlend);
     leftTargetQuaternion.current
       .copy(footFrameQuaternion.current)
@@ -2448,18 +2625,15 @@ function SkateModel({
     );
     leftTargetQuaternion.current.multiply(footMotionQuaternion.current);
 
-
     stanceOffset.current.set(
       rearSetupX +
         spinDirection *
-          popPhase *
+          scoopPhase *
           (0.1 + rearFootDemand * 0.22) *
           visibleMotionScale,
       soleHeight,
       rearSetupZ -
-        popPhase *
-          (0.1 + rearFootDemand * 0.17) *
-          visibleMotionScale,
+        scoopPhase * (0.1 + rearFootDemand * 0.17) * visibleMotionScale,
     );
     stanceOffset.current.applyQuaternion(footFrameQuaternion.current);
     rightTargetPosition.current
@@ -2467,9 +2641,7 @@ function SkateModel({
       .add(stanceOffset.current);
     rightTargetPosition.current.y +=
       (clearance +
-        popPhase *
-          (0.1 + rearFootDemand * 0.13) *
-          visibleMotionScale) *
+        scoopPhase * (0.1 + rearFootDemand * 0.13) * visibleMotionScale) *
       (1 - rightCatchBlend);
     rightTargetQuaternion.current
       .copy(footFrameQuaternion.current)
@@ -2477,15 +2649,15 @@ function SkateModel({
     footMotionQuaternion.current.setFromEuler(
       new THREE.Euler(
         (rearSetupBlend * rearFootDemand * 5 +
-          popPhase * (18 + rearFootDemand * 18)) *
+          scoopPhase * (18 + rearFootDemand * 18)) *
           DEG,
         -spinDirection *
           (rearSetupBlend * rearFootDemand * 7 +
-            popPhase * (24 + rearFootDemand * 38)) *
+            scoopPhase * (24 + rearFootDemand * 38)) *
           DEG,
         spinDirection *
           (rearSetupBlend * rearFootDemand * 5 +
-            popPhase * rearFootDemand * 20) *
+            scoopPhase * rearFootDemand * 20) *
           DEG,
       ),
     );
@@ -2498,31 +2670,132 @@ function SkateModel({
       blend: number,
       localStance: THREE.Vector3,
       targetPosition: THREE.Vector3,
+      targetQuaternion: THREE.Quaternion,
+      shoe: THREE.Group,
+      boltPose: (typeof TRICK_FOOT_POSES.boltPosition)["left" | "right"],
     ) => {
       if (blend <= 0) return;
+      shoe.position.lerp(
+        shoeLocalOffset.current.set(...boltPose.localPosition),
+        blend,
+      );
+      landingShoeQuaternion.current
+        .set(...boltPose.localQuaternion)
+        .normalize();
+      shoe.quaternion.slerp(landingShoeQuaternion.current, blend).normalize();
+      shoe.updateMatrix();
       caughtPosition.current
         .copy(localStance)
         .applyQuaternion(boardTargetQuaternion.current)
         .add(centerPosition.current);
+      // localStance describes the desired visible shoe origin. The rendered
+      // shoe is an authored child of its rigid body, so subtract that child
+      // offset here. At handoff the child transform is baked into the body.
+      shoeLocalOffset.current
+        .copy(shoe.position)
+        .applyQuaternion(targetQuaternion);
+      caughtPosition.current.sub(shoeLocalOffset.current);
       targetPosition.lerp(caughtPosition.current, blend);
     };
+
+    // Bolt positions were captured on the inner shoe objects. Combine them
+    // with the procedural parent stance to get the two actual, symmetric
+    // deck-local landing anchors.
+    leftLandingAnchor.current
+      .set(
+        GENERIC_FRONT_FOOT_STANCE.x +
+          TRICK_FOOT_POSES.boltPosition.right.localPosition[0],
+        soleHeight + TRICK_FOOT_POSES.boltPosition.right.localPosition[1],
+        GENERIC_FRONT_FOOT_STANCE.z +
+          TRICK_FOOT_POSES.boltPosition.right.localPosition[2],
+      )
+      .applyQuaternion(boardTargetQuaternion.current)
+      .add(centerPosition.current);
+    rightLandingAnchor.current
+      .set(
+        GENERIC_REAR_FOOT_STANCE.x +
+          TRICK_FOOT_POSES.boltPosition.left.localPosition[0],
+        soleHeight + TRICK_FOOT_POSES.boltPosition.left.localPosition[1],
+        GENERIC_REAR_FOOT_STANCE.z +
+          TRICK_FOOT_POSES.boltPosition.left.localPosition[2],
+      )
+      .applyQuaternion(boardTargetQuaternion.current)
+      .add(centerPosition.current);
+
+    // A 180-degree board spin exchanges which physical bolt cluster is under
+    // each foot. Assign anchors by the minimum total travel in rider space,
+    // then lock that assignment for the remainder of this landing.
+    if (!landingBoltAssignmentLocked.current && boardCatchBlend > 0.001) {
+      leftVisualPosition.current
+        .copy(leftShoe.position)
+        .applyQuaternion(leftTargetQuaternion.current)
+        .add(leftTargetPosition.current);
+      rightVisualPosition.current
+        .copy(rightShoe.position)
+        .applyQuaternion(rightTargetQuaternion.current)
+        .add(rightTargetPosition.current);
+      const directDistance =
+        leftVisualPosition.current.distanceToSquared(
+          leftLandingAnchor.current,
+        ) +
+        rightVisualPosition.current.distanceToSquared(
+          rightLandingAnchor.current,
+        );
+      const swappedDistance =
+        leftVisualPosition.current.distanceToSquared(
+          rightLandingAnchor.current,
+        ) +
+        rightVisualPosition.current.distanceToSquared(
+          leftLandingAnchor.current,
+        );
+      if (swappedDistance < directDistance) {
+        leftLandingBoltLocal.current.set(
+          GENERIC_REAR_FOOT_STANCE.x +
+            TRICK_FOOT_POSES.boltPosition.left.localPosition[0],
+          soleHeight + TRICK_FOOT_POSES.boltPosition.left.localPosition[1],
+          GENERIC_REAR_FOOT_STANCE.z +
+            TRICK_FOOT_POSES.boltPosition.left.localPosition[2],
+        );
+        rightLandingBoltLocal.current.set(
+          GENERIC_FRONT_FOOT_STANCE.x +
+            TRICK_FOOT_POSES.boltPosition.right.localPosition[0],
+          soleHeight + TRICK_FOOT_POSES.boltPosition.right.localPosition[1],
+          GENERIC_FRONT_FOOT_STANCE.z +
+            TRICK_FOOT_POSES.boltPosition.right.localPosition[2],
+        );
+      } else {
+        leftLandingBoltLocal.current.set(
+          GENERIC_FRONT_FOOT_STANCE.x +
+            TRICK_FOOT_POSES.boltPosition.right.localPosition[0],
+          soleHeight + TRICK_FOOT_POSES.boltPosition.right.localPosition[1],
+          GENERIC_FRONT_FOOT_STANCE.z +
+            TRICK_FOOT_POSES.boltPosition.right.localPosition[2],
+        );
+        rightLandingBoltLocal.current.set(
+          GENERIC_REAR_FOOT_STANCE.x +
+            TRICK_FOOT_POSES.boltPosition.left.localPosition[0],
+          soleHeight + TRICK_FOOT_POSES.boltPosition.left.localPosition[1],
+          GENERIC_REAR_FOOT_STANCE.z +
+            TRICK_FOOT_POSES.boltPosition.left.localPosition[2],
+        );
+      }
+      landingBoltAssignmentLocked.current = true;
+    }
     lockCaughtFootToBoard(
       leftCatchBlend,
-      stanceOffset.current.set(
-        GENERIC_FRONT_FOOT_STANCE.x,
-        soleHeight,
-        GENERIC_FRONT_FOOT_STANCE.z,
-      ),
+      leftLandingBoltLocal.current,
       leftTargetPosition.current,
+      leftTargetQuaternion.current,
+      leftShoe,
+      TRICK_FOOT_POSES.boltPosition.right,
     );
     lockCaughtFootToBoard(
       rightCatchBlend,
-      stanceOffset.current.set(
-        GENERIC_REAR_FOOT_STANCE.x,
-        soleHeight,
-        GENERIC_REAR_FOOT_STANCE.z,
-      ),
+      rightLandingBoltLocal.current,
       rightTargetPosition.current,
+      rightTargetQuaternion.current,
+      rightShoe,
+      TRICK_FOOT_POSES.boltPosition.left,
     );
 
     // Rapier setters take world-space values. The editable curves above are
@@ -2559,8 +2832,7 @@ function SkateModel({
       physicsReleaseElapsed.current = 0;
       state.restartDelayRemaining = 0;
       const caughtBoard = boardBody.current;
-      const leftCatchesFirst =
-        state.footCatch.left <= state.footCatch.right;
+      const leftCatchesFirst = state.footCatch.left <= state.footCatch.right;
       const caughtShoe = leftCatchesFirst
         ? leftShoeBody.current
         : rightShoeBody.current;
@@ -2570,6 +2842,7 @@ function SkateModel({
       const caughtShoeRotation = leftCatchesFirst
         ? leftTargetQuaternion.current
         : rightTargetQuaternion.current;
+      const caughtShoeGroup = leftCatchesFirst ? leftShoe : rightShoe;
       caughtBoard?.setAdditionalMass(0, true);
       // The authored catch pose is the exact completed rotation. Snap the
       // dynamic body to it before releasing physics so a velocity-driven
@@ -2585,6 +2858,41 @@ function SkateModel({
         PLAYBACK_DURATION;
       secondCatchPending.current = true;
       secondCatchIsLeft.current = !leftCatchesFirst;
+      const pendingShoe = secondCatchIsLeft.current
+        ? leftShoeBody.current
+        : rightShoeBody.current;
+      const pendingShoeGroup = secondCatchIsLeft.current
+        ? leftShoe
+        : rightShoe;
+      const pendingPosition = pendingShoe?.translation();
+      const pendingRotation = pendingShoe?.rotation();
+      if (pendingPosition && pendingRotation) {
+        secondCatchStartQuaternion.current.set(
+          pendingRotation.x,
+          pendingRotation.y,
+          pendingRotation.z,
+          pendingRotation.w,
+        );
+        secondCatchStartPosition.current
+          .set(
+          pendingPosition.x,
+          pendingPosition.y,
+          pendingPosition.z,
+          )
+          .add(
+            shoeLocalOffset.current
+              .copy(pendingShoeGroup.position)
+              .applyQuaternion(secondCatchStartQuaternion.current),
+          );
+        secondCatchStartQuaternion.current
+          .multiply(pendingShoeGroup.quaternion)
+          .normalize();
+        pendingShoeGroup.position.set(0, 0, 0);
+        pendingShoeGroup.quaternion.identity();
+        pendingShoeGroup.updateMatrix();
+        pendingShoe?.setTranslation(secondCatchStartPosition.current, true);
+        pendingShoe?.setRotation(secondCatchStartQuaternion.current, true);
+      }
       // Store the other foot's exact deck-contact transform relative to the
       // board. At its later marker we rebuild this pose from the live Rapier
       // board transform, so it cannot miss a board that has already moved.
@@ -2592,10 +2900,10 @@ function SkateModel({
       // Do not derive it from the uncaught shoe's current target: that target
       // still includes airborne clearance until its own marker.
       secondCatchLocalOffset.current
-        .set(
-          secondCatchIsLeft.current ? -0.12 : 0.12,
-          soleHeight,
-          secondCatchIsLeft.current ? 0.68 : -0.68,
+        .copy(
+          secondCatchIsLeft.current
+            ? leftLandingBoltLocal.current
+            : rightLandingBoltLocal.current,
         )
         .multiplyScalar(presentationScale);
       secondCatchWorldQuaternion.current.copy(
@@ -2603,17 +2911,51 @@ function SkateModel({
           ? leftTargetQuaternion.current
           : rightTargetQuaternion.current,
       );
+      landingShoeQuaternion.current
+        .set(
+          ...(secondCatchIsLeft.current
+            ? TRICK_FOOT_POSES.boltPosition.right.localQuaternion
+            : TRICK_FOOT_POSES.boltPosition.left.localQuaternion),
+        )
+        .normalize();
+      secondCatchWorldQuaternion.current
+        .multiply(landingShoeQuaternion.current)
+        .normalize();
+      // Keep the uncaught foot's final approach in the board's local frame.
+      // Interpolating from a fixed world position made the foot chase the
+      // already-moving deck and briefly arc forward before the joint bound.
+      landingShoeQuaternion.current.copy(boardTargetQuaternion.current).invert();
+      secondCatchStartLocalOffset.current
+        .copy(secondCatchStartPosition.current)
+        .sub(boardTargetPosition.current)
+        .applyQuaternion(landingShoeQuaternion.current);
       setBodyCollisionGroups(caughtBoard, BOARD_LANDING_GROUPS);
-      // The uncaught shoe remains ground-only until its marker. The catching
-      // shoe is switched to ground-only by attachCaughtShoe after impact.
-      leftShoeCollider.current?.setCollisionGroups(SHOE_FLIGHT_GROUPS);
-      rightShoeCollider.current?.setCollisionGroups(SHOE_FLIGHT_GROUPS);
+      // Do not globally enable both shoes here. Each shoe must remain fully
+      // collision-free until its own catch marker; otherwise the first foot's
+      // catch can make the still-authored second foot hit the ground and pitch
+      // downward. attachCaughtShoe enables only the shoe being handed off.
+      leftShoeCollider.current?.setCollisionGroups(SHOE_AUTHORED_GROUPS);
+      rightShoeCollider.current?.setCollisionGroups(SHOE_AUTHORED_GROUPS);
 
       // Put the catching sole exactly on its authored contact pose, then let
       // a heavy physical shoe strike the deck. Applying the impulse directly
       // to the board only made the three bodies look like they floated down.
-      caughtShoe?.setTranslation(caughtShoePosition, true);
-      caughtShoe?.setRotation(caughtShoeRotation, true);
+      // Bake the selected bolt pose into the body at handoff. The collider,
+      // joint, and rendered shoe now share the same world transform instead
+      // of applying the child offset a second time after physics starts.
+      caughtPosition.current
+        .copy(caughtShoeGroup.position)
+        .applyQuaternion(caughtShoeRotation)
+        .add(caughtShoePosition);
+      landingShoeQuaternion.current
+        .copy(caughtShoeRotation)
+        .multiply(caughtShoeGroup.quaternion)
+        .normalize();
+      caughtShoeGroup.position.set(0, 0, 0);
+      caughtShoeGroup.quaternion.identity();
+      caughtShoeGroup.updateMatrix();
+      caughtShoe?.setTranslation(caughtPosition.current, true);
+      caughtShoe?.setRotation(landingShoeQuaternion.current, true);
       const boardVelocity = caughtBoard?.linvel() ?? { x: 0, y: 0, z: 0 };
       const catchVelocity =
         -FOOT_CATCH_DOWNWARD_VELOCITY * Math.sqrt(presentationScale);
@@ -2626,15 +2968,12 @@ function SkateModel({
       caughtShoe?.setLinvel(sharedVelocity, true);
       caughtShoe?.setAngvel({ x: 0, y: 0, z: 0 }, true);
       stanceOffset.current
-        .copy(caughtShoePosition)
-        .sub(boardTargetPosition.current);
-      caughtQuaternion.current
-        .copy(boardTargetQuaternion.current)
-        .invert();
-      stanceOffset.current.applyQuaternion(caughtQuaternion.current);
-      localQuaternion.current
-        .copy(caughtQuaternion.current)
-        .multiply(caughtShoeRotation);
+        .copy(
+          leftCatchesFirst
+            ? leftLandingBoltLocal.current
+            : rightLandingBoltLocal.current,
+        )
+        .multiplyScalar(presentationScale);
       attachCaughtShoe(
         caughtShoe,
         stanceOffset.current,
@@ -2658,6 +2997,7 @@ function SkateModel({
       secondCatchElapsed.current = 0;
       secondCatchDelay.current = 0;
       secondCatchPending.current = false;
+      landingBoltAssignmentLocked.current = false;
       if (leftCatchJoint.current) {
         world.removeImpulseJoint(leftCatchJoint.current, true);
         leftCatchJoint.current = null;
@@ -2672,9 +3012,11 @@ function SkateModel({
       rightShoeBody.current?.setAdditionalMass(0, true);
       leftShoeBody.current?.setEnabledRotations(true, true, true, true);
       rightShoeBody.current?.setEnabledRotations(true, true, true, true);
-      setBodyCollisionGroups(boardBody.current, BOARD_FLIGHT_GROUPS);
-      leftShoeCollider.current?.setCollisionGroups(SHOE_FLIGHT_GROUPS);
-      rightShoeCollider.current?.setCollisionGroups(SHOE_FLIGHT_GROUPS);
+      // Authored preparation and trick animation must not be corrected by
+      // Rapier contacts. Collisions are enabled only at the catch handoff.
+      setBodyCollisionGroups(boardBody.current, BOARD_AUTHORED_GROUPS);
+      leftShoeCollider.current?.setCollisionGroups(SHOE_AUTHORED_GROUPS);
+      rightShoeCollider.current?.setCollisionGroups(SHOE_AUTHORED_GROUPS);
       const resetBody = (
         body: RapierRigidBody | null,
         position: THREE.Vector3,
@@ -2747,10 +3089,7 @@ function SkateModel({
         // The model and its colliders are presented at 8-10x scale. Matching
         // gravity after handoff preserves real-time acceleration relative to
         // the visible board instead of making free-fall look slow-motion.
-        body?.setGravityScale(
-          presentationScale * PHYSICS_GRAVITY_SCALE,
-          true,
-        );
+        body?.setGravityScale(presentationScale * PHYSICS_GRAVITY_SCALE, true);
       }
     }
     previousProgress.current = state.progress;
@@ -2812,7 +3151,7 @@ function SkateModel({
         ref={boardBody}
         name="keyframe_board"
         colliders="hull"
-        collisionGroups={BOARD_FLIGHT_GROUPS}
+        collisionGroups={BOARD_AUTHORED_GROUPS}
         friction={0.85}
         restitution={0}
         mass={BOARD_MASS}
@@ -2822,9 +3161,13 @@ function SkateModel({
         angularDamping={0.9}
         onCollisionEnter={handleGroundContact}
       >
-        {board && <KeyframeSelect object={board}>
-          {board && <primitive object={board} name="keyframe_board" dispose={null} />}
-        </KeyframeSelect>}
+        {board && (
+          <KeyframeSelect object={board}>
+            {board && (
+              <primitive object={board} name="keyframe_board" dispose={null} />
+            )}
+          </KeyframeSelect>
+        )}
       </RigidBody>
       <RigidBody
         ref={leftShoeBody}
@@ -2840,12 +3183,16 @@ function SkateModel({
         <CuboidCollider
           ref={leftShoeCollider}
           args={shoeColliderHalfExtents}
-          collisionGroups={SHOE_FLIGHT_GROUPS}
+          collisionGroups={SHOE_AUTHORED_GROUPS}
           friction={1.1}
           restitution={0}
         />
         <KeyframeSelect object={leftShoe}>
-          <primitive object={leftShoe} name="keyframe_right_shoe" dispose={null} />
+          <primitive
+            object={leftShoe}
+            name="keyframe_right_shoe"
+            dispose={null}
+          />
         </KeyframeSelect>
       </RigidBody>
       <RigidBody
@@ -2862,12 +3209,16 @@ function SkateModel({
         <CuboidCollider
           ref={rightShoeCollider}
           args={shoeColliderHalfExtents}
-          collisionGroups={SHOE_FLIGHT_GROUPS}
+          collisionGroups={SHOE_AUTHORED_GROUPS}
           friction={1.1}
           restitution={0}
         />
         <KeyframeSelect object={rightShoe}>
-          <primitive object={rightShoe} name="keyframe_left_shoe" dispose={null} />
+          <primitive
+            object={rightShoe}
+            name="keyframe_left_shoe"
+            dispose={null}
+          />
         </KeyframeSelect>
       </RigidBody>
       <RigidBody
@@ -3041,9 +3392,7 @@ function AerialSkateModel({
 
   useFrame(() => {
     boardRef.current?.quaternion.copy(motion.current.previewQuaternion);
-    leftShoeRef.current?.position.copy(
-      motion.current.previewLeftShoePosition,
-    );
+    leftShoeRef.current?.position.copy(motion.current.previewLeftShoePosition);
     leftShoeRef.current?.quaternion.copy(
       motion.current.previewLeftShoeQuaternion,
     );
@@ -3083,12 +3432,16 @@ function SkateAerialPreview({
       aria-label="Live top-down skateboard view"
       className="skate-aerial-preview w-full select-none max-[1149px]:hidden"
     >
-      <div className="relative h-[11.5rem] overflow-hidden rounded-[1rem] border-[3px] border-[#242529] bg-[radial-gradient(circle_at_50%_42%,#fff_0%,#f1f2f4_65%,#dfe1e5_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.68),inset_0_0_0_2px_rgba(0,0,0,0.12),0_1px_0_#0b0b0c,0_14px_30px_rgba(0,0,0,0.2)]">
+      <div className="shadow-md relative h-[11.5rem] overflow-hidden rounded-[1rem] border-[3px] border-[#c8c8c8] bg-[radial-gradient(circle_at_50%_42%,#fff_0%,#f1f2f4_65%,#dfe1e5_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.68),inset_0_0_0_2px_rgba(0,0,0,0.12),0_1px_0_#0b0b0c,0_14px_30px_rgba(0,0,0,0.2)]">
         <Canvas
           orthographic
           dpr={1}
           frameloop="always"
-          gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+          gl={{
+            alpha: true,
+            antialias: true,
+            powerPreference: "high-performance",
+          }}
           style={{ pointerEvents: "none" }}
         >
           <AerialPreviewCamera />

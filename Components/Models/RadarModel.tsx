@@ -50,7 +50,10 @@ const RadarModel = () => {
         intensity={0.5}
         color={"#ffa546"}
       />
-      <SmoothOrbitControls target={[275, 0, -500]} rotateObject={radar} />
+      <SmoothOrbitControls
+        target={[93.98587, 43.75356, -500]}
+        rotateObject={radar}
+      />
       <Suspense fallback={null}>
         <LoadRadarModel url="/Models/rmu-transformed.glb" group={radar} />
       </Suspense>

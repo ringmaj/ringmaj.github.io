@@ -53,6 +53,7 @@ interface KeyframingDataContextValue {
   setPlaying: (playing: boolean) => void;
   setSelectionLocked: (locked: boolean) => void;
   addKeyframe: () => void;
+  moveKeyframe: (id: string, time: number) => void;
   removeKeyframe: (id: string) => void;
   copyExport: () => Promise<boolean>;
   registerSelection: (object: THREE.Object3D | null, scene: THREE.Scene | null) => void;
@@ -175,6 +176,14 @@ function applyInterpolatedKeyframes(object: THREE.Object3D, keyframes: KeyframeP
   object.updateWorldMatrix(false, true);
 }
 
+function applyLocalTransform(object: THREE.Object3D, transform: TransformExport) {
+  object.position.set(...transform.position);
+  object.scale.set(...transform.scale);
+  object.quaternion.set(...transform.quaternion).normalize();
+  object.updateMatrix();
+  object.updateWorldMatrix(false, true);
+}
+
 function isHelper(object: THREE.Object3D) {
   let current: THREE.Object3D | null = object;
   while (current) {
@@ -227,6 +236,32 @@ function KeyframingPanel() {
   const { enabled, route, setEnabled } = useKeyframingMode();
   const data = useKeyframingData();
   const [copied, setCopied] = useState(false);
+  const [selectedKeyframeId, setSelectedKeyframeId] = useState<string | null>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const draggedKeyframeId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (
+      selectedKeyframeId &&
+      !data.keyframes.some((keyframe) => keyframe.id === selectedKeyframeId)
+    ) {
+      setSelectedKeyframeId(null);
+    }
+  }, [data.keyframes, selectedKeyframeId]);
+
+  const timeAtPointer = (clientX: number) => {
+    const bounds = timelineRef.current?.getBoundingClientRect();
+    if (!bounds || bounds.width === 0) return 0;
+    return THREE.MathUtils.clamp((clientX - bounds.left) / bounds.width, 0, 1);
+  };
+
+  const finishKeyframeDrag = (pointerId: number) => {
+    draggedKeyframeId.current = null;
+    if (timelineRef.current?.hasPointerCapture(pointerId)) {
+      timelineRef.current.releasePointerCapture(pointerId);
+    }
+  };
+
   if (!enabled) return null;
 
   return (
@@ -284,7 +319,7 @@ function KeyframingPanel() {
 
       <div className="space-y-3 p-4">
         <p className="text-[0.64rem] leading-relaxed text-black/50">
-          Click an object, drag the colored arrows or rotation arcs, choose a time, then add a keyframe.
+          Click an object, drag the colored arrows or rotation arcs, choose a time, then add a keyframe. Drag a timeline marker to retime it.
         </p>
         {data.registeredObjects.length > 0 && (
           <div className="grid grid-cols-3 gap-1.5" aria-label="Keyframe objects">
@@ -338,15 +373,43 @@ function KeyframingPanel() {
             >{time.toFixed(2)}</button>
           ))}
         </div>
-        <div className="relative h-8 border-y border-black/10">
+        <div
+          ref={timelineRef}
+          className="relative h-8 touch-none border-y border-black/10 bg-white/55"
+          onPointerMove={(event) => {
+            const id = draggedKeyframeId.current;
+            if (!id) return;
+            data.moveKeyframe(id, timeAtPointer(event.clientX));
+          }}
+          onPointerUp={(event) => finishKeyframeDrag(event.pointerId)}
+          onPointerCancel={(event) => finishKeyframeDrag(event.pointerId)}
+        >
           {data.keyframes.map((keyframe) => (
             <button
               key={keyframe.id}
               type="button"
-              title={`${keyframe.time.toFixed(2)} seconds`}
-              className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-white bg-orange-500 shadow"
+              aria-label={`Keyframe at ${keyframe.time.toFixed(2)} seconds. Drag to move.`}
+              title={`Drag to move · ${keyframe.time.toFixed(2)} seconds`}
+              className={`absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rotate-45 cursor-ew-resize border border-white bg-orange-500 shadow focus:outline-none focus:ring-2 focus:ring-orange-300 ${
+                selectedKeyframeId === keyframe.id ? "ring-2 ring-orange-300" : ""
+              }`}
               style={{ left: `${keyframe.time * 100}%` }}
-              onClick={() => data.setCurrentTime(keyframe.time)}
+              onPointerDown={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                draggedKeyframeId.current = keyframe.id;
+                setSelectedKeyframeId(keyframe.id);
+                timelineRef.current?.setPointerCapture(event.pointerId);
+                data.moveKeyframe(keyframe.id, timeAtPointer(event.clientX));
+              }}
+              onKeyDown={(event) => {
+                if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+                event.preventDefault();
+                const direction = event.key === "ArrowRight" ? 1 : -1;
+                const increment = event.shiftKey ? 0.1 : 0.01;
+                setSelectedKeyframeId(keyframe.id);
+                data.moveKeyframe(keyframe.id, keyframe.time + direction * increment);
+              }}
             />
           ))}
         </div>
@@ -556,6 +619,27 @@ export function KeyframingProvider({ children }: { children: ReactNode }) {
     });
   }, [currentTime, selected]);
 
+  const moveKeyframe = useCallback((id: string, time: number) => {
+    const nextTime = round(THREE.MathUtils.clamp(time, 0, 1), 3);
+    setPlaying(false);
+    currentTimeRef.current = nextTime;
+    setCurrentTime(nextTime);
+    setKeyframes((frames) => {
+      const movedFrame = frames.find((frame) => frame.id === id);
+      if (!movedFrame) return frames;
+      const next = frames
+        .map((frame) =>
+          frame.id === id ? { ...frame, time: nextTime } : frame,
+        )
+        .sort((a, b) => a.time - b.time);
+      if (selected) {
+        keyframeDrafts.current.set(selected.path, next);
+        applyLocalTransform(selected.object, movedFrame.local);
+      }
+      return next;
+    });
+  }, [selected]);
+
   const seek = useCallback((time: number) => {
     setPlaying(false);
     setCurrentTime(time);
@@ -613,6 +697,7 @@ export function KeyframingProvider({ children }: { children: ReactNode }) {
     setPlaying,
     setSelectionLocked,
     addKeyframe,
+    moveKeyframe,
     removeKeyframe,
     copyExport,
     registerSelection,
@@ -623,7 +708,7 @@ export function KeyframingProvider({ children }: { children: ReactNode }) {
     activePosePreset,
     registerPosePresets,
     applyPosePreset,
-  }), [activePosePreset, addKeyframe, applyPosePreset, copyExport, currentTime, keyframes, playing, posePresets, registerObject, registerPosePresets, registeredObjects, registerSelection, removeKeyframe, seek, selectRegistered, selected, selectionLocked]);
+  }), [activePosePreset, addKeyframe, applyPosePreset, copyExport, currentTime, keyframes, moveKeyframe, playing, posePresets, registerObject, registerPosePresets, registeredObjects, registerSelection, removeKeyframe, seek, selectRegistered, selected, selectionLocked]);
 
   return (
     <KeyframingContext.Provider value={mode}>

@@ -9,6 +9,7 @@ import { usePageNavigation } from "@/Components/PageNavigationController";
 import PerformanceStats from "@/Components/PerformanceStats";
 import { PositionInfoToggle } from "@/Components/PositionInfo";
 import { KeyframingToggle } from "@/Components/Keyframing";
+import { SkateMotionCurveExportButton } from "@/Components/SkateMotionCurveExport";
 import { DEBUG_MODE } from "@/Components/debugMode";
 
 const links = [
@@ -28,13 +29,14 @@ const NavBar = () => {
           <PerformanceStats />
           <PositionInfoToggle />
           <KeyframingToggle />
+          <SkateMotionCurveExportButton />
         </div>
       )}
       <div
         id="nav-items-container"
         className={classnames(
           "mx-auto flex w-full max-w-[1296px] items-center",
-          DEBUG_MODE && "pl-32 sm:pl-[15rem] md:pl-[25rem]",
+          DEBUG_MODE && "pl-32 sm:pl-[15rem] md:pl-[34rem]",
         )}
       >
         <ul className="flex h-3/4 items-center">

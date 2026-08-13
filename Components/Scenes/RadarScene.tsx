@@ -15,7 +15,12 @@ const RadarScene = () => {
       frameloop={viewerOpen ? "never" : "demand"}
       performance={{ min: 0.5 }}
       orthographic
-      camera={{ position: [275, 0, 0], zoom: 1.5, near: 0.01, far: 1000 }}
+      camera={{
+        position: [93.98587, 43.75356, 0],
+        zoom: 2.06983,
+        near: 0.01,
+        far: 1000,
+      }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
       style={{
         width: "100vw",
