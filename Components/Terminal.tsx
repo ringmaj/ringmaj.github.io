@@ -20,16 +20,42 @@ type TerminalLine =
       text: string;
     };
 
-const FILES = ["introduction.sh", "resume.pdf", "skills.txt", "projects.txt"];
+const FILES = [
+  "app",
+  "next.config.mjs",
+  "package.json",
+  "postcss.config.js",
+  "public",
+  "Components",
+  "introduction.sh",
+  "pnpm-lock.yaml",
+  "projects.txt",
+  "resume.pdf",
+  "next-env.d.ts",
+  "pnpm-workspace.yaml",
+  "README.md",
+  "scripts",
+  "skills.txt",
+];
+const DIRECTORIES = new Set([
+  "app",
+  "Components",
+  "node_modules",
+  "public",
+  "scripts",
+]);
 const SKILLS = [
   "TypeScript / React / Next.js / R3F",
   "C / C++ / Python / embedded systems",
   "Linux / Docker / CI/CD / cloud platforms",
 ];
 const PROJECTS = [
-  "LEO satellite integration and test",
-  "AESA radar mission software",
-  "Interactive 3D engineering portfolio",
+  "Amazon Leo satellite integration and test",
+  "Spacecraft simulation and processing automation",
+  "APG-79 / APG-82 AESA radar mission software",
+  "MFD (Multi Functional Display) software + RSIL HIL validation",
+  "AI, data analytics, and cybersecurity platforms",
+  "Privacy-preserving identity and compliance systems",
 ];
 
 const COMPLETE_SESSION: TerminalLine[] = [
@@ -47,7 +73,7 @@ const COMPLETE_SESSION: TerminalLine[] = [
     id: 6,
     kind: "field",
     label: "Field of study",
-    text: "B.S. Computer Science and Engineering",
+    text: "B.S. Computer Science and Engineering · 2018",
   },
   {
     id: 7,
@@ -91,7 +117,7 @@ function TerminalLineView({
 }) {
   if (line.kind === "command") {
     return (
-      <div className="min-h-[1.25em] whitespace-pre-wrap text-white">
+      <div className="min-h-[1.35em] whitespace-pre-wrap text-white">
         <Prompt />
         <span>{line.text}</span>
         {active && <TerminalCursor />}
@@ -101,7 +127,7 @@ function TerminalLineView({
 
   if (line.kind === "field") {
     return (
-      <div className="grid min-h-[1.25em] grid-cols-[8.75rem_minmax(0,1fr)] gap-x-3">
+      <div className="grid min-h-[1.35em] grid-cols-[8.75rem_minmax(0,1fr)] gap-x-3">
         <span className="text-white/45">{line.label}:</span>
         <span className="min-w-0 text-white">
           {line.text}
@@ -112,20 +138,29 @@ function TerminalLineView({
   }
 
   const itemColor =
-    line.kind === "files"
-      ? "text-[#aaaaff]"
-      : line.kind === "skills"
+    line.kind === "skills"
         ? "text-[#72d6c9]"
         : "text-[#ffc26f]";
 
   return (
     <div
-      className={`mb-[0.25rem] grid gap-x-4 gap-y-0 ${
-        line.kind === "files" ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-1"
+      className={`grid gap-y-0 ${
+        line.kind === "files"
+          ? "grid-cols-2 gap-x-3 sm:grid-cols-[13ch_19ch_14ch_17ch_10ch] sm:gap-x-2"
+          : "grid-cols-1"
       } ${itemColor}`}
     >
       {line.items.map((item) => (
-        <span key={item} className="min-h-[1.25em] truncate">
+        <span
+          key={item}
+          className={`min-h-[1.35em] whitespace-nowrap ${
+            line.kind === "files"
+              ? DIRECTORIES.has(item)
+                ? "font-semibold text-[#54e879]"
+                : "text-white/70"
+              : ""
+          }`}
+        >
           {item}
         </span>
       ))}
@@ -182,7 +217,6 @@ export default function Terminal() {
           ),
         );
       }
-
     };
 
     const appendItems = (
@@ -218,7 +252,7 @@ export default function Terminal() {
         speed: 21,
       });
       await sleep(240);
-      await typeLine("field", "B.S. Computer Science and Engineering", {
+      await typeLine("field", "B.S. Computer Science and Engineering · 2018", {
         label: "Field of study",
         speed: 20,
       });
@@ -262,26 +296,26 @@ export default function Terminal() {
   return (
     <div
       id="terminal-container"
-      className="mx-auto w-full min-w-0 max-w-[43rem] overflow-hidden rounded-xl border border-black/15 bg-[#111316] shadow-[0_24px_70px_rgba(0,0,0,0.22)]"
+      className="terminal-font mx-auto w-full min-w-0 max-w-[43rem] overflow-hidden rounded-xl bg-[#111316] shadow-[0_24px_70px_rgba(0,0,0,0.22)]"
       role="region"
       aria-label="Animated portfolio terminal"
     >
       <div
         id="status-bar"
-        className="relative flex h-10 w-full items-center border-b border-black/10 bg-[#e7e7e7] px-4"
+        className="relative flex h-10 w-full items-center bg-[#111316] px-4"
       >
         <ul aria-hidden="true" className="flex items-center gap-2">
           <li className="size-3 rounded-full border border-black/10 bg-[#ff5f57]" />
           <li className="size-3 rounded-full border border-black/10 bg-[#febc2e]" />
           <li className="size-3 rounded-full border border-black/10 bg-[#28c840]" />
         </ul>
-        <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 font-mono text-[0.68rem] font-medium text-black/55">
+        <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 text-[0.68rem] text-white">
           ring@portfolio — zsh
         </span>
         <button
           type="button"
           onClick={() => setSession((value) => value + 1)}
-          className="ml-auto grid size-7 place-items-center rounded-md font-mono text-base text-black/45 transition hover:bg-black/10 hover:text-black focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-black"
+          className="ml-auto grid size-7 place-items-center rounded-md text-base text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-white"
           aria-label="Replay terminal session"
           title="Replay terminal session"
         >
@@ -291,7 +325,7 @@ export default function Terminal() {
       <div
         ref={bodyRef}
         id="terminal-body"
-        className="h-[clamp(22rem,52vh,29rem)] overflow-y-auto bg-[radial-gradient(circle_at_80%_0%,#17202b_0%,#0d0f12_42%,#08090b_100%)] px-[1.125rem] py-4 font-mono text-[clamp(0.72rem,0.82vw,0.8rem)] leading-[1.35] tracking-[-0.01em] text-white/90 [scrollbar-color:#3f4650_transparent] [scrollbar-width:thin]"
+        className="h-[clamp(22rem,52vh,29rem)] overflow-y-auto px-[1.125rem] py-5 text-[clamp(0.66rem,0.72vw,0.73rem)] leading-[1.35] tracking-normal text-white/90 [scrollbar-color:#3f4650_transparent] [scrollbar-width:thin]"
       >
         {lines.map((line) => (
           <TerminalLineView

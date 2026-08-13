@@ -193,6 +193,21 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
   }
 }
 
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/Fonts/IBMPlexMono-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.terminal-font {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono",
+    monospace;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
 .terminal-cursor {
   animation: terminal-caret-blink 1s steps(1, end) infinite;
 }
