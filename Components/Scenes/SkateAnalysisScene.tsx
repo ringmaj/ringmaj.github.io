@@ -198,6 +198,7 @@ interface SkateMotionState {
   preparationElapsed: number;
   progress: number;
   restartDelayRemaining: number;
+  resetVersion: number;
   paused: boolean;
   previewQuaternion: THREE.Quaternion;
   previewLeftShoePosition: THREE.Vector3;
@@ -490,6 +491,142 @@ function createDefaultChannels(): Record<MotionChannel, MotionPoint[]> {
   };
 }
 
+function createVarialHeelflipChannels(): Record<
+  MotionChannel,
+  MotionPoint[]
+> {
+  return {
+    height: [
+      { time: 0, value: 0 },
+      { time: 0.5339251615000203, value: 1.5 },
+      { time: 1, value: 0 },
+    ],
+    x: [
+      { time: 0, value: 0 },
+      { time: 0.12851186364929104, value: -0.8675781250000001 },
+      { time: 0.26389509608743345, value: 0.60546875 },
+      { time: 0.46531304595132655, value: -0.3871093750000001 },
+      { time: 1, value: 0 },
+    ],
+    y: [
+      { time: 0, value: 0 },
+      { time: 0.24704678421972132, value: -0.095703125 },
+      { time: 0.4426497176288953, value: -1 },
+    ],
+    z: [
+      { time: 0, value: 0 },
+      { time: 0.2, value: 0 },
+      { time: 0.3042447080810954, value: -1 },
+    ],
+    body: [
+      { time: 0, value: 0 },
+      { time: 0.135, value: 0 },
+      { time: 0.27, value: 0 },
+      { time: 1, value: 0 },
+    ],
+    speed: [
+      { time: 0, value: 1 },
+      { time: 0.13493631414293258, value: 1.3333984375 },
+      { time: 0.19796195100150327, value: 0 },
+      { time: 0.35252421774788, value: 0 },
+      { time: 0.49374060455856666, value: 0.45683593749999996 },
+      { time: 0.6319297728842482, value: 1.2478515625 },
+      { time: 0.7792129304490658, value: 1.1125 },
+      { time: 1, value: 1 },
+    ],
+  };
+}
+
+function createBigspinHeelflipChannels(): Record<
+  MotionChannel,
+  MotionPoint[]
+> {
+  return {
+    height: [
+      { time: 0, value: 0 },
+      { time: 0.2462722951285906, value: 1.5 },
+      { time: 0.5325539349124446, value: 0 },
+    ],
+    x: [
+      { time: 0, value: 0 },
+      { time: 0.12851186364929104, value: -0.8675781250000001 },
+      { time: 0.26389509608743345, value: 0.60546875 },
+      { time: 0.46531304595132655, value: -0.3871093750000001 },
+      { time: 1, value: 0 },
+    ],
+    y: [
+      { time: 0, value: 0 },
+      { time: 0.24704678421972132, value: -0.095703125 },
+      { time: 0.4343715719335311, value: -1 },
+    ],
+    z: [
+      { time: 0, value: 0 },
+      { time: 0.2, value: 0 },
+      { time: 0.45891398854264004, value: -1 },
+    ],
+    body: [
+      { time: 0, value: 0 },
+      { time: 0.1669189046438874, value: 0.555078125 },
+      { time: 0.4625578962336976, value: -0.875 },
+    ],
+    speed: [
+      { time: 0, value: 1 },
+      { time: 0.10027475317921423, value: 0 },
+      { time: 0.19796195100150327, value: 0 },
+      { time: 0.35252421774788, value: 0 },
+      { time: 0.5119982326412872, value: 0 },
+      { time: 0.6396111810831674, value: 0 },
+      { time: 0.7906111607686994, value: 0.5816406249999999 },
+      { time: 1, value: 1 },
+    ],
+  };
+}
+
+function createBigspinKickflipChannels(): Record<
+  MotionChannel,
+  MotionPoint[]
+> {
+  return {
+    height: [
+      { time: 0, value: 0 },
+      { time: 0.2462722951285906, value: 1.5 },
+      { time: 0.5325539349124446, value: 0 },
+    ],
+    x: [
+      { time: 0, value: 0 },
+      { time: 0.12851186364929104, value: -0.8675781250000001 },
+      { time: 0.26389509608743345, value: 0.60546875 },
+      { time: 0.46531304595132655, value: -0.3871093750000001 },
+      { time: 1, value: 0 },
+    ],
+    y: [
+      { time: 0, value: 0 },
+      { time: 0.24704678421972132, value: -0.095703125 },
+      { time: 0.4391200788201357, value: 1 },
+    ],
+    z: [
+      { time: 0, value: 0 },
+      { time: 0.2, value: 0 },
+      { time: 0.4676365132247186, value: 1 },
+    ],
+    body: [
+      { time: 0, value: 0 },
+      { time: 0.1669189046438874, value: 0.555078125 },
+      { time: 0.45031842928533705, value: 1 },
+    ],
+    speed: [
+      { time: 0, value: 1 },
+      { time: 0.10027475317921423, value: 0 },
+      { time: 0.19796195100150327, value: 0 },
+      { time: 0.35252421774788, value: 0 },
+      { time: 0.5119982326412872, value: 0 },
+      { time: 0.6396111810831674, value: 0 },
+      { time: 0.7906111607686994, value: 0.5816406249999999 },
+      { time: 1, value: 1 },
+    ],
+  };
+}
+
 function createClearedChannels(): Record<MotionChannel, MotionPoint[]> {
   const createPoints = (value: number) => [
     { time: 0, value },
@@ -515,6 +652,48 @@ const GENERATED_TRICK_PRESETS: GeneratedTrickPreset[] = [
       channels: createDefaultChannels(),
       rotationMax: createDefaultRotationMax(),
       footCatch: createDefaultFootCatch(),
+    }),
+  },
+  {
+    id: "varial-heelflip",
+    label: "Varial Heelflip",
+    create: () => ({
+      channels: createVarialHeelflipChannels(),
+      rotationMax: { x: 180, y: 180, z: 360, body: 180 },
+      // The internal shoe rig is reversed: preserve the exported semantic
+      // left/right catch times when this preset is selected and re-exported.
+      footCatch: {
+        left: 0.6519722967791411,
+        right: 0.5872076303680982,
+      },
+    }),
+  },
+  {
+    id: "bigspin-heelflip",
+    label: "Bigspin Heelflip",
+    create: () => ({
+      channels: createBigspinHeelflipChannels(),
+      rotationMax: { x: 180, y: 180, z: 360, body: 180 },
+      // Exported semantic catches are left 0.497603527607362s and right
+      // 0.545928393404908s; source shoe roles are reversed internally.
+      footCatch: {
+        left: 0.545928393404908,
+        right: 0.497603527607362,
+      },
+    }),
+  },
+  {
+    id: "bigspin-kickflip",
+    label: "Bigspin Kickflip",
+    create: () => ({
+      channels: createBigspinKickflipChannels(),
+      rotationMax: { x: 180, y: 180, z: 360, body: 180 },
+      // Exported semantic catches are left 0.497603527607362s and right
+      // 0.545928393404908s; source shoe roles are reversed internally.
+      footCatch: {
+        left: 0.545928393404908,
+        right: 0.497603527607362,
+      },
     }),
   },
 ];
@@ -728,7 +907,9 @@ function classifyTrick(
   const hasPitch = Math.abs(xDegrees) >= threshold;
   const hasBodyRotation = Math.abs(bodyDegrees) >= threshold;
   const flipName = z >= 0 ? "Kickflip" : "Heelflip";
-  const bodyDirection = body >= 0 ? "Frontside" : "Backside";
+  // The scene's positive body-Y rotation turns away from the rider's front,
+  // so it is backside. This is the opposite of the raw Three.js axis label.
+  const bodyDirection = body >= 0 ? "Backside" : "Frontside";
 
   let baseName = "Ollie";
   if (hasFlip && hasShove) {
@@ -1351,12 +1532,6 @@ function SkateMotionEditor({
 
   useEffect(() => {
     motion.current.footCatch = footCatch;
-    // Moving a catch behind the live playhead used to release the current
-    // midair pose immediately. Re-arm from takeoff so every edited marker is
-    // reached in sequence and produces a deterministic physical impact.
-    motion.current.progress = 0;
-    motion.current.preparationElapsed = 0;
-    motion.current.restartDelayRemaining = 0;
   }, [footCatch, motion]);
 
   useEffect(() => {
@@ -1405,6 +1580,24 @@ function SkateMotionEditor({
     [],
   );
 
+  const updateFootCatch = useCallback(
+    (nextFootCatch: { left: number; right: number }) => {
+      setSelectedTrickId("custom");
+      // Catch markers control the authored-to-Rapier handoff. Editing one
+      // must reset more than curve time: an active landing may still own
+      // joints, collision groups, baked shoe transforms, and body velocity.
+      // Use the same explicit reset generation as preset changes so the next
+      // frame rebuilds a clean takeoff before accepting the new marker.
+      motion.current.footCatch = nextFootCatch;
+      motion.current.progress = 0;
+      motion.current.preparationElapsed = 0;
+      motion.current.restartDelayRemaining = 0;
+      motion.current.resetVersion += 1;
+      setFootCatch(nextFootCatch);
+    },
+    [motion],
+  );
+
   const applyTrickPreset = useCallback(
     (preset: GeneratedTrickPreset) => {
       const next = preset.create();
@@ -1414,6 +1607,7 @@ function SkateMotionEditor({
       motion.current.preparationElapsed = 0;
       motion.current.progress = 0;
       motion.current.restartDelayRemaining = 0;
+      motion.current.resetVersion += 1;
       motion.current.paused = false;
       setChannels(cloneChannels(next.channels));
       setRotationMax({ ...next.rotationMax });
@@ -1536,10 +1730,7 @@ function SkateMotionEditor({
             {channel.key === "speed" && (
               <FootCatchEditor
                 value={footCatch}
-                onChange={(value) => {
-                  setSelectedTrickId("custom");
-                  setFootCatch(value);
-                }}
+                onChange={updateFootCatch}
                 playhead={catchPlayhead}
               />
             )}
@@ -1889,6 +2080,7 @@ function SkateModel({
   const rightTargetPosition = useRef(new THREE.Vector3());
   const rightTargetQuaternion = useRef(new THREE.Quaternion());
   const physicsInitialized = useRef(false);
+  const handledResetVersion = useRef(motion.current.resetVersion);
   const previousProgress = useRef(0);
   const physicsReleased = useRef(false);
   const simulationWasPaused = useRef(false);
@@ -1906,9 +2098,9 @@ function SkateModel({
   const secondCatchStartQuaternion = useRef(new THREE.Quaternion());
   const secondCatchTargetPosition = useRef(new THREE.Vector3());
   const secondCatchTargetQuaternion = useRef(new THREE.Quaternion());
-  const landingBoltAssignmentLocked = useRef(false);
   const leftLandingBoltLocal = useRef(new THREE.Vector3());
   const rightLandingBoltLocal = useRef(new THREE.Vector3());
+  const landingBoltAssignmentLocked = useRef(false);
   const leftLandingAnchor = useRef(new THREE.Vector3());
   const rightLandingAnchor = useRef(new THREE.Vector3());
   const leftVisualPosition = useRef(new THREE.Vector3());
@@ -1922,7 +2114,7 @@ function SkateModel({
     (typeof rapier.World.prototype)["createImpulseJoint"]
   > | null>(null);
 
-  const applyFootPosePreset = useCallback(
+  const setFootPoseTransforms = useCallback(
     (preset: keyof typeof TRICK_FOOT_POSES) => {
       const pose = TRICK_FOOT_POSES[preset];
       // The source geometry names are inverse to semantic feet.
@@ -1934,12 +2126,19 @@ function SkateModel({
       leftShoe.quaternion.set(...pose.right.localQuaternion).normalize();
       leftShoe.updateMatrix();
       leftShoe.updateWorldMatrix(false, true);
+    },
+    [leftShoe, rightShoe],
+  );
+
+  const applyFootPosePreset = useCallback(
+    (preset: keyof typeof TRICK_FOOT_POSES) => {
+      setFootPoseTransforms(preset);
       motion.current.progress = 0;
       motion.current.preparationElapsed =
         preset === "genericStart" ? TRICK_PREPARATION_DURATION : 0;
       motion.current.restartDelayRemaining = 0;
     },
-    [leftShoe, motion, rightShoe],
+    [motion, setFootPoseTransforms],
   );
   const footPosePresets = useMemo(
     () => [
@@ -2010,6 +2209,8 @@ function SkateModel({
     const delta = world.timestep;
     const state = motion.current;
     const frameDelta = Math.min(delta, 0.05);
+    const explicitPresetReset =
+      state.resetVersion !== handledResetVersion.current;
     let restartingAfterLanding = false;
     const hasAuthoredMotion =
       strongestValue(state.channels.height) > 0.001 ||
@@ -2032,6 +2233,32 @@ function SkateModel({
       leftShoeBody.current,
       rightShoeBody.current,
     ];
+
+    if (explicitPresetReset) {
+      handledResetVersion.current = state.resetVersion;
+      // A catch bakes each inner shoe transform into its Rapier body and then
+      // zeroes the child group. Restore the authored bolt transforms before
+      // evaluating the new preset. Otherwise the next landing assignment
+      // measures from the previous trick's baked/identity shoe pose and can
+      // send both feet to the same outer bolt cluster.
+      setFootPoseTransforms("boltPosition");
+      previousProgress.current = 0;
+      physicsReleased.current = false;
+      physicsReleaseElapsed.current = 0;
+      groundedAfterRelease.current = false;
+      secondCatchElapsed.current = 0;
+      secondCatchDelay.current = 0;
+      secondCatchPending.current = false;
+      landingBoltAssignmentLocked.current = false;
+      if (leftCatchJoint.current) {
+        world.removeImpulseJoint(leftCatchJoint.current, true);
+        leftCatchJoint.current = null;
+      }
+      if (rightCatchJoint.current) {
+        world.removeImpulseJoint(rightCatchJoint.current, true);
+        rightCatchJoint.current = null;
+      }
+    }
 
     if (state.paused) {
       if (!simulationWasPaused.current) {
@@ -2987,6 +3214,7 @@ function SkateModel({
       state.progress < previousProgress.current - 0.5;
     if (
       !physicsInitialized.current ||
+      explicitPresetReset ||
       looped ||
       progressReset ||
       clearedDuringPhysics
@@ -3551,6 +3779,7 @@ export function SkateAnalysisScene({ modelUrl }: { modelUrl: string }) {
     preparationElapsed: 0,
     progress: 0,
     restartDelayRemaining: 0,
+    resetVersion: 0,
     paused: false,
     previewQuaternion: new THREE.Quaternion(),
     previewLeftShoePosition: new THREE.Vector3(),

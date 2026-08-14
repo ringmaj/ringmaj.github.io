@@ -18,9 +18,9 @@ const RADAR_BASE_ROTATION: [number, number, number] = [
   0,
 ];
 const RADAR_FLOAT_SPEED = 0.7;
-const RADAR_FLOAT_HEIGHT = 1.9;
-const RADAR_FLOAT_DRIFT = 0.6;
-const RADAR_FLOAT_TILT = THREE.MathUtils.degToRad(0.19);
+const RADAR_FLOAT_HEIGHT = 3.5;
+const RADAR_FLOAT_DRIFT = 1.2;
+const RADAR_FLOAT_TILT = THREE.MathUtils.degToRad(0.4);
 
 const LoadRadarModel = ({
   url,
