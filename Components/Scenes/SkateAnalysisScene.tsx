@@ -92,6 +92,27 @@ const MAX_CURVE_POINTS = 8;
 const SHOE_MODEL_URL = "/Models/skate-shoe.glb";
 const BOARD_GRAPHIC_TEXTURE_URL = "/Models/boardGraphics.jpg";
 const SHOE_SCALE = 0.65;
+
+function composePhysicsObjectWorldTransform(
+  body: RapierRigidBody,
+  object: THREE.Object3D,
+  presentationScale: number,
+  position: THREE.Vector3,
+  quaternion: THREE.Quaternion,
+) {
+  const translation = body.translation();
+  const rotation = body.rotation();
+  quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w).normalize();
+  position
+    .copy(object.position)
+    .multiplyScalar(presentationScale)
+    .applyQuaternion(quaternion);
+  position.x += translation.x;
+  position.y += translation.y;
+  position.z += translation.z;
+  quaternion.multiply(object.quaternion).normalize();
+}
+
 // The centered shoe rig origin sits behind the ball of the foot. Shift the
 // shoe backward along its local length so the forefoot, rather than the heel,
 // is centered over each truck's bolt cluster in the landing stance.
@@ -1746,7 +1767,7 @@ function SkateModel({
   const { scene: sourceShoeScene } = useGLTF(SHOE_MODEL_URL);
   const boardGraphicTexture = useTexture(BOARD_GRAPHIC_TEXTURE_URL);
   const { enabled: keyframingEnabled } = useKeyframingMode();
-  const { rapier } = useRapier();
+  const { rapier, rigidBodyStates } = useRapier();
   const compact = useThree((state) => state.size.width < 640);
   const presentationScale = compact ? 8 : 10;
   const presentationPosition = useMemo(
@@ -1994,6 +2015,10 @@ function SkateModel({
   const boardBody = useRef<RapierRigidBody>(null);
   const leftShoeBody = useRef<RapierRigidBody>(null);
   const rightShoeBody = useRef<RapierRigidBody>(null);
+  const forceMainVisualSyncFrames = useRef(0);
+  const mainVisualSyncMatrix = useRef(new THREE.Matrix4());
+  const mainVisualSyncPosition = useRef(new THREE.Vector3());
+  const mainVisualSyncQuaternion = useRef(new THREE.Quaternion());
   const groundBody = useRef<RapierRigidBody>(null);
   const leftShoeCollider = useRef<RapierCollider>(null);
   const rightShoeCollider = useRef<RapierCollider>(null);
@@ -2046,6 +2071,53 @@ function SkateModel({
   const rightCatchJoint = useRef<ReturnType<
     (typeof rapier.World.prototype)["createImpulseJoint"]
   > | null>(null);
+
+  const syncMainRigidBodyVisual = useCallback(
+    (body: RapierRigidBody | null) => {
+      if (!body) return;
+      const bodyState = rigidBodyStates.get(body.handle);
+      if (!bodyState || bodyState.meshType !== "mesh") return;
+      const translation = body.translation();
+      const rotation = body.rotation();
+      mainVisualSyncPosition.current.set(
+        translation.x,
+        translation.y,
+        translation.z,
+      );
+      mainVisualSyncQuaternion.current
+        .set(rotation.x, rotation.y, rotation.z, rotation.w)
+        .normalize();
+      mainVisualSyncMatrix.current
+        .compose(
+          mainVisualSyncPosition.current,
+          mainVisualSyncQuaternion.current,
+          bodyState.scale,
+        )
+        .premultiply(bodyState.invertedWorldMatrix)
+        .decompose(
+          bodyState.object.position,
+          bodyState.object.quaternion,
+          bodyState.object.scale,
+        );
+      bodyState.object.updateMatrix();
+      bodyState.object.updateWorldMatrix(false, true);
+    },
+    [rigidBodyStates],
+  );
+
+  // Rapier normally interpolates its Three.js wrappers between physics
+  // states. Catch intentionally bakes a shoe's local pose into its body in a
+  // single step, so interpolating only the parent while immediately zeroing
+  // the child creates a visible one-frame teleport. For the two handoff
+  // frames, atomically mirror the authoritative bodies after Rapier's normal
+  // frame update; regular interpolation resumes immediately afterward.
+  useFrame(() => {
+    if (forceMainVisualSyncFrames.current <= 0) return;
+    syncMainRigidBodyVisual(boardBody.current);
+    syncMainRigidBodyVisual(leftShoeBody.current);
+    syncMainRigidBodyVisual(rightShoeBody.current);
+    forceMainVisualSyncFrames.current -= 1;
+  });
 
   const setFootPoseTransforms = useCallback(
     (preset: keyof typeof TRICK_FOOT_POSES) => {
@@ -3208,6 +3280,7 @@ function SkateModel({
         stanceOffset.current,
         leftCatchesFirst ? leftCatchJoint : rightCatchJoint,
       );
+      forceMainVisualSyncFrames.current = 2;
     }
     const progressReset =
       state.progress <= 0.001 && previousProgress.current > 0.05;
@@ -3321,6 +3394,7 @@ function SkateModel({
         );
       }
       physicsInitialized.current = true;
+      forceMainVisualSyncFrames.current = 2;
     }
 
     if (!physicsReleased.current) {
@@ -3379,43 +3453,67 @@ function SkateModel({
   });
 
   useAfterPhysicsStep(() => {
-    // Mirror the final rendered transforms, not just the Rapier bodies. Each
-    // shoe has an authored local pose inside its body; omitting that pose made
-    // the aerial feet disagree with the main scene during preparation/flicks.
-    if (board) {
-      board.updateWorldMatrix(true, false);
-      leftShoe.updateWorldMatrix(true, false);
-      rightShoe.updateWorldMatrix(true, false);
-      board.getWorldPosition(previewBoardWorldPosition.current);
-      board.getWorldQuaternion(previewBoardWorldQuaternion.current);
-      leftShoe.getWorldPosition(previewLeftWorldPosition.current);
-      leftShoe.getWorldQuaternion(previewLeftWorldQuaternion.current);
-      rightShoe.getWorldPosition(previewRightWorldPosition.current);
-      rightShoe.getWorldQuaternion(previewRightWorldQuaternion.current);
-
-      motion.current.previewQuaternion
-        .copy(previewBoardWorldQuaternion.current)
-        .premultiply(previewPresentationInverse)
-        .normalize();
-      motion.current.previewLeftShoePosition
-        .copy(previewLeftWorldPosition.current)
-        .sub(previewBoardWorldPosition.current)
-        .applyQuaternion(previewPresentationInverse)
-        .divideScalar(presentationScale);
-      motion.current.previewLeftShoeQuaternion
-        .copy(previewLeftWorldQuaternion.current)
-        .premultiply(previewPresentationInverse)
-        .normalize();
-      motion.current.previewRightShoePosition
-        .copy(previewRightWorldPosition.current)
-        .sub(previewBoardWorldPosition.current)
-        .applyQuaternion(previewPresentationInverse)
-        .divideScalar(presentationScale);
-      motion.current.previewRightShoeQuaternion
-        .copy(previewRightWorldQuaternion.current)
-        .premultiply(previewPresentationInverse)
-        .normalize();
+    const currentBoardBody = boardBody.current;
+    const currentLeftShoeBody = leftShoeBody.current;
+    const currentRightShoeBody = rightShoeBody.current;
+    if (
+      !board ||
+      !currentBoardBody ||
+      !currentLeftShoeBody ||
+      !currentRightShoeBody
+    ) {
+      return;
     }
+
+    // Build all three rendered transforms from one post-physics snapshot.
+    // Reading Object3D.matrixWorld here used to expose a one-render-frame
+    // mismatch at catch: the shoe child was zeroed immediately while R3F's
+    // Rapier wrapper had not yet copied the new body transform to its parent.
+    // That made only the aerial view show both feet teleport out and back.
+    composePhysicsObjectWorldTransform(
+      currentBoardBody,
+      board,
+      presentationScale,
+      previewBoardWorldPosition.current,
+      previewBoardWorldQuaternion.current,
+    );
+    composePhysicsObjectWorldTransform(
+      currentLeftShoeBody,
+      leftShoe,
+      presentationScale,
+      previewLeftWorldPosition.current,
+      previewLeftWorldQuaternion.current,
+    );
+    composePhysicsObjectWorldTransform(
+      currentRightShoeBody,
+      rightShoe,
+      presentationScale,
+      previewRightWorldPosition.current,
+      previewRightWorldQuaternion.current,
+    );
+
+    motion.current.previewQuaternion
+      .copy(previewBoardWorldQuaternion.current)
+      .premultiply(previewPresentationInverse)
+      .normalize();
+    motion.current.previewLeftShoePosition
+      .copy(previewLeftWorldPosition.current)
+      .sub(previewBoardWorldPosition.current)
+      .applyQuaternion(previewPresentationInverse)
+      .divideScalar(presentationScale);
+    motion.current.previewLeftShoeQuaternion
+      .copy(previewLeftWorldQuaternion.current)
+      .premultiply(previewPresentationInverse)
+      .normalize();
+    motion.current.previewRightShoePosition
+      .copy(previewRightWorldPosition.current)
+      .sub(previewBoardWorldPosition.current)
+      .applyQuaternion(previewPresentationInverse)
+      .divideScalar(presentationScale);
+    motion.current.previewRightShoeQuaternion
+      .copy(previewRightWorldQuaternion.current)
+      .premultiply(previewPresentationInverse)
+      .normalize();
   });
 
   return (
