@@ -165,8 +165,6 @@ const GRAPH_PLOT_HEIGHT = GRAPH_HEIGHT - GRAPH_PADDING_Y * 2;
 const X_AXIS = new THREE.Vector3(1, 0, 0);
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 const Z_AXIS = new THREE.Vector3(0, 0, 1);
-const DRIVE_CURRENT_QUATERNION = new THREE.Quaternion();
-const DRIVE_DELTA_QUATERNION = new THREE.Quaternion();
 const BOARD_MASS = 2.4;
 const SHOE_MASS = 1.2;
 const RIDER_MASS = 75;
@@ -774,83 +772,6 @@ function sampleCurveAtTime(points: MotionPoint[], time: number) {
 
   const parameter = (lower + upper) * 0.5;
   return evaluateBezierScalar(motionValues, parameter);
-}
-
-function driveDynamicBody(
-  body: RapierRigidBody | null,
-  targetPosition: THREE.Vector3,
-  targetQuaternion: THREE.Quaternion,
-  delta: number,
-  positionStrength: number,
-  rotationStrength: number,
-) {
-  if (!body) return;
-  const currentPosition = body.translation();
-  const currentVelocity = body.linvel();
-  const inverseDelta = 1 / Math.max(delta, 1 / 240);
-  const velocityBlend = 1 - Math.exp(-positionStrength * delta);
-  body.setLinvel(
-    {
-      x: THREE.MathUtils.lerp(
-        currentVelocity.x,
-        (targetPosition.x - currentPosition.x) * inverseDelta,
-        velocityBlend,
-      ),
-      y: THREE.MathUtils.lerp(
-        currentVelocity.y,
-        (targetPosition.y - currentPosition.y) * inverseDelta,
-        velocityBlend,
-      ),
-      z: THREE.MathUtils.lerp(
-        currentVelocity.z,
-        (targetPosition.z - currentPosition.z) * inverseDelta,
-        velocityBlend,
-      ),
-    },
-    true,
-  );
-
-  const currentRotation = body.rotation();
-  const currentQuaternion = DRIVE_CURRENT_QUATERNION.set(
-    currentRotation.x,
-    currentRotation.y,
-    currentRotation.z,
-    currentRotation.w,
-  );
-  const deltaQuaternion = DRIVE_DELTA_QUATERNION.copy(
-    targetQuaternion,
-  ).multiply(currentQuaternion.invert());
-  if (deltaQuaternion.w < 0) {
-    deltaQuaternion.x *= -1;
-    deltaQuaternion.y *= -1;
-    deltaQuaternion.z *= -1;
-    deltaQuaternion.w *= -1;
-  }
-  const angle = 2 * Math.acos(THREE.MathUtils.clamp(deltaQuaternion.w, -1, 1));
-  const sine = Math.sqrt(Math.max(1e-8, 1 - deltaQuaternion.w ** 2));
-  const angularBlend = 1 - Math.exp(-rotationStrength * delta);
-  const angularScale = angle < 1e-4 ? 0 : (angle * inverseDelta) / sine;
-  const currentAngularVelocity = body.angvel();
-  body.setAngvel(
-    {
-      x: THREE.MathUtils.lerp(
-        currentAngularVelocity.x,
-        deltaQuaternion.x * angularScale,
-        angularBlend,
-      ),
-      y: THREE.MathUtils.lerp(
-        currentAngularVelocity.y,
-        deltaQuaternion.y * angularScale,
-        angularBlend,
-      ),
-      z: THREE.MathUtils.lerp(
-        currentAngularVelocity.z,
-        deltaQuaternion.z * angularScale,
-        angularBlend,
-      ),
-    },
-    true,
-  );
 }
 
 function setBodyCollisionGroups(body: RapierRigidBody | null, groups: number) {
@@ -2112,6 +2033,13 @@ function SkateModel({
   const landingShoeQuaternion = useRef(new THREE.Quaternion());
   const stabilizePlainFlipLanding = useRef(false);
   const stabilizedLandingQuaternion = useRef(new THREE.Quaternion());
+  const rearmFromLanding = useRef(false);
+  const rearmBoardPosition = useRef(new THREE.Vector3());
+  const rearmBoardQuaternion = useRef(new THREE.Quaternion());
+  const rearmLeftShoePosition = useRef(new THREE.Vector3());
+  const rearmLeftShoeQuaternion = useRef(new THREE.Quaternion());
+  const rearmRightShoePosition = useRef(new THREE.Vector3());
+  const rearmRightShoeQuaternion = useRef(new THREE.Quaternion());
   const leftCatchJoint = useRef<ReturnType<
     (typeof rapier.World.prototype)["createImpulseJoint"]
   > | null>(null);
@@ -2255,6 +2183,7 @@ function SkateModel({
       secondCatchDelay.current = 0;
       secondCatchPending.current = false;
       landingBoltAssignmentLocked.current = false;
+      rearmFromLanding.current = false;
       if (leftCatchJoint.current) {
         world.removeImpulseJoint(leftCatchJoint.current, true);
         leftCatchJoint.current = null;
@@ -2418,6 +2347,38 @@ function SkateModel({
     ) {
       physicsReleaseElapsed.current += frameDelta;
       if (physicsReleaseElapsed.current >= PHYSICS_LANDING_DURATION) {
+        const captureBodyTransform = (
+          body: RapierRigidBody | null,
+          position: THREE.Vector3,
+          quaternion: THREE.Quaternion,
+        ) => {
+          if (!body) return;
+          const translation = body.translation();
+          const rotation = body.rotation();
+          position.set(translation.x, translation.y, translation.z);
+          quaternion
+            .set(rotation.x, rotation.y, rotation.z, rotation.w)
+            .normalize();
+        };
+        // Catch bakes each shoe child into its rigid body. Preserve those
+        // rendered world poses before restoring the authored child transforms
+        // so rearming the loop cannot look like the feet swap and snap back.
+        captureBodyTransform(
+          boardBody.current,
+          rearmBoardPosition.current,
+          rearmBoardQuaternion.current,
+        );
+        captureBodyTransform(
+          leftShoeBody.current,
+          rearmLeftShoePosition.current,
+          rearmLeftShoeQuaternion.current,
+        );
+        captureBodyTransform(
+          rightShoeBody.current,
+          rearmRightShoePosition.current,
+          rearmRightShoeQuaternion.current,
+        );
+        rearmFromLanding.current = true;
         state.progress = 0;
         state.preparationElapsed = 0;
         state.restartDelayRemaining = 0;
@@ -2538,9 +2499,15 @@ function SkateModel({
       LEFT_FOOT_PREPARATION_DELAY,
       TRICK_PREPARATION_DURATION,
     );
-    // Source rig roles are inverse to semantic foot names.
-    applyPreparationPose(leftShoe, "right", rightFootPreparation);
-    applyPreparationPose(rightShoe, "left", leftFootPreparation);
+    // Source rig roles are inverse to semantic foot names. Once catch hands
+    // the shoes to Rapier their authored child transforms have already been
+    // baked into the rigid bodies. Reapplying these local poses during the
+    // landing would visibly move each shoe a second time and look like the
+    // semantic feet briefly swap before the next loop.
+    if (!physicsReleased.current) {
+      applyPreparationPose(leftShoe, "right", rightFootPreparation);
+      applyPreparationPose(rightShoe, "left", leftFootPreparation);
+    }
 
     const heightValue = sampleCurveAtTime(
       state.channels.height,
@@ -2972,9 +2939,11 @@ function SkateModel({
       .applyQuaternion(boardTargetQuaternion.current)
       .add(centerPosition.current);
 
-    // A 180-degree board spin exchanges which physical bolt cluster is under
-    // each foot. Assign anchors by the minimum total travel in rider space,
-    // then lock that assignment for the remainder of this landing.
+    // Only an odd 180-degree board-local shove exchanges which physical bolt
+    // cluster is under each foot. A flip can briefly make the opposite anchor
+    // look closer in 3D even though nose and tail never exchanged; allowing a
+    // distance-only swap there made the feet cross at catch and then appear to
+    // switch back on the following cycle.
     if (!landingBoltAssignmentLocked.current && boardCatchBlend > 0.001) {
       leftVisualPosition.current
         .copy(leftShoe.position)
@@ -2998,7 +2967,9 @@ function SkateModel({
         rightVisualPosition.current.distanceToSquared(
           leftLandingAnchor.current,
         );
-      if (swappedDistance < directDistance) {
+      const shoveHalfTurns = Math.round(shoveDegrees / 180);
+      const exchangesBoltClusters = Math.abs(shoveHalfTurns) % 2 === 1;
+      if (exchangesBoltClusters && swappedDistance < directDistance) {
         leftLandingBoltLocal.current.set(
           GENERIC_REAR_FOOT_STANCE.x +
             TRICK_FOOT_POSES.boltPosition.left.localPosition[0] -
@@ -3035,22 +3006,24 @@ function SkateModel({
       }
       landingBoltAssignmentLocked.current = true;
     }
-    lockCaughtFootToBoard(
-      leftCatchBlend,
-      leftLandingBoltLocal.current,
-      leftTargetPosition.current,
-      leftTargetQuaternion.current,
-      leftShoe,
-      TRICK_FOOT_POSES.boltPosition.right,
-    );
-    lockCaughtFootToBoard(
-      rightCatchBlend,
-      rightLandingBoltLocal.current,
-      rightTargetPosition.current,
-      rightTargetQuaternion.current,
-      rightShoe,
-      TRICK_FOOT_POSES.boltPosition.left,
-    );
+    if (!physicsReleased.current) {
+      lockCaughtFootToBoard(
+        leftCatchBlend,
+        leftLandingBoltLocal.current,
+        leftTargetPosition.current,
+        leftTargetQuaternion.current,
+        leftShoe,
+        TRICK_FOOT_POSES.boltPosition.right,
+      );
+      lockCaughtFootToBoard(
+        rightCatchBlend,
+        rightLandingBoltLocal.current,
+        rightTargetPosition.current,
+        rightTargetQuaternion.current,
+        rightShoe,
+        TRICK_FOOT_POSES.boltPosition.left,
+      );
+    }
 
     // Rapier setters take world-space values. The editable curves above are
     // authored in the model's local presentation space, which is rotated and
@@ -3134,6 +3107,7 @@ function SkateModel({
           .add(
             shoeLocalOffset.current
               .copy(pendingShoeGroup.position)
+              .multiplyScalar(presentationScale)
               .applyQuaternion(secondCatchStartQuaternion.current),
           );
         secondCatchStartQuaternion.current
@@ -3199,6 +3173,7 @@ function SkateModel({
       // of applying the child offset a second time after physics starts.
       caughtPosition.current
         .copy(caughtShoeGroup.position)
+        .multiplyScalar(presentationScale)
         .applyQuaternion(caughtShoeRotation)
         .add(caughtShoePosition);
       landingShoeQuaternion.current
@@ -3285,21 +3260,66 @@ function SkateModel({
         body.setLinvel({ x: 0, y: 0, z: 0 }, true);
         body.setAngvel({ x: 0, y: 0, z: 0 }, true);
       };
-      resetBody(
-        boardBody.current,
-        boardTargetPosition.current,
-        boardTargetQuaternion.current,
-      );
-      resetBody(
-        leftShoeBody.current,
-        leftTargetPosition.current,
-        leftTargetQuaternion.current,
-      );
-      resetBody(
-        rightShoeBody.current,
-        rightTargetPosition.current,
-        rightTargetQuaternion.current,
-      );
+      const preserveRenderedShoePose = (
+        body: RapierRigidBody | null,
+        renderedPosition: THREE.Vector3,
+        renderedQuaternion: THREE.Quaternion,
+        shoe: THREE.Group,
+      ) => {
+        // body' * restoredChild = capturedRenderedWorld
+        landingShoeQuaternion.current
+          .copy(renderedQuaternion)
+          .multiply(caughtQuaternion.current.copy(shoe.quaternion).invert())
+          .normalize();
+        shoeLocalOffset.current
+          .copy(shoe.position)
+          .multiplyScalar(presentationScale)
+          .applyQuaternion(landingShoeQuaternion.current);
+        caughtPosition.current
+          .copy(renderedPosition)
+          .sub(shoeLocalOffset.current);
+        resetBody(
+          body,
+          caughtPosition.current,
+          landingShoeQuaternion.current,
+        );
+      };
+      if (rearmFromLanding.current) {
+        resetBody(
+          boardBody.current,
+          rearmBoardPosition.current,
+          rearmBoardQuaternion.current,
+        );
+        preserveRenderedShoePose(
+          leftShoeBody.current,
+          rearmLeftShoePosition.current,
+          rearmLeftShoeQuaternion.current,
+          leftShoe,
+        );
+        preserveRenderedShoePose(
+          rightShoeBody.current,
+          rearmRightShoePosition.current,
+          rearmRightShoeQuaternion.current,
+          rightShoe,
+        );
+        rearmFromLanding.current = false;
+      } else {
+        resetBody(
+          boardBody.current,
+          boardTargetPosition.current,
+          boardTargetQuaternion.current,
+        );
+        resetBody(
+          leftShoeBody.current,
+          leftTargetPosition.current,
+          leftTargetQuaternion.current,
+        );
+        resetBody(
+          rightShoeBody.current,
+          rightTargetPosition.current,
+          rightTargetQuaternion.current,
+        );
+      }
       physicsInitialized.current = true;
     }
 
@@ -3311,29 +3331,35 @@ function SkateModel({
       ]) {
         body?.setGravityScale(1, true);
       }
-      driveDynamicBody(
+      const placeAuthoredBody = (
+        body: RapierRigidBody | null,
+        position: THREE.Vector3,
+        quaternion: THREE.Quaternion,
+      ) => {
+        if (!body) return;
+        // Curves already provide smooth interpolation and authored bodies do
+        // not collide. Keeping a velocity follower here only introduced pose
+        // lag, followed by a visible teleport when catch snapped to the exact
+        // target. Rapier begins integrating motion only after the handoff.
+        body.setTranslation(position, true);
+        body.setRotation(quaternion, true);
+        body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+        body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+      };
+      placeAuthoredBody(
         boardBody.current,
         boardTargetPosition.current,
         boardTargetQuaternion.current,
-        delta,
-        22,
-        20,
       );
-      driveDynamicBody(
+      placeAuthoredBody(
         leftShoeBody.current,
         leftTargetPosition.current,
         leftTargetQuaternion.current,
-        delta,
-        24,
-        22,
       );
-      driveDynamicBody(
+      placeAuthoredBody(
         rightShoeBody.current,
         rightTargetPosition.current,
         rightTargetQuaternion.current,
-        delta,
-        24,
-        22,
       );
     } else {
       // No authored driver is allowed after catch. Keeping gravity enabled is
