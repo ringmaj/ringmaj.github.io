@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useGLTF, useTexture } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useInspectableObject } from "../SceneInspector";
 import SmoothOrbitControls from "../Scenes/SmoothOrbitControls";
@@ -16,6 +16,9 @@ const PCB_ROOT_ROTATION = [-0.12066, -0.58991, -0.05447] as const;
 const PCB_SHADOW_TARGET_POSITION = new THREE.Vector3(1.56, 0.81, -2.085);
 const PCB_ORBIT_TARGET: [number, number, number] = [
   1.19415, 0.71187, -1.42209,
+];
+const PCB_MOBILE_SCENE_POSITION: [number, number, number] = [
+  1.19415, -0.84713, -0.87678,
 ];
 const PCB_ROTATION = [
   -3.02145,
@@ -700,6 +703,7 @@ function EtchedPCB() {
 
 export default function PCBModel() {
   const controlsRef = useRef<THREE.Group>(null);
+  const isMobile = useThree((state) => state.size.width <= 640);
 
   return (
     <>
@@ -722,7 +726,10 @@ export default function PCBModel() {
         minDistance={7}
         maxDistance={22}
       />
-      <group ref={controlsRef} position={PCB_ORBIT_TARGET}>
+      <group
+        ref={controlsRef}
+        position={isMobile ? PCB_MOBILE_SCENE_POSITION : PCB_ORBIT_TARGET}
+      >
         <group
           position={[
             -PCB_ORBIT_TARGET[0],

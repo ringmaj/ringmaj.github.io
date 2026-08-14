@@ -16,18 +16,18 @@ export default function PCB() {
     <SceneInspectorProvider modelUrl={PCB_MODEL_URL} label="DIY PCB Etcher">
       <div className="relative h-full w-full !min-h-[40em]">
         <Lead header={header} description={description} badge="Just for fun" />
-        <figure className="absolute left-[42%] top-10 z-0 w-[30%] overflow-hidden rounded-lg border border-black/10 bg-[#f5f5f5] shadow-[0_12px_28px_rgba(0,0,0,0.08)] max-sm:hidden">
+        <figure className="absolute left-[42%] top-10 z-0 w-[30%] overflow-hidden rounded-lg border border-black/10 bg-[#f5f5f5] shadow-[0_12px_28px_rgba(0,0,0,0.08)] max-sm:left-auto max-sm:right-4 max-sm:top-[15.5rem] max-sm:z-[5] max-sm:w-[43%] max-sm:rounded-md max-sm:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
           <div className="relative aspect-[1.5/1] w-full bg-white">
             <Image
               src="/Images/PCB_Shaker.png"
               alt="Fusion 360 bisected view of the desktop PCB etcher"
               fill
-              sizes="(max-width: 1200px) 30vw, 360px"
-              className="object-contain p-3"
+              sizes="(max-width: 640px) 43vw, (max-width: 1200px) 30vw, 360px"
+              className="object-contain p-3 max-sm:p-1.5"
               priority
             />
           </div>
-          <figcaption className="border-t border-black/10 px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-black/55">
+          <figcaption className="border-t border-black/10 px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-black/55 max-sm:px-2 max-sm:py-1.5 max-sm:text-[0.45rem] max-sm:tracking-[0.1em]">
             Fusion 360 · Inspect assembly view
           </figcaption>
         </figure>

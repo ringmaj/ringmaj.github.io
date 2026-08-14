@@ -44,7 +44,7 @@ const Lead = ({
             id="lead-card"
             data-page-navigation-ignore
             className={classNames(
-              "h-fit w-full p-8 max-sm:max-h-[12.5rem] max-sm:overflow-y-auto max-sm:p-4 max-sm:shadow-sm",
+              "h-fit w-full p-8 max-sm:p-3.5 max-sm:shadow-sm",
               {
               "rounded-lg bg-[#f5f5f5]": !onDark,
               "bg-transparent max-sm:rounded-lg max-sm:bg-black/70 max-sm:backdrop-blur-sm":
@@ -54,7 +54,7 @@ const Lead = ({
           >
             <p
               className={classNames({
-                "mb-4 text-4xl font-bold max-sm:mb-2 max-sm:text-[1.5rem] max-sm:leading-[1.05]": true,
+                "mb-4 text-4xl font-bold max-sm:mb-2 max-sm:text-[1.4rem] max-sm:leading-[1.05]": true,
                 "text-black": !onDark,
                 "text-white": onDark,
                 "justify-left": true,
@@ -64,7 +64,7 @@ const Lead = ({
             </p>
             <p
               className={classNames({
-                "text-[0.8em] max-sm:text-[0.68rem] max-sm:leading-[1.05rem]": true,
+                "text-[0.8em] max-sm:text-[0.62rem] max-sm:leading-[0.92rem]": true,
                 "text-black": !onDark,
                 "text-white": onDark,
                 "justify-left": true,

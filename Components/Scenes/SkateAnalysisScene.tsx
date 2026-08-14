@@ -92,6 +92,10 @@ const MAX_CURVE_POINTS = 8;
 const SHOE_MODEL_URL = "/Models/skate-shoe.glb";
 const BOARD_GRAPHIC_TEXTURE_URL = "/Models/boardGraphics.jpg";
 const SHOE_SCALE = 0.65;
+const SKATE_MOBILE_PRESENTATION_POSITION: [number, number, number] = [
+  0.75, -14.5, 0,
+];
+const SKATE_MOBILE_CAMERA_ZOOM = 17.1;
 
 function composePhysicsObjectWorldTransform(
   body: RapierRigidBody,
@@ -719,6 +723,8 @@ const GENERATED_TRICK_PRESETS: GeneratedTrickPreset[] = [
     }),
   },
 ];
+
+const SKATE_MOBILE_PRESET_EVENT = "portfolio:skate-mobile-preset";
 
 function cloneChannels(
   channels: Record<MotionChannel, MotionPoint[]>,
@@ -1563,6 +1569,23 @@ function SkateMotionEditor({
     [motion],
   );
 
+  useEffect(() => {
+    const applyRequestedPreset = (event: Event) => {
+      const presetId = (event as CustomEvent<string>).detail;
+      const preset = GENERATED_TRICK_PRESETS.find(
+        (candidate) => candidate.id === presetId,
+      );
+      if (preset) applyTrickPreset(preset);
+    };
+
+    window.addEventListener(SKATE_MOBILE_PRESET_EVENT, applyRequestedPreset);
+    return () =>
+      window.removeEventListener(
+        SKATE_MOBILE_PRESET_EVENT,
+        applyRequestedPreset,
+      );
+  }, [applyTrickPreset]);
+
   const reset = useCallback(() => {
     applyTrickPreset(GENERATED_TRICK_PRESETS[0]);
   }, [applyTrickPreset]);
@@ -1771,7 +1794,10 @@ function SkateModel({
   const compact = useThree((state) => state.size.width < 640);
   const presentationScale = compact ? 8 : 10;
   const presentationPosition = useMemo(
-    () => new THREE.Vector3(...(compact ? [0, -4, 0] : [-6, -4, 0])),
+    () =>
+      new THREE.Vector3(
+        ...(compact ? SKATE_MOBILE_PRESENTATION_POSITION : [-6, -4, 0]),
+      ),
     [compact],
   );
   const presentationQuaternion = useMemo(
@@ -3845,6 +3871,26 @@ function SkateAerialPreview({
   );
 }
 
+function SkateMobileCameraConfiguration({
+  positionInfoEnabled,
+}: {
+  positionInfoEnabled: boolean;
+}) {
+  const { camera, invalidate, size } = useThree();
+  const isMobile = size.width <= 640;
+
+  useLayoutEffect(() => {
+    if (!isMobile || positionInfoEnabled) return;
+    camera.position.set(4.82398, -5.60948, 50);
+    camera.zoom = SKATE_MOBILE_CAMERA_ZOOM;
+    camera.updateProjectionMatrix();
+    camera.updateMatrixWorld(true);
+    invalidate();
+  }, [camera, invalidate, isMobile, positionInfoEnabled]);
+
+  return null;
+}
+
 function SkateCanvas({
   modelUrl,
   motion,
@@ -3904,6 +3950,9 @@ function SkateCanvas({
             <NeutralEnvironment />
           </Physics>
         </Suspense>
+        <SkateMobileCameraConfiguration
+          positionInfoEnabled={positionInfoEnabled}
+        />
         {(positionInfoEnabled || keyframingEnabled) && (
           <OrbitControls
             makeDefault
@@ -3954,6 +4003,29 @@ export function SkateAnalysisScene({ modelUrl }: { modelUrl: string }) {
       >
         {mobileToolsOpen ? "Close curves" : "Motion curves"}
       </button>
+      <nav
+        data-page-navigation-ignore
+        aria-label="Skate trick shortcuts"
+        className={`absolute bottom-[4.25rem] left-1/2 z-30 hidden w-[calc(100%-7rem)] -translate-x-1/2 grid-cols-4 gap-1 max-sm:grid ${mobileToolsOpen ? "max-sm:hidden" : ""}`}
+      >
+        {GENERATED_TRICK_PRESETS.map((preset) => (
+          <button
+            key={preset.id}
+            type="button"
+            className="min-w-0 truncate rounded-md border border-black/12 bg-white/90 px-1.5 py-1.5 text-[0.48rem] font-semibold uppercase tracking-[0.05em] text-black shadow-sm backdrop-blur-sm transition active:bg-orange-500 active:text-white"
+            title={preset.label}
+            onClick={() =>
+              window.dispatchEvent(
+                new CustomEvent<string>(SKATE_MOBILE_PRESET_EVENT, {
+                  detail: preset.id,
+                }),
+              )
+            }
+          >
+            {preset.label.replace("Bigspin ", "Big ").replace("Varial ", "Var. ")}
+          </button>
+        ))}
+      </nav>
       <div
         data-page-navigation-ignore
         className={`skate-tools-column absolute right-[4.5rem] top-4 z-30 flex w-[22rem] origin-top-right flex-col gap-3 max-[1149px]:right-12 ${mobileToolsOpen ? "" : "max-sm:hidden"}`}

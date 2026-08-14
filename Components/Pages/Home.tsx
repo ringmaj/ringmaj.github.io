@@ -103,13 +103,16 @@ const jobsList = {
 const Home = () => {
   return (
     <>
-      <div className="h-full w-full pt-12 !min-h-[50em] max-sm:!min-h-0 max-sm:px-4 max-sm:pt-4">
+      <div className="h-full w-full pt-12 !min-h-[50em] max-sm:!min-h-0 max-sm:px-4 max-sm:pt-3">
         <div
           id="about-me-header"
           className="flex h-fit items-center justify-center max-sm:flex-col-reverse max-sm:gap-2"
         >
-          <div id="about-me-text" className="w-[45em] rounded-lg bg-white p-5 max-sm:w-full max-sm:p-4">
-            <h1 className="display-5 lh-1 !mb-3 flex text-[2rem] font-bold text-body-emphasis max-sm:flex-wrap max-sm:text-[1.35rem]">
+          <div
+            id="about-me-text"
+            className="w-[45em] rounded-lg bg-white p-5 max-sm:w-full max-sm:px-4 max-sm:py-3.5"
+          >
+            <h1 className="display-5 lh-1 !mb-3 flex text-[2rem] font-bold text-body-emphasis max-sm:!mb-2 max-sm:flex-wrap max-sm:text-[1.35rem]">
               <span
                 id="HenryRingName"
                 className="text-[var(--main-accent-color)]"
@@ -119,13 +122,14 @@ const Home = () => {
               <span className="ml-1">{bio.position}</span>
             </h1>
             <p className="!text-[0.9em] !font-[300] max-sm:line-clamp-6 max-sm:!text-[0.72rem] max-sm:leading-5">
-              {bio.header} <br />
-              <br />
-              {bio.mainText}
-              <br />
-              <br />
+              <span>{bio.header}</span>
+              <br className="max-sm:hidden" />
+              <br className="max-sm:hidden" />
+              <span className="max-sm:mt-2.5 max-sm:block">{bio.mainText}</span>
+              <br className="max-sm:hidden" />
+              <br className="max-sm:hidden" />
             </p>
-            <div className="d-grid gap-2 d-md-flex justify-content-md-start">
+            <div className="d-grid gap-2 d-md-flex justify-content-md-start max-sm:mt-2.5">
               <CustomButton>Start our journey!</CustomButton>
             </div>
           </div>
@@ -140,7 +144,7 @@ const Home = () => {
         <div
           id="about-me-footer"
           data-page-navigation-ignore
-          className="mt-5 flex justify-center max-sm:mt-3 max-sm:w-full max-sm:justify-start max-sm:overflow-x-auto max-sm:pb-12"
+          className="mt-5 flex justify-center max-sm:hidden"
         >
           <div id="career-list">
             <ul className="flex items-center gap-3 p-6 max-sm:p-2">
@@ -208,6 +212,80 @@ const Home = () => {
                       />
                     </div>
                     <p className="min-h-16 text-center text-[0.8rem] leading-5">
+                      {job.company}
+                    </p>
+                  </HoverPopover>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div
+          id="about-me-footer-mobile"
+          data-page-navigation-ignore
+          className="mt-[12rem] hidden w-full pb-12 max-sm:flex max-sm:justify-center"
+        >
+          <div className="w-full max-w-[40rem]">
+            <ul className="grid grid-cols-5 items-start gap-1 p-1.5">
+              {jobsList.career.map((job) => (
+                <li
+                  key={job.company}
+                  className="flex h-[4.8rem] min-w-0 items-center justify-center text-white"
+                >
+                  <HoverPopover
+                    jobCardProps={{
+                      jobCompany: job.company,
+                      jobTitle: job.title,
+                      jobDescription: job.description,
+                      jobLocation: job.location,
+                    }}
+                  >
+                    <div className="invert-100 flex h-8 w-full items-center justify-center">
+                      <Image
+                        src={job.logo}
+                        alt={`${job.company} Logo`}
+                        width={job.company === "Amazon Leo" ? 150 : 64}
+                        height={job.company === "Amazon Leo" ? 34 : 64}
+                        className={classnames(
+                          "h-8 rounded-lg object-contain p-1 brightness-0",
+                          job.company === "Amazon Leo" ? "w-full" : "w-16",
+                        )}
+                      />
+                    </div>
+                    <p className="text-center text-[0.46rem] leading-[0.62rem]">
+                      {job.company}
+                    </p>
+                  </HoverPopover>
+                </li>
+              ))}
+            </ul>
+            <div className="my-0.5 h-0.5 w-full bg-white/35" />
+            <ul className="grid grid-cols-5 items-start gap-1 p-1.5">
+              {jobsList.preCareer.map((job) => (
+                <li
+                  key={job.company}
+                  className="flex h-[4.8rem] min-w-0 items-center justify-center text-white"
+                >
+                  <HoverPopover
+                    jobCardProps={{
+                      jobCompany: job.company,
+                      jobTitle: job.title,
+                      jobDescription: job.description,
+                      jobLocation: job.location,
+                    }}
+                  >
+                    <div className="invert-100 flex h-8 w-full items-center justify-center">
+                      <Image
+                        src={job.logo}
+                        alt={`${job.company} Logo`}
+                        width={64}
+                        height={64}
+                        className="h-8 w-8 rounded-lg object-contain p-1 brightness-0"
+                        unoptimized
+                      />
+                    </div>
+                    <p className="text-center text-[0.46rem] leading-[0.62rem]">
                       {job.company}
                     </p>
                   </HoverPopover>

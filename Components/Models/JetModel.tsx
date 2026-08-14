@@ -10,6 +10,11 @@ import { applyModelMaterialOverride } from "../modelMaterialOverrides";
 
 const JET_BASE_POSITION = new THREE.Vector3(-2.5, -1.6, 3.5);
 const JET_BASE_ROTATION = [0, 0, 0] as const;
+const JET_MOBILE_SCENE_OFFSET: [number, number, number] = [
+  -1.8672,
+  0.30301,
+  0,
+];
 const JET_ORBIT_TARGET: [number, number, number] = [
   -4.00854,
   -3.24757,
@@ -94,7 +99,7 @@ const LoadJetModel = ({
   });
 
   return (
-    <group position={isMobile ? [-1.05, 0, 0] : [0, 0, 0]}>
+    <group position={isMobile ? JET_MOBILE_SCENE_OFFSET : [0, 0, 0]}>
       <group
         ref={floatingGroup}
         position={JET_BASE_POSITION}

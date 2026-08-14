@@ -682,7 +682,11 @@ function ZoomViewer({
   defaultNormalScale?: number;
   onClose: () => void;
 }) {
-  const [editorOpen, setEditorOpen] = useState(true);
+  const [editorOpen, setEditorOpen] = useState(() =>
+    typeof window === "undefined"
+      ? true
+      : window.matchMedia("(min-width: 641px)").matches,
+  );
   const [sceneData, setSceneData] =
     useState<ViewerSceneData>(INITIAL_VIEWER_SCENE);
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(

@@ -17,6 +17,11 @@ const RADAR_BASE_ROTATION: [number, number, number] = [
   THREE.MathUtils.degToRad(50),
   0,
 ];
+const RADAR_MOBILE_SCENE_OFFSET: [number, number, number] = [
+  101.82054,
+  -30.32563,
+  0,
+];
 const RADAR_FLOAT_SPEED = 0.7;
 const RADAR_FLOAT_HEIGHT = 3.5;
 const RADAR_FLOAT_DRIFT = 1.2;
@@ -100,7 +105,7 @@ const LoadRadarModel = ({
   );
 
   return (
-    <group position={isMobile ? [55, 0, 0] : [0, 0, 0]}>
+    <group position={isMobile ? RADAR_MOBILE_SCENE_OFFSET : [0, 0, 0]}>
       <group
         ref={floatingGroup}
         position={RADAR_BASE_POSITION}

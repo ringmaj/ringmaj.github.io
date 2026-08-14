@@ -31,8 +31,24 @@ const WORKSPACE_MODEL_ROTATION: [number, number, number] = [
 const WORKSPACE_CAMERA_POSITION: [number, number, number] = [
   5.2435, 1.418, 27.37449,
 ];
+const WORKSPACE_MOBILE_MODEL_POSITION: [number, number, number] = [
+  7.22723, 2.1, 0,
+];
+const WORKSPACE_MOBILE_CAMERA_POSITION: [number, number, number] = [
+  -1.98312, 5.27089, 49.69758,
+];
 const WORKSPACE_ORBIT_TARGET: [number, number, number] = [
   7.43514, -1.82757, 1.3221,
+];
+const BUILD_INTEGRATION_MOBILE_POSITION: [number, number, number] = [
+  -197.87197,
+  -188.35728,
+  0,
+];
+const BUILD_INTEGRATION_MOBILE_ROTATION: [number, number, number] = [
+  -2.87979,
+  -1.38137,
+  -Math.PI,
 ];
 
 function SceneRendererSettings({
@@ -213,8 +229,14 @@ function SeniorModel({ modelUrl }: { modelUrl: string }) {
     <group
       ref={group}
       scale={25}
-      position={[isMobile ? -105 : 0, -70, 0]}
-      rotation={[15 * DEG, -1.760226, 0]}
+      position={
+        isMobile ? BUILD_INTEGRATION_MOBILE_POSITION : [0, -70, 0]
+      }
+      rotation={
+        isMobile
+          ? BUILD_INTEGRATION_MOBILE_ROTATION
+          : [15 * DEG, -1.760226, 0]
+      }
       {...inspectionHandlers}
     >
       <primitive object={scene} dispose={null} />
@@ -268,7 +290,10 @@ export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
       environmentIntensity={1.17}
       exposure={0.34}
       toneMapping={THREE.ACESFilmicToneMapping}
-      mobileCamera={{ zoom: 0.56 }}
+      mobileCamera={{
+        position: [-84.96694, 34.13831, 298.00991],
+        zoom: 0.76199,
+      }}
     >
       <ambientLight intensity={0} />
       <directionalLight
@@ -428,8 +453,9 @@ function WorkspaceModel({ modelUrl }: { modelUrl: string }) {
   };
 
   return (
-    <group
-      position={WORKSPACE_MODEL_POSITION}
+    <ResponsivePositionGroup
+      desktop={WORKSPACE_MODEL_POSITION}
+      mobile={WORKSPACE_MOBILE_MODEL_POSITION}
       rotation={WORKSPACE_MODEL_ROTATION}
     >
       <group rotation={[0, 45 * DEG, 0]} {...inspectionHandlers}>
@@ -459,7 +485,7 @@ function WorkspaceModel({ modelUrl }: { modelUrl: string }) {
           depthWrite={false}
         />
       </mesh>
-    </group>
+    </ResponsivePositionGroup>
   );
 }
 
@@ -503,7 +529,7 @@ export function WorkspaceScene({ modelUrl }: { modelUrl: string }) {
         near: 0.1,
         far: 500,
       }}
-      mobileCamera={{ position: [4.7, 2.25, 34] }}
+      mobileCamera={{ position: WORKSPACE_MOBILE_CAMERA_POSITION }}
       shadows
       dpr={[1, 1.75]}
       environmentIntensity={1.42}
@@ -800,13 +826,13 @@ export function CarProjectScene({ modelUrl }: { modelUrl: string }) {
         orthographic
         animated
         camera={{ position: [0, 1, 50], zoom: 20, near: 0.01, far: 1000 }}
-        mobileCamera={{ zoom: 10.5 }}
+        mobileCamera={{ zoom: 10.21689 }}
       >
         <hemisphereLight intensity={1.6} groundColor="#999999" />
         <directionalLight position={[20, 20, 30]} intensity={3} />
         <ResponsivePositionGroup
           desktop={[10.5, 7.5, 0]}
-          mobile={[9.5, 7.5, 0]}
+          mobile={[-0.93956, -14.32863, 0]}
           rotation={[6 * DEG, 0, 0]}
         >
           <CarModel
@@ -1284,7 +1310,10 @@ function HobbiesModel({
   });
 
   return (
-    <group {...inspectionHandlers}>
+    <group
+      position={isMobile ? [-20.69855, 33.59509, 0] : [0, 0, 0]}
+      {...inspectionHandlers}
+    >
       <group
         ref={group}
         scale={0.3}
@@ -1328,7 +1357,7 @@ export function HobbiesScene({ modelUrl }: { modelUrl: string }) {
     <SceneShell
       orthographic
       camera={{ position: [0, 60, 0], zoom: 5, near: 0.01, far: 1000 }}
-      mobileCamera={{ zoom: 2.15 }}
+      mobileCamera={{ position: [4.59569, 61.86096, -0.02452], zoom: 2.15 }}
       shadows
     >
       <ambientLight intensity={0.8} />

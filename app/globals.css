@@ -232,6 +232,103 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
 }
 
 @media (max-width: 640px) {
+  #about-me-page {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    padding-inline: 1rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  #about-me-page > p:first-of-type {
+    flex: none;
+    padding-top: 0.9rem !important;
+    padding-bottom: 0.25rem !important;
+    font-size: 1.35rem !important;
+  }
+
+  #about-me-page > p:nth-of-type(2) {
+    max-width: 23rem;
+    flex: none;
+    margin-inline: auto;
+    font-size: 0.68rem !important;
+    line-height: 1.05rem;
+  }
+
+  #about-me-page > ul {
+    display: grid;
+    height: auto !important;
+    min-height: 0;
+    flex: 1;
+    grid-template-rows: repeat(4, auto);
+    align-content: start;
+    margin-top: 3rem !important;
+  }
+
+  #about-me-page > ul > li {
+    min-height: 0;
+    justify-content: flex-start;
+    padding-top: 0;
+  }
+
+  #about-me-page > ul > li > h1 {
+    margin-bottom: 0.55rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #about-me-page > ul > li > ul {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    column-gap: 0.7rem;
+    row-gap: 0.7rem;
+  }
+
+  #about-me-page > ul > li > ul > li {
+    min-width: 0;
+  }
+
+  #about-me-page > ul > li > ul > li img {
+    width: 1.65rem;
+    height: 1.65rem;
+    object-fit: contain;
+  }
+
+  #about-me-page > ul > li > ul > li p {
+    max-width: 100%;
+    margin-top: 0.3rem;
+    font-size: 0.5rem;
+    line-height: 0.65rem;
+  }
+
+  #about-me-page #divider {
+    margin-block: 0.7rem;
+  }
+
+  #about-me-page > ul > li:last-child #divider {
+    display: none;
+  }
+
+  #terminal-container {
+    height: clamp(27rem, 65vh, 31rem);
+    min-height: 0;
+  }
+
+  #terminal-container #status-bar button {
+    flex-shrink: 0;
+    font-family: Arial, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1;
+  }
+
+  #terminal-body {
+    height: calc(100% - 2.5rem) !important;
+  }
+
   body > nav {
     min-height: 3.5rem;
   }
@@ -242,7 +339,7 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
 
   #lead-container {
     position: relative;
-    z-index: 30;
+    z-index: 10;
     pointer-events: none;
   }
 
@@ -263,7 +360,7 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
   .portfolio-scene-canvas {
     top: 0 !important;
     bottom: 0 !important;
-    z-index: 5 !important;
+    z-index: 20 !important;
     height: auto !important;
     overflow: hidden;
   }

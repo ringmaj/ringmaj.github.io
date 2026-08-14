@@ -1,10 +1,38 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { useLayoutEffect } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import PCBModel from "../Models/PCBModel";
 import { SceneOutline, useSceneInspector } from "../SceneInspector";
+import { usePositionInfoMode } from "../PositionInfo";
 import NeutralEnvironment from "./NeutralEnvironment";
+
+const PCB_CAMERA_POSITION: [number, number, number] = [
+  -6.16164, 3.7758, 5.9373,
+];
+const PCB_MOBILE_CAMERA_POSITION: [number, number, number] = [
+  -8.28873, 4.6618, 8.06543,
+];
+const PCB_MOBILE_CAMERA_QUATERNION: [number, number, number, number] = [
+  -0.13184, -0.37866, -0.05459, 0.91447,
+];
+
+function PCBMobileCamera() {
+  const { enabled: positionInfoEnabled } = usePositionInfoMode();
+  const { camera, invalidate, size } = useThree();
+  const isMobile = size.width <= 640;
+
+  useLayoutEffect(() => {
+    if (!isMobile || positionInfoEnabled) return;
+    camera.position.set(...PCB_MOBILE_CAMERA_POSITION);
+    camera.quaternion.set(...PCB_MOBILE_CAMERA_QUATERNION);
+    camera.updateMatrixWorld(true);
+    invalidate();
+  }, [camera, invalidate, isMobile, positionInfoEnabled]);
+
+  return null;
+}
 
 export default function PCBScene() {
   const { viewerOpen } = useSceneInspector();
@@ -17,7 +45,7 @@ export default function PCBScene() {
       frameloop={viewerOpen ? "never" : "demand"}
       performance={{ min: 0.5 }}
       camera={{
-        position: [-6.16164, 3.7758, 5.9373],
+        position: PCB_CAMERA_POSITION,
         fov: 48,
         near: 0.1,
         far: 100,
@@ -37,6 +65,7 @@ export default function PCBScene() {
       }}
       >
         <PCBModel />
+        <PCBMobileCamera />
         <NeutralEnvironment intensity={0.22} />
         <SceneOutline />
       </Canvas>

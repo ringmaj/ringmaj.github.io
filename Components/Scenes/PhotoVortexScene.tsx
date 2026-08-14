@@ -4,6 +4,7 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -134,6 +135,14 @@ function SelectedPhotoPreview({ photo }: { photo: PreparedPhoto | undefined }) {
   const pointer = useRef({ id: null as number | null, x: 0, y: 0 });
   const gl = useThree((state) => state.gl);
   const isMobile = useThree((state) => state.size.width <= 640);
+
+  useLayoutEffect(() => {
+    if (!isMobile) return;
+    orbit.current.set(-0.07822, -0.43533);
+    if (preview.current) {
+      preview.current.rotation.set(orbit.current.x, orbit.current.y, 0);
+    }
+  }, [isMobile, photo]);
 
   const previewPhoto = useMemo(() => {
     if (!photo) return null;

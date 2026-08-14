@@ -38,7 +38,7 @@ const RadarScene = () => {
       }}
       >
         <RadarModel />
-        <ResponsiveSceneCamera mobileZoom={0.95} />
+        <ResponsiveSceneCamera mobileZoom={1.30392} />
         <NeutralEnvironment intensity={0.09} />
         <SceneOutline />
       </Canvas>

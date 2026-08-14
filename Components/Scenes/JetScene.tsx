@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { useLayoutEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import JetModel from "../Models/JetModel";
 import { SceneOutline, useSceneInspector } from "../SceneInspector";
@@ -17,13 +17,42 @@ const JET_CAMERA_POSITION: [number, number, number] = [
   1.78628,
   11.87773,
 ];
+const JET_MOBILE_CAMERA_ROTATION = [
+  -0.57356,
+  0.22735,
+  0.14459,
+] as const;
+const JET_MOBILE_CAMERA_POSITION: [number, number, number] = [
+  -1.82289,
+  1.87874,
+  11.29192,
+];
 
 function JetCameraOrientation() {
   const { enabled: positionInfoEnabled } = usePositionInfoMode();
+  const { camera, invalidate, size } = useThree();
+  const isMobile = size.width <= 640;
 
-  useFrame(({ camera }) => {
+  useLayoutEffect(() => {
     if (positionInfoEnabled) return;
-    camera.rotation.set(...JET_CAMERA_ROTATION);
+    const position = isMobile
+      ? JET_MOBILE_CAMERA_POSITION
+      : JET_CAMERA_POSITION;
+    const rotation = isMobile
+      ? JET_MOBILE_CAMERA_ROTATION
+      : JET_CAMERA_ROTATION;
+    camera.position.set(position[0], position[1], position[2]);
+    camera.rotation.set(rotation[0], rotation[1], rotation[2]);
+    camera.updateMatrixWorld(true);
+    invalidate();
+  }, [camera, invalidate, isMobile, positionInfoEnabled]);
+
+  useFrame(() => {
+    if (positionInfoEnabled) return;
+    const rotation = isMobile
+      ? JET_MOBILE_CAMERA_ROTATION
+      : JET_CAMERA_ROTATION;
+    camera.rotation.set(rotation[0], rotation[1], rotation[2]);
   });
   return null;
 }

@@ -50,7 +50,7 @@ const NavigationArrows = ({
         type="button"
         aria-label="Previous page"
         className={classnames(
-          "absolute top-[calc(50%-5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl max-sm:bottom-3 max-sm:!left-3 max-sm:top-auto max-sm:flex-row max-sm:rounded-md max-sm:border max-sm:px-2 max-sm:py-1 max-sm:text-xl max-sm:shadow-sm max-sm:backdrop-blur-sm",
+          "absolute top-[calc(50%-5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl max-sm:bottom-3 max-sm:!left-3 max-sm:top-auto max-sm:h-8 max-sm:min-w-12 max-sm:flex-row max-sm:gap-1 max-sm:rounded-md max-sm:border max-sm:px-2 max-sm:py-0 max-sm:text-xs max-sm:shadow-sm max-sm:backdrop-blur-sm",
           {
             invisible: !previousPage,
             "max-sm:border-white/20 max-sm:bg-black/65": color === "white",
@@ -63,8 +63,10 @@ const NavigationArrows = ({
         onPointerDown={() => previousPage && primePage(previousPage)}
         onFocus={() => previousPage && primePage(previousPage)}
       >
-        <GrUp aria-hidden="true" />
-        <span className="text-[0.42em] font-light leading-none">Prev</span>
+        <GrUp aria-hidden="true" className="max-sm:size-3" />
+        <span className="text-[0.42em] font-light leading-none max-sm:text-[0.58rem]">
+          Prev
+        </span>
       </button>
 
       <div id="center-container" className="h-full w-full max-w-[1200px]">
@@ -114,7 +116,7 @@ const NavigationArrows = ({
         type="button"
         aria-label="Next page"
         className={classnames(
-          "absolute top-[calc(50%+1.5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl max-sm:bottom-3 max-sm:!left-auto max-sm:right-3 max-sm:top-auto max-sm:flex-row max-sm:rounded-md max-sm:border max-sm:px-2 max-sm:py-1 max-sm:text-xl max-sm:shadow-sm max-sm:backdrop-blur-sm",
+          "absolute top-[calc(50%+1.5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl max-sm:bottom-3 max-sm:!left-auto max-sm:right-3 max-sm:top-auto max-sm:h-8 max-sm:min-w-12 max-sm:flex-row max-sm:gap-1 max-sm:rounded-md max-sm:border max-sm:px-2 max-sm:py-0 max-sm:text-xs max-sm:shadow-sm max-sm:backdrop-blur-sm",
           {
             invisible: !nextPage,
             "max-sm:border-white/20 max-sm:bg-black/65": color === "white",
@@ -127,8 +129,10 @@ const NavigationArrows = ({
         onPointerDown={() => nextPage && primePage(nextPage)}
         onFocus={() => nextPage && primePage(nextPage)}
       >
-        <span className="text-[0.42em] font-light leading-none">Next</span>
-        <GrDown aria-hidden="true" />
+        <span className="text-[0.42em] font-light leading-none max-sm:text-[0.58rem]">
+          Next
+        </span>
+        <GrDown aria-hidden="true" className="max-sm:size-3" />
       </button>
     </div>
   );

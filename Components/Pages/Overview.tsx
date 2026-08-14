@@ -3,7 +3,7 @@ import Terminal from "../Terminal";
 export default function Overview() {
   return (
     <section className="h-full w-full bg-white px-7 py-8 max-sm:px-5 max-sm:py-5 sm:px-12 lg:px-20">
-      <div className="mx-auto grid h-full max-w-[1120px] min-h-0 items-center gap-8 max-sm:grid-rows-[auto_minmax(0,1fr)] max-sm:gap-4 lg:grid-cols-[minmax(16rem,0.72fr)_minmax(31rem,1.28fr)] lg:gap-12">
+      <div className="mx-auto grid h-full max-w-[1120px] min-h-0 items-center gap-8 max-sm:grid-rows-[auto_minmax(0,1fr)] max-sm:items-start max-sm:gap-5 lg:grid-cols-[minmax(16rem,0.72fr)_minmax(31rem,1.28fr)] lg:gap-12">
         <header className="max-w-md max-sm:pr-5 lg:-translate-y-4">
           <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.28em] text-[var(--main-accent-color-dark)]">
             Interactive introduction

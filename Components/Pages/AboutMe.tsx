@@ -67,8 +67,8 @@ const AboutMe = () => {
   return (
     <>
       <div
-        data-page-navigation-ignore
-        className="h-full w-full bg-white !min-h-[40em] max-sm:!min-h-0 max-sm:overflow-y-auto max-sm:px-4 max-sm:pb-16"
+        id="about-me-page"
+        className="h-full w-full bg-white !min-h-[40em] max-sm:!min-h-0 max-sm:overflow-hidden max-sm:px-4 max-sm:pb-16"
       >
         <p className="p-8 pb-3 text-center text-4xl font-bold text-black max-sm:px-2 max-sm:pt-5 max-sm:text-2xl">
           Fullstack / Embedded / DevOps.

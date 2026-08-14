@@ -6,6 +6,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import * as THREE from "three";
 import NeutralEnvironment from "./NeutralEnvironment";
+import ResponsiveSceneCamera from "./ResponsiveSceneCamera";
 import SmoothOrbitControls from "./SmoothOrbitControls";
 import {
   SceneOutline,
@@ -18,6 +19,12 @@ const SATELLITE_NORMAL_SCALE = 2.8;
 const SATELLITE_FLOAT_AMPLITUDE = 0.035;
 const SATELLITE_FLOAT_SPEED = 0.55;
 const SATELLITE_ROTATION_SPEED = 0.006;
+const SATELLITE_MOBILE_POSITION: [number, number, number] = [
+  0.78477,
+  0.74345,
+  0,
+];
+const SATELLITE_MOBILE_ROTATION_Y = 1.16142;
 
 const STAR_VERTEX_SHADER = `
   attribute float starSize;
@@ -201,7 +208,9 @@ function SatelliteModel({
 
   useFrame(({ clock }, delta) => {
     if (!group.current) return;
+    const baseY = isMobile ? SATELLITE_MOBILE_POSITION[1] : 0;
     group.current.position.y =
+      baseY +
       Math.sin(clock.elapsedTime * SATELLITE_FLOAT_SPEED) *
       SATELLITE_FLOAT_AMPLITUDE;
     group.current.rotation.y += delta * SATELLITE_ROTATION_SPEED;
@@ -210,9 +219,15 @@ function SatelliteModel({
   return (
     <group
       ref={group}
-      position={[isMobile ? 0 : -1.5, 0, 0]}
+      position={isMobile ? SATELLITE_MOBILE_POSITION : [-1.5, 0, 0]}
       scale={isMobile ? 0.68 : 1}
-      rotation={[0, THREE.MathUtils.degToRad(65), 0]}
+      rotation={[
+        0,
+        isMobile
+          ? SATELLITE_MOBILE_ROTATION_Y
+          : THREE.MathUtils.degToRad(65),
+        0,
+      ]}
       onPointerEnter={() => {
         document.body.style.cursor = "default";
       }}
@@ -279,6 +294,9 @@ export default function SatelliteScene({ modelUrl }: { modelUrl: string }) {
             maxDistance={9}
             target={[0, 1, 0]}
             rotateObject={satellite}
+          />
+          <ResponsiveSceneCamera
+            mobilePosition={[0.46695, 3.6155, 4.2357]}
           />
           <SceneOutline />
         </Canvas>
