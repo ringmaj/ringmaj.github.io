@@ -10,7 +10,8 @@ export default function PCBScene() {
   const { viewerOpen } = useSceneInspector();
 
   return (
-    <Canvas
+    <div className="portfolio-scene-canvas portfolio-scene-pcb absolute inset-0 z-20">
+      <Canvas
       shadows="soft"
       dpr={[1, 1.5]}
       frameloop={viewerOpen ? "never" : "demand"}
@@ -34,10 +35,11 @@ export default function PCBScene() {
         position: "absolute",
         inset: 0,
       }}
-    >
-      <PCBModel />
-      <NeutralEnvironment intensity={0.22} />
-      <SceneOutline />
-    </Canvas>
+      >
+        <PCBModel />
+        <NeutralEnvironment intensity={0.22} />
+        <SceneOutline />
+      </Canvas>
+    </div>
   );
 }

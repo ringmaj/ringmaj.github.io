@@ -341,9 +341,9 @@ function PositionInfoModal() {
     <aside
       data-page-navigation-ignore
       aria-label="Scene position information"
-      className="fixed right-4 top-[3.35rem] z-[100] flex max-h-[calc(100vh-4.35rem)] w-[26rem] max-w-[calc(100vw-2rem)] flex-col border border-black/15 bg-[#f8f8f8]/97 text-black shadow-2xl backdrop-blur-md"
+      className="fixed right-4 top-[3.35rem] z-[100] flex max-h-[calc(100vh-4.35rem)] w-[26rem] max-w-[calc(100vw-2rem)] flex-col border border-black/15 bg-[#f8f8f8]/97 text-black shadow-2xl backdrop-blur-md max-sm:bottom-16 max-sm:right-3 max-sm:top-auto max-sm:w-auto max-sm:max-w-none max-sm:border-0 max-sm:bg-transparent max-sm:shadow-none max-sm:backdrop-blur-none"
     >
-      <header className="flex items-center gap-3 border-b border-black/10 px-4 py-3">
+      <header className="flex items-center gap-3 border-b border-black/10 px-4 py-3 max-sm:hidden">
         <span className="grid size-8 shrink-0 place-items-center border border-black/15 bg-white">
           <FiMove aria-hidden="true" />
         </span>
@@ -365,7 +365,7 @@ function PositionInfoModal() {
         </button>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 [scrollbar-color:#a3a3a3_transparent] [scrollbar-width:thin]">
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 [scrollbar-color:#a3a3a3_transparent] [scrollbar-width:thin] max-sm:hidden">
         {!snapshot ? (
           <p className="py-8 text-center text-xs text-black/45">
             Waiting for the active 3D scene…
@@ -451,15 +451,15 @@ function PositionInfoModal() {
         )}
       </div>
 
-      <footer className="border-t border-black/10 bg-white/80 p-3">
-        <p className="mb-2 text-[0.62rem] leading-relaxed text-black/45">
+      <footer className="border-t border-black/10 bg-white/80 p-3 max-sm:flex max-sm:items-center max-sm:gap-1.5 max-sm:border-0 max-sm:bg-transparent max-sm:p-0">
+        <p className="mb-2 text-[0.62rem] leading-relaxed text-black/45 max-sm:hidden">
           Drag colored arrows to move · drag colored arcs to rotate · drag empty
           space to orbit. Copy this state after positioning the scene.
         </p>
         <button
           type="button"
           disabled={!snapshot}
-          className="flex h-9 w-full items-center justify-center gap-2 border border-black/20 bg-black text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-orange-600 disabled:cursor-default disabled:opacity-35"
+          className="flex h-9 w-full items-center justify-center gap-2 border border-black/20 bg-black text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-orange-600 disabled:cursor-default disabled:opacity-35 max-sm:h-8 max-sm:w-auto max-sm:rounded-md max-sm:px-3 max-sm:text-[0.56rem] max-sm:shadow-lg"
           onClick={copySnapshot}
         >
           {copyStatus === "copied" ? (
@@ -467,11 +467,28 @@ function PositionInfoModal() {
           ) : (
             <FiCopy aria-hidden="true" />
           )}
-          {copyStatus === "copied"
-            ? "Copied positioning"
-            : copyStatus === "failed"
-              ? "Copy failed"
-              : "Copy positioning"}
+          <span className="max-sm:hidden">
+            {copyStatus === "copied"
+              ? "Copied positioning"
+              : copyStatus === "failed"
+                ? "Copy failed"
+                : "Copy positioning"}
+          </span>
+          <span className="hidden max-sm:inline">
+            {copyStatus === "copied"
+              ? "Copied"
+              : copyStatus === "failed"
+                ? "Failed"
+                : "Copy"}
+          </span>
+        </button>
+        <button
+          type="button"
+          aria-label="Close position information"
+          className="hidden size-8 place-items-center rounded-md border border-black/20 bg-white text-black shadow-lg transition hover:border-orange-500 hover:text-orange-600 max-sm:grid"
+          onClick={() => setEnabled(false)}
+        >
+          <FiX aria-hidden="true" />
         </button>
       </footer>
     </aside>
@@ -536,25 +553,25 @@ export function PositionInfoToggle() {
       aria-checked={enabled}
       data-page-navigation-ignore
       title="Show live scene and object positioning"
-      className="flex h-8 items-center gap-2 rounded-md border border-neutral-200 bg-white px-2.5 text-[0.58rem] font-bold uppercase tracking-[0.12em] text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50"
+      className="flex h-8 items-center gap-2 rounded-md border border-neutral-200 bg-white px-2.5 text-[0.58rem] font-bold uppercase tracking-[0.12em] text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50 max-sm:h-7 max-sm:gap-1 max-sm:px-1.5"
       onClick={() => setEnabled(!enabled)}
     >
       <FiMove
         aria-hidden="true"
-        className={`text-sm ${enabled ? "text-neutral-950" : "text-neutral-500"}`}
+        className={`text-sm max-sm:text-xs ${enabled ? "text-neutral-950" : "text-neutral-500"}`}
       />
       <span className="hidden sm:inline">Position info</span>
       <span
         aria-hidden="true"
-        className={`relative block h-5 w-9 shrink-0 overflow-hidden rounded-full border transition-colors ${
+        className={`relative block h-5 w-9 shrink-0 overflow-hidden rounded-full border transition-colors max-sm:h-4 max-sm:w-7 ${
           enabled
             ? "border-neutral-900 bg-neutral-900"
             : "border-neutral-300 bg-neutral-200"
         }`}
       >
         <span
-          className={`absolute left-0.5 top-0.5 size-3.5 rounded-full bg-white transition-transform ${
-            enabled ? "translate-x-4" : "translate-x-0"
+          className={`absolute left-0.5 top-0.5 size-3.5 rounded-full bg-white transition-transform max-sm:size-2.5 ${
+            enabled ? "translate-x-4 max-sm:translate-x-3" : "translate-x-0"
           }`}
         />
       </span>
@@ -659,6 +676,7 @@ export function ScenePositionProbe() {
   const { enabled, route } = usePositionInfoMode();
   const { publishSnapshot } = usePositionInfoData();
   const scene = useThree((state) => state.scene);
+  const isMobile = useThree((state) => state.size.width <= 640);
   const get = useThree((state) => state.get);
   const invalidate = useThree((state) => state.invalidate);
   const lastCapture = useRef(-Infinity);
@@ -785,7 +803,7 @@ export function ScenePositionProbe() {
     }
 
     const elapsed = clock.getElapsedTime();
-    if (elapsed - lastCapture.current < CAPTURE_INTERVAL) return;
+    if (elapsed - lastCapture.current < (isMobile ? 0.3 : CAPTURE_INTERVAL)) return;
     lastCapture.current = elapsed;
     capture();
   });
@@ -801,8 +819,8 @@ export function ScenePositionProbe() {
         axisColors={[GIZMO_COLORS.x, GIZMO_COLORS.y, GIZMO_COLORS.z]}
         hoveredColor="#f97316"
         fixed
-        scale={82}
-        lineWidth={3}
+        scale={isMobile ? 46 : 82}
+        lineWidth={isMobile ? 2 : 3}
         opacity={0.95}
         depthTest={false}
         renderOrder={1000}

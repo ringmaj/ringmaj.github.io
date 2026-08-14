@@ -66,22 +66,25 @@ const skills: { [key: string]: { skill: string; logo: string }[] } = {
 const AboutMe = () => {
   return (
     <>
-      <div className="bg-white w-full h-full !min-h-[40em]">
-        <p className="text-black text-center text-4xl font-bold p-8 pb-3">
+      <div
+        data-page-navigation-ignore
+        className="h-full w-full bg-white !min-h-[40em] max-sm:!min-h-0 max-sm:overflow-y-auto max-sm:px-4 max-sm:pb-16"
+      >
+        <p className="p-8 pb-3 text-center text-4xl font-bold text-black max-sm:px-2 max-sm:pt-5 max-sm:text-2xl">
           Fullstack / Embedded / DevOps.
         </p>
-        <p className="text-center text-[0.8em]">
+        <p className="text-center text-[0.8em] max-sm:text-[0.72rem]">
           A wide range of skills to fit any team and develop on many different
           platforms.
         </p>
 
-        <ul className="w-full h-full mx-auto text-center mt-8 ">
+        <ul className="mx-auto mt-8 h-full w-full text-center max-sm:mt-5">
           {groups.map((group) => (
-            <li key={group} className="flex flex-col h-[18%]">
+            <li key={group} className="flex h-[18%] flex-col max-sm:h-auto">
               <h1 className="text-2xl text-[#043b94] font-[800] text-[1.25rem] mb-4">
                 {group}
               </h1>
-              <ul className="flex flex-wrap mx-auto space-x-8 justify-center">
+              <ul className="mx-auto flex flex-wrap justify-center gap-x-6 gap-y-4 sm:space-x-8">
                 {skills[group].map((skill) => (
                   <li key={skill.skill} className="flex flex-col items-center">
                     <Image
@@ -98,7 +101,7 @@ const AboutMe = () => {
               </ul>
               <div
                 id="divider"
-                className="w-[100%] h-[1px] bg-[#dee2e6] mx-auto my-8"
+                className="mx-auto my-8 h-[1px] w-[100%] bg-[#dee2e6] max-sm:my-6"
               ></div>
             </li>
           ))}

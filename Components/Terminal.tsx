@@ -325,7 +325,7 @@ export default function Terminal() {
       <div
         ref={bodyRef}
         id="terminal-body"
-        className="h-[clamp(22rem,52vh,29rem)] overflow-y-auto px-[1.125rem] py-5 text-[clamp(0.66rem,0.72vw,0.73rem)] leading-[1.35] tracking-normal text-white/90 [scrollbar-color:#3f4650_transparent] [scrollbar-width:thin]"
+        className="h-[clamp(22rem,52vh,29rem)] overflow-y-auto px-[1.125rem] py-5 text-[clamp(0.66rem,0.72vw,0.73rem)] leading-[1.35] tracking-normal text-white/90 [scrollbar-color:#3f4650_transparent] [scrollbar-width:thin] max-sm:h-full max-sm:min-h-0 max-sm:px-3 max-sm:py-3 max-sm:text-[0.58rem]"
       >
         {lines.map((line) => (
           <TerminalLineView

@@ -230,3 +230,49 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
   padding: 1em;
   font-size: 0.8em;
 }
+
+@media (max-width: 640px) {
+  body > nav {
+    min-height: 3.5rem;
+  }
+
+  .portfolio-page-shell {
+    background-position: center;
+  }
+
+  #lead-container {
+    position: relative;
+    z-index: 30;
+    pointer-events: none;
+  }
+
+  #lead-column,
+  #lead-card {
+    pointer-events: auto;
+  }
+
+  #lead-card {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+  }
+
+  #lead-card br + br {
+    display: none;
+  }
+
+  .portfolio-scene-canvas {
+    top: 0 !important;
+    bottom: 0 !important;
+    z-index: 5 !important;
+    height: auto !important;
+    overflow: hidden;
+  }
+
+  .portfolio-scene-canvas canvas {
+    transform: none;
+  }
+
+  .portfolio-scene-satellite {
+    height: 100% !important;
+  }
+}

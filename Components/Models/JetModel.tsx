@@ -43,6 +43,7 @@ const LoadJetModel = ({
 }) => {
   const { scene: sourceScene } = useGLTF(url);
   const gl = useThree((state) => state.gl);
+  const isMobile = useThree((state) => state.size.width <= 640);
   const scene = useMemo(() => {
     const clone = sourceScene.clone(true);
     const anisotropy = Math.min(gl.capabilities.getMaxAnisotropy(), 8);
@@ -93,14 +94,16 @@ const LoadJetModel = ({
   });
 
   return (
-    <group
-      ref={floatingGroup}
-      position={JET_BASE_POSITION}
-      rotation={JET_BASE_ROTATION}
-      {...inspectionHandlers}
-    >
-      <group ref={group} scale={0.9}>
-        <primitive object={scene} dispose={null} />
+    <group position={isMobile ? [-1.05, 0, 0] : [0, 0, 0]}>
+      <group
+        ref={floatingGroup}
+        position={JET_BASE_POSITION}
+        rotation={JET_BASE_ROTATION}
+        {...inspectionHandlers}
+      >
+        <group ref={group} scale={isMobile ? 0.46 : 0.9}>
+          <primitive object={scene} dispose={null} />
+        </group>
       </group>
     </group>
   );

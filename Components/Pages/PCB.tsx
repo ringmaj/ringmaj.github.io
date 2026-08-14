@@ -16,7 +16,7 @@ export default function PCB() {
     <SceneInspectorProvider modelUrl={PCB_MODEL_URL} label="DIY PCB Etcher">
       <div className="relative h-full w-full !min-h-[40em]">
         <Lead header={header} description={description} badge="Just for fun" />
-        <figure className="absolute left-[42%] top-10 z-0 w-[30%] overflow-hidden rounded-lg border border-black/10 bg-[#f5f5f5] shadow-[0_12px_28px_rgba(0,0,0,0.08)]">
+        <figure className="absolute left-[42%] top-10 z-0 w-[30%] overflow-hidden rounded-lg border border-black/10 bg-[#f5f5f5] shadow-[0_12px_28px_rgba(0,0,0,0.08)] max-sm:hidden">
           <div className="relative aspect-[1.5/1] w-full bg-white">
             <Image
               src="/Images/PCB_Shaker.png"

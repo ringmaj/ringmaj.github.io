@@ -2,7 +2,7 @@
 
 import React, { Suspense, useEffect, useMemo, useRef } from "react";
 import { useGLTF, useTexture } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import SmoothOrbitControls from "../Scenes/SmoothOrbitControls";
 import { useInspectableObject } from "../SceneInspector";
@@ -30,6 +30,7 @@ const LoadRadarModel = ({
   group: React.RefObject<THREE.Group | null>;
 }) => {
   const { scene: sourceScene } = useGLTF(url);
+  const isMobile = useThree((state) => state.size.width <= 640);
   const overrideTexture = useTexture(getModelMaterialTextureUrl(url)!);
   const { scene, ownedMaterials } = useMemo(() => {
     const clone = sourceScene.clone(true);
@@ -99,13 +100,15 @@ const LoadRadarModel = ({
   );
 
   return (
-    <group
-      ref={floatingGroup}
-      position={RADAR_BASE_POSITION}
-      {...inspectionHandlers}
-    >
-      <group ref={group} scale={65} rotation={RADAR_BASE_ROTATION}>
-        <primitive object={scene} dispose={null} />
+    <group position={isMobile ? [55, 0, 0] : [0, 0, 0]}>
+      <group
+        ref={floatingGroup}
+        position={RADAR_BASE_POSITION}
+        {...inspectionHandlers}
+      >
+        <group ref={group} scale={65} rotation={RADAR_BASE_ROTATION}>
+          <primitive object={scene} dispose={null} />
+        </group>
       </group>
     </group>
   );

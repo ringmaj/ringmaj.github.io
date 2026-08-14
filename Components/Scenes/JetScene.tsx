@@ -32,7 +32,8 @@ const JetScene = () => {
   const { viewerOpen } = useSceneInspector();
 
   return (
-    <Canvas
+    <div className="portfolio-scene-canvas portfolio-scene-jet absolute inset-0 z-20">
+      <Canvas
       dpr={[1, 1.5]}
       frameloop={viewerOpen ? "never" : "demand"}
       performance={{ min: 0.5 }}
@@ -54,11 +55,12 @@ const JetScene = () => {
         top: 0,
         left: 0,
       }}
-    >
-      <JetModel />
-      <JetCameraOrientation />
-      <SceneOutline />
-    </Canvas>
+      >
+        <JetModel />
+        <JetCameraOrientation />
+        <SceneOutline />
+      </Canvas>
+    </div>
   );
 };
 

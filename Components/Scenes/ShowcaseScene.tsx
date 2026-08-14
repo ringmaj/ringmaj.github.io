@@ -35,7 +35,7 @@ export default function ShowcaseScene({ modelUrl }: { modelUrl: string }) {
   const { viewerOpen } = useSceneInspector();
 
   return (
-    <div className="absolute inset-y-0 left-1/2 z-20 w-screen -translate-x-1/2">
+    <div className="portfolio-scene-canvas portfolio-scene-showcase absolute inset-y-0 left-1/2 z-20 w-screen -translate-x-1/2">
       <Canvas
         dpr={[1, 1.5]}
         frameloop={viewerOpen ? "never" : "demand"}

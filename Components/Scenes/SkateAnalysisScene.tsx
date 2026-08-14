@@ -3857,7 +3857,7 @@ function SkateCanvas({
   const { enabled: keyframingEnabled } = useKeyframingMode();
 
   return (
-    <div className="absolute inset-y-0 left-1/2 z-20 w-screen -translate-x-1/2">
+    <div className="portfolio-scene-canvas portfolio-scene-skate absolute inset-y-0 left-1/2 z-20 w-screen -translate-x-1/2">
       <Canvas
         orthographic
         camera={{
@@ -3925,6 +3925,7 @@ function SkateCanvas({
 }
 
 export function SkateAnalysisScene({ modelUrl }: { modelUrl: string }) {
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
   const motion = useRef<SkateMotionState>({
     channels: createDefaultChannels(),
     rotationMax: createDefaultRotationMax(),
@@ -3944,7 +3945,19 @@ export function SkateAnalysisScene({ modelUrl }: { modelUrl: string }) {
   return (
     <>
       <SkateCanvas modelUrl={modelUrl} motion={motion} />
-      <div className="skate-tools-column absolute right-[4.5rem] top-4 z-30 flex w-[22rem] origin-top-right flex-col gap-3 max-[1149px]:right-12 max-sm:top-auto max-sm:right-8 max-sm:bottom-[4.5rem] max-sm:left-12 max-sm:w-auto">
+      <button
+        type="button"
+        aria-expanded={mobileToolsOpen}
+        data-page-navigation-ignore
+        onClick={() => setMobileToolsOpen((open) => !open)}
+        className="absolute right-3 top-[8.75rem] z-40 hidden rounded-full border border-black/15 bg-white/90 px-3 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.16em] shadow-sm backdrop-blur max-sm:block"
+      >
+        {mobileToolsOpen ? "Close curves" : "Motion curves"}
+      </button>
+      <div
+        data-page-navigation-ignore
+        className={`skate-tools-column absolute right-[4.5rem] top-4 z-30 flex w-[22rem] origin-top-right flex-col gap-3 max-[1149px]:right-12 ${mobileToolsOpen ? "" : "max-sm:hidden"}`}
+      >
         <SkateMotionEditor motion={motion} />
         <SkateAerialPreview modelUrl={modelUrl} motion={motion} />
       </div>
@@ -3994,6 +4007,18 @@ export function SkateAnalysisScene({ modelUrl }: { modelUrl: string }) {
         }
 
         @media (max-width: 640px) {
+          .skate-tools-column {
+            bottom: 3.75rem;
+            left: 0.75rem;
+            max-height: calc(100% - 13rem);
+            overflow-x: hidden;
+            overflow-y: auto;
+            right: 0.75rem;
+            top: 12rem;
+            transform: none;
+            width: auto;
+          }
+
           body:has(.skate-motion-editor) #lead-container {
             padding-top: 1rem;
           }

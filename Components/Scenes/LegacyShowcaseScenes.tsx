@@ -20,6 +20,7 @@ import {
   useSceneInspector,
 } from "../SceneInspector";
 import { applyModelMaterialOverride } from "../modelMaterialOverrides";
+import ResponsiveSceneCamera from "./ResponsiveSceneCamera";
 
 const DEG = Math.PI / 180;
 const PHOTO_ORBIT_LIMIT = 160 * DEG;
@@ -53,6 +54,25 @@ function SceneRendererSettings({
   return null;
 }
 
+function ResponsivePositionGroup({
+  children,
+  desktop,
+  mobile,
+  rotation,
+}: {
+  children: React.ReactNode;
+  desktop: [number, number, number];
+  mobile: [number, number, number];
+  rotation?: [number, number, number];
+}) {
+  const isMobile = useThree((state) => state.size.width <= 640);
+  return (
+    <group position={isMobile ? mobile : desktop} rotation={rotation}>
+      {children}
+    </group>
+  );
+}
+
 function SceneShell({
   children,
   orthographic = false,
@@ -63,6 +83,7 @@ function SceneShell({
   environmentIntensity = 1,
   exposure = 1,
   toneMapping,
+  mobileCamera,
 }: {
   children: React.ReactNode;
   orthographic?: boolean;
@@ -79,11 +100,15 @@ function SceneShell({
   environmentIntensity?: number;
   exposure?: number;
   toneMapping?: THREE.ToneMapping;
+  mobileCamera?: {
+    position?: [number, number, number];
+    zoom?: number;
+  };
 }) {
   const { viewerOpen } = useSceneInspector();
 
   return (
-    <div className="absolute inset-y-0 left-1/2 z-20 w-screen -translate-x-1/2">
+    <div className="portfolio-scene-canvas portfolio-scene-legacy absolute inset-y-0 left-1/2 z-20 w-screen -translate-x-1/2">
       <Canvas
         dpr={dpr}
         frameloop={viewerOpen ? "never" : animated ? "always" : "demand"}
@@ -101,6 +126,12 @@ function SceneShell({
           toneMapping={toneMapping}
         />
         <Suspense fallback={null}>{children}</Suspense>
+        {mobileCamera && (
+          <ResponsiveSceneCamera
+            mobilePosition={mobileCamera.position}
+            mobileZoom={mobileCamera.zoom}
+          />
+        )}
         <NeutralEnvironment intensity={environmentIntensity} />
         <SceneOutline />
       </Canvas>
@@ -147,6 +178,7 @@ function SeniorModel({ modelUrl }: { modelUrl: string }) {
     return { scene: clonedScene, ownedMaterials: materials };
   }, [sourceScene]);
   const { actions, mixer } = useAnimations(animations, group);
+  const isMobile = useThree((state) => state.size.width <= 640);
   const setFrameloop = useThree((state) => state.setFrameloop);
   const invalidate = useThree((state) => state.invalidate);
   const { inspectionHandlers } = useInspectableObject(scene);
@@ -181,7 +213,7 @@ function SeniorModel({ modelUrl }: { modelUrl: string }) {
     <group
       ref={group}
       scale={25}
-      position={[0, -70, 0]}
+      position={[isMobile ? -105 : 0, -70, 0]}
       rotation={[15 * DEG, -1.760226, 0]}
       {...inspectionHandlers}
     >
@@ -236,6 +268,7 @@ export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
       environmentIntensity={1.17}
       exposure={0.34}
       toneMapping={THREE.ACESFilmicToneMapping}
+      mobileCamera={{ zoom: 0.56 }}
     >
       <ambientLight intensity={0} />
       <directionalLight
@@ -470,6 +503,7 @@ export function WorkspaceScene({ modelUrl }: { modelUrl: string }) {
         near: 0.1,
         far: 500,
       }}
+      mobileCamera={{ position: [4.7, 2.25, 34] }}
       shadows
       dpr={[1, 1.75]}
       environmentIntensity={1.42}
@@ -766,17 +800,22 @@ export function CarProjectScene({ modelUrl }: { modelUrl: string }) {
         orthographic
         animated
         camera={{ position: [0, 1, 50], zoom: 20, near: 0.01, far: 1000 }}
+        mobileCamera={{ zoom: 10.5 }}
       >
         <hemisphereLight intensity={1.6} groundColor="#999999" />
         <directionalLight position={[20, 20, 30]} intensity={3} />
-        <group position={[10.5, 7.5, 0]} rotation={[6 * DEG, 0, 0]}>
+        <ResponsivePositionGroup
+          desktop={[10.5, 7.5, 0]}
+          mobile={[9.5, 7.5, 0]}
+          rotation={[6 * DEG, 0, 0]}
+        >
           <CarModel
             modelUrl={modelUrl}
             rotationTarget={rotationStep * CAROUSEL_TURN}
             onRotationSettled={handleRotationSettled}
             onModuleSelect={selectCarouselItem}
           />
-        </group>
+        </ResponsivePositionGroup>
         <SmoothOrbitControls
           target={[0, 1, 0]}
           enableRotate={false}
@@ -1200,6 +1239,7 @@ function HobbiesModel({
   group: React.RefObject<THREE.Group | null>;
 }) {
   const { scene: sourceScene } = useGLTF(modelUrl);
+  const isMobile = useThree((state) => state.size.width <= 640);
   const scene = useMemo(() => {
     const clone = sourceScene.clone(true);
     clone.rotateOnAxis(new THREE.Vector3(0, 1, 0), -135 * DEG);
@@ -1210,7 +1250,9 @@ function HobbiesModel({
   }, [sourceScene]);
   const focused = useRef(false);
   const moving = useRef(false);
-  const targetPosition = useRef(new THREE.Vector3(30, -10, -500));
+  const targetPosition = useRef(
+    new THREE.Vector3(isMobile ? 0 : 30, -10, -500),
+  );
   const invalidate = useThree((state) => state.invalidate);
   const { inspectionActive, inspectionHandlers } =
     useInspectableObject(scene);
@@ -1243,7 +1285,11 @@ function HobbiesModel({
 
   return (
     <group {...inspectionHandlers}>
-      <group ref={group} scale={0.3} position={[30, -10, -500]}>
+      <group
+        ref={group}
+        scale={0.3}
+        position={[isMobile ? 0 : 30, -10, -500]}
+      >
         <primitive
           object={scene}
           onClick={(event: ThreeEvent<MouseEvent>) => {
@@ -1258,7 +1304,7 @@ function HobbiesModel({
             focused.current = !focused.current;
             if (focused.current && object)
               targetPosition.current.copy(object.position).multiplyScalar(-0.3);
-            else targetPosition.current.set(30, -10, -500);
+            else targetPosition.current.set(isMobile ? 0 : 30, -10, -500);
             moving.current = true;
             invalidate();
           }}
@@ -1282,6 +1328,7 @@ export function HobbiesScene({ modelUrl }: { modelUrl: string }) {
     <SceneShell
       orthographic
       camera={{ position: [0, 60, 0], zoom: 5, near: 0.01, far: 1000 }}
+      mobileCamera={{ zoom: 2.15 }}
       shadows
     >
       <ambientLight intensity={0.8} />

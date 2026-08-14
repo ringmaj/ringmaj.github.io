@@ -103,13 +103,13 @@ const jobsList = {
 const Home = () => {
   return (
     <>
-      <div className="w-full h-full pt-12 !min-h-[50em]">
+      <div className="h-full w-full pt-12 !min-h-[50em] max-sm:!min-h-0 max-sm:px-4 max-sm:pt-4">
         <div
           id="about-me-header"
-          className="flex h-fit justify-center items-center"
+          className="flex h-fit items-center justify-center max-sm:flex-col-reverse max-sm:gap-2"
         >
-          <div id="about-me-text" className=" w-[45em] bg-white p-5 rounded-lg">
-            <h1 className="flex display-5 font-bold text-[2rem] text-body-emphasis lh-1 !mb-3">
+          <div id="about-me-text" className="w-[45em] rounded-lg bg-white p-5 max-sm:w-full max-sm:p-4">
+            <h1 className="display-5 lh-1 !mb-3 flex text-[2rem] font-bold text-body-emphasis max-sm:flex-wrap max-sm:text-[1.35rem]">
               <span
                 id="HenryRingName"
                 className="text-[var(--main-accent-color)]"
@@ -118,7 +118,7 @@ const Home = () => {
               </span>
               <span className="ml-1">{bio.position}</span>
             </h1>
-            <p className="!text-[0.9em] !font-[300]">
+            <p className="!text-[0.9em] !font-[300] max-sm:line-clamp-6 max-sm:!text-[0.72rem] max-sm:leading-5">
               {bio.header} <br />
               <br />
               {bio.mainText}
@@ -134,12 +134,16 @@ const Home = () => {
             alt="Henry Ring Profile Photo"
             width={150} // Adjust the width as necessary
             height={150} // Adjust the height as necessary
-            className="ml-[2em] rounded-full w-auto h-auto border-white border-[0.4em]"
+            className="ml-[2em] h-auto w-auto rounded-full border-[0.4em] border-white max-sm:ml-0 max-sm:h-20 max-sm:w-20"
           />
         </div>
-        <div id="about-me-footer" className="flex mt-5 justify-center">
+        <div
+          id="about-me-footer"
+          data-page-navigation-ignore
+          className="mt-5 flex justify-center max-sm:mt-3 max-sm:w-full max-sm:justify-start max-sm:overflow-x-auto max-sm:pb-12"
+        >
           <div id="career-list">
-            <ul className="flex items-center gap-3 p-6">
+            <ul className="flex items-center gap-3 p-6 max-sm:p-2">
               {jobsList.career.map((job) => (
                 <li
                   key={job.company}
@@ -176,10 +180,10 @@ const Home = () => {
 
           <div
             id="divider"
-            className="my-auto h-[100px] w-0.5 shrink-0 bg-white"
+            className="my-auto h-[100px] w-0.5 shrink-0 bg-white max-sm:mx-2"
           ></div>
           <div id="pre-career-list">
-            <ul className="flex items-center gap-3 p-6">
+            <ul className="flex items-center gap-3 p-6 max-sm:p-2">
               {jobsList.preCareer.map((job) => (
                 <li
                   key={job.company}

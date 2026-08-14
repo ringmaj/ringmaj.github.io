@@ -37,14 +37,17 @@ const awards = [
 export default function RecognitionPage() {
   return (
     <NavigationArrows>
-      <section className="h-full min-h-[40em] px-10 py-8">
-        <header className="mb-7 text-center">
-          <h1 className="text-4xl font-bold">Recognition from the teams.</h1>
+      <section
+        data-page-navigation-ignore
+        className="h-full min-h-[40em] px-10 py-8 max-sm:!min-h-0 max-sm:overflow-y-auto max-sm:px-5 max-sm:py-5 max-sm:pb-16"
+      >
+        <header className="mb-7 text-center max-sm:mb-5">
+          <h1 className="text-4xl font-bold max-sm:text-2xl">Recognition from the teams.</h1>
           <p className="mt-2 text-sm text-neutral-600">
             A few moments of impact, collaboration, and technical leadership.
           </p>
         </header>
-        <ul className="grid grid-cols-3 gap-4">
+        <ul className="grid grid-cols-3 gap-4 max-sm:grid-cols-1">
           {awards.map((award) => (
             <li
               key={award.title}

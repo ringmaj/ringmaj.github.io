@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import * as THREE from "three";
 import NeutralEnvironment from "./NeutralEnvironment";
@@ -134,6 +134,7 @@ function SatelliteModel({
   group: React.RefObject<THREE.Group | null>;
 }) {
   const { scene: sourceScene, animations } = useGLTF(modelUrl);
+  const isMobile = useThree((state) => state.size.width <= 640);
   const { scene, ownedMaterials } = useMemo(() => {
     const clone = cloneSkinned(sourceScene);
     const materialClones = new Map<THREE.Material, THREE.Material>();
@@ -209,7 +210,8 @@ function SatelliteModel({
   return (
     <group
       ref={group}
-      position={[-1.5, 0, 0]}
+      position={[isMobile ? 0 : -1.5, 0, 0]}
+      scale={isMobile ? 0.68 : 1}
       rotation={[0, THREE.MathUtils.degToRad(65), 0]}
       onPointerEnter={() => {
         document.body.style.cursor = "default";
@@ -235,7 +237,7 @@ export default function SatelliteScene({ modelUrl }: { modelUrl: string }) {
         style={{ height: "calc(100% / 0.95)" }}
       />
       <div
-        className="absolute top-0 left-1/2 z-20 w-screen -translate-x-1/2"
+        className="portfolio-scene-canvas portfolio-scene-satellite absolute top-0 left-1/2 z-20 w-screen -translate-x-1/2"
         style={{ height: "calc(100% / 0.95)" }}
       >
         <Canvas

@@ -39,7 +39,7 @@ const NavigationArrows = ({
   return (
     <div
       className={classnames(
-        "relative flex h-full w-full justify-center overflow-hidden",
+        "portfolio-page-shell relative flex h-full w-full justify-center overflow-hidden",
         backgroundOptions,
       )}
       style={
@@ -50,8 +50,12 @@ const NavigationArrows = ({
         type="button"
         aria-label="Previous page"
         className={classnames(
-          "absolute top-[calc(50%-5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl",
-          { invisible: !previousPage },
+          "absolute top-[calc(50%-5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl max-sm:bottom-3 max-sm:!left-3 max-sm:top-auto max-sm:flex-row max-sm:rounded-md max-sm:border max-sm:px-2 max-sm:py-1 max-sm:text-xl max-sm:shadow-sm max-sm:backdrop-blur-sm",
+          {
+            invisible: !previousPage,
+            "max-sm:border-white/20 max-sm:bg-black/65": color === "white",
+            "max-sm:border-black/10 max-sm:bg-white/85": color !== "white",
+          },
         )}
         style={{ color: navigationColor, left: navigationRailLeft }}
         onClick={() => navigate(previousPage)}
@@ -72,7 +76,7 @@ const NavigationArrows = ({
       <nav
         id="dot-navigation"
         aria-label="Portfolio pages"
-        className="absolute right-1 top-1/2 z-30 -translate-y-1/2 p-1 lg:right-4"
+        className="absolute right-1 top-1/2 z-30 -translate-y-1/2 p-1 max-sm:hidden lg:right-4"
       >
         <ol className="flex flex-col items-center gap-0.5">
           {NAVIGATION_ITEMS.map(({ href, label }, index) => {
@@ -110,8 +114,12 @@ const NavigationArrows = ({
         type="button"
         aria-label="Next page"
         className={classnames(
-          "absolute top-[calc(50%+1.5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl",
-          { invisible: !nextPage },
+          "absolute top-[calc(50%+1.5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl max-sm:bottom-3 max-sm:!left-auto max-sm:right-3 max-sm:top-auto max-sm:flex-row max-sm:rounded-md max-sm:border max-sm:px-2 max-sm:py-1 max-sm:text-xl max-sm:shadow-sm max-sm:backdrop-blur-sm",
+          {
+            invisible: !nextPage,
+            "max-sm:border-white/20 max-sm:bg-black/65": color === "white",
+            "max-sm:border-black/10 max-sm:bg-white/85": color !== "white",
+          },
         )}
         style={{ color: navigationColor, left: navigationRailLeft }}
         onClick={() => navigate(nextPage)}

@@ -212,6 +212,7 @@ export default function PageNavigationController({
     const handleWheel = (event: WheelEvent) => {
       if (positionInfoEnabled || keyframingEnabled) return;
       if (isModelInspectorOpen()) return;
+      if (isEditableTarget(event.target)) return;
       if (event.ctrlKey || Math.abs(event.deltaY) < Math.abs(event.deltaX)) {
         return;
       }
@@ -258,6 +259,7 @@ export default function PageNavigationController({
     const handleTouchStart = (event: TouchEvent) => {
       if (positionInfoEnabled || keyframingEnabled) return;
       if (isModelInspectorOpen()) return;
+      if (isEditableTarget(event.target)) return;
       if (event.touches.length !== 1) return;
       touchGesture.current = {
         x: event.touches[0].clientX,
@@ -269,6 +271,7 @@ export default function PageNavigationController({
     const handleTouchMove = (event: TouchEvent) => {
       if (positionInfoEnabled || keyframingEnabled) return;
       if (isModelInspectorOpen()) return;
+      if (isEditableTarget(event.target)) return;
       if (event.touches.length !== 1 || touchGesture.current.triggered) return;
       if (
         NAVIGATION_ITEMS.findIndex(

@@ -1235,7 +1235,7 @@ export function SceneInspectorProvider({
         type="button"
         aria-pressed={active}
         data-page-navigation-ignore
-        className={`fixed bottom-5 right-14 z-40 flex cursor-default items-center gap-2 border px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] shadow-lg transition-colors ${
+        className={`fixed bottom-5 right-14 z-40 flex cursor-default items-center gap-2 border px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] shadow-lg transition-colors max-sm:bottom-3 max-sm:left-1/2 max-sm:right-auto max-sm:-translate-x-1/2 max-sm:px-2 max-sm:py-1.5 max-sm:text-[0.58rem] ${
           active
             ? "border-orange-300 bg-orange-500 text-white"
             : "border-white/30 bg-black/75 text-white hover:border-orange-300 hover:bg-orange-500"

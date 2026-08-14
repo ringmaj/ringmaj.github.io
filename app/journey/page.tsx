@@ -98,7 +98,10 @@ const milestones = [
 export default function JourneyPage() {
   return (
     <NavigationArrows>
-      <section className="relative h-full min-h-[40em] overflow-hidden px-6 py-3 lg:px-12">
+      <section
+        data-page-navigation-ignore
+        className="relative h-full min-h-[40em] overflow-hidden px-6 py-3 max-sm:!min-h-0 max-sm:overflow-y-auto max-sm:px-4 max-sm:pb-16 lg:px-12"
+      >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-orange-50/70 to-transparent"
@@ -110,11 +113,11 @@ export default function JourneyPage() {
               <p className="text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[var(--main-accent-color-dark)]">
                 Career timeline
               </p>
-              <div className="mt-0.5 flex items-end gap-4">
-                <h1 className="text-3xl font-bold tracking-[-0.035em]">
+              <div className="mt-0.5 flex items-end gap-4 max-sm:block">
+                <h1 className="text-3xl font-bold tracking-[-0.035em] max-sm:text-2xl">
                   My journey so far.
                 </h1>
-                <p className="pb-0.5 text-xs text-neutral-600">
+                <p className="pb-0.5 text-xs text-neutral-600 max-sm:mt-1">
                   Where I have been, what I built, and what I learned.
                 </p>
               </div>

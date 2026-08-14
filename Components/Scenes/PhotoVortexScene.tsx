@@ -133,6 +133,7 @@ function SelectedPhotoPreview({ photo }: { photo: PreparedPhoto | undefined }) {
   const orbit = useRef(new THREE.Vector2(0, -5 * DEG));
   const pointer = useRef({ id: null as number | null, x: 0, y: 0 });
   const gl = useThree((state) => state.gl);
+  const isMobile = useThree((state) => state.size.width <= 640);
 
   const previewPhoto = useMemo(() => {
     if (!photo) return null;
@@ -272,7 +273,11 @@ function SelectedPhotoPreview({ photo }: { photo: PreparedPhoto | undefined }) {
   if (!previewPhoto || !photo) return null;
 
   return (
-    <group ref={preview} position={[5.75, -0.55, 24.5]} scale={1.72}>
+    <group
+      ref={preview}
+      position={isMobile ? [2.15, -2.1, 24.5] : [5.75, -0.55, 24.5]}
+      scale={isMobile ? 1.05 : 1.72}
+    >
       <primitive object={previewPhoto} dispose={null} />
     </group>
   );
@@ -511,7 +516,7 @@ export default function PhotoVortexScene({ modelUrl }: { modelUrl: string }) {
 
   return (
     <>
-      <div className="absolute inset-y-0 left-1/2 z-20 w-screen -translate-x-1/2">
+      <div className="portfolio-scene-canvas portfolio-scene-photo-vortex absolute inset-y-0 left-1/2 z-20 w-screen -translate-x-1/2">
         <Canvas
           shadows="soft"
           dpr={1}

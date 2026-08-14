@@ -24,9 +24,13 @@ const Lead = ({
 }: LeadProps) => {
   return (
     <>
-      <div id="lead-container" className="w-full h-full pt-10">
+      <div
+        id="lead-container"
+        className="h-full w-full pt-10 max-sm:px-4 max-sm:pt-3"
+      >
         <div
-          className="h-fit w-[40%]"
+          id="lead-column"
+          className="h-fit w-[40%] max-sm:!float-none max-sm:w-[calc(100%-2.75rem)] max-sm:max-w-[18rem]"
           style={{
             float: position as unknown as
               | "left"
@@ -38,14 +42,19 @@ const Lead = ({
         >
           <div
             id="lead-card"
-            className={classNames("h-fit w-full p-8", {
+            data-page-navigation-ignore
+            className={classNames(
+              "h-fit w-full p-8 max-sm:max-h-[12.5rem] max-sm:overflow-y-auto max-sm:p-4 max-sm:shadow-sm",
+              {
               "rounded-lg bg-[#f5f5f5]": !onDark,
-              "bg-transparent": onDark,
-            })}
+              "bg-transparent max-sm:rounded-lg max-sm:bg-black/70 max-sm:backdrop-blur-sm":
+                onDark,
+              },
+            )}
           >
             <p
               className={classNames({
-                "text-4xl mb-4 font-bold": true,
+                "mb-4 text-4xl font-bold max-sm:mb-2 max-sm:text-[1.5rem] max-sm:leading-[1.05]": true,
                 "text-black": !onDark,
                 "text-white": onDark,
                 "justify-left": true,
@@ -55,7 +64,7 @@ const Lead = ({
             </p>
             <p
               className={classNames({
-                "text-[0.8em]": true,
+                "text-[0.8em] max-sm:text-[0.68rem] max-sm:leading-[1.05rem]": true,
                 "text-black": !onDark,
                 "text-white": onDark,
                 "justify-left": true,
