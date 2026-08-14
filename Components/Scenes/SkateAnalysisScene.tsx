@@ -92,6 +92,10 @@ const MAX_CURVE_POINTS = 8;
 const SHOE_MODEL_URL = "/Models/skate-shoe.glb";
 const BOARD_GRAPHIC_TEXTURE_URL = "/Models/boardGraphics.jpg";
 const SHOE_SCALE = 0.65;
+// The centered shoe rig origin sits behind the ball of the foot. Shift the
+// shoe backward along its local length so the forefoot, rather than the heel,
+// is centered over each truck's bolt cluster in the landing stance.
+const BOLT_POSE_FOREFOOT_OFFSET_X = -0.25;
 // Neutral rider stance captured with the keyframing inspector. Every trick
 // starts here, then blends into a demand-aware setup before the flick/pop.
 // Keep this semantic because the source shoe rig names left/right inversely.
@@ -116,12 +120,16 @@ const TRICK_FOOT_POSES = {
       ],
     },
   },
-  // Both shoes centered over the truck hardware. This is a reusable setup
-  // pose for tricks that begin from the bolts; it is intentionally not the
-  // global default so trick definitions can opt into it during setup.
+  // The ball of each foot is centered over the truck hardware. This is a
+  // reusable setup pose for tricks that begin from the bolts; it is
+  // intentionally not the global default so tricks can opt into it.
   boltPosition: {
     left: {
-      localPosition: [-0.21841, -0.00787, 0.44832] as [number, number, number],
+      localPosition: [
+        -0.21841 - BOLT_POSE_FOREFOOT_OFFSET_X,
+        -0.00787,
+        0.44832,
+      ] as [number, number, number],
       localQuaternion: [-0.00148, 0.04692, -0.03097, 0.99842] as [
         number,
         number,
@@ -130,7 +138,11 @@ const TRICK_FOOT_POSES = {
       ],
     },
     right: {
-      localPosition: [-0.01471, 0.00287, -0.46604] as [number, number, number],
+      localPosition: [
+        -0.01471 - BOLT_POSE_FOREFOOT_OFFSET_X,
+        0.00287,
+        -0.46604,
+      ] as [number, number, number],
       localQuaternion: [0.01539, -0.03469, 0.00051, 0.99928] as [
         number,
         number,
@@ -491,10 +503,7 @@ function createDefaultChannels(): Record<MotionChannel, MotionPoint[]> {
   };
 }
 
-function createVarialHeelflipChannels(): Record<
-  MotionChannel,
-  MotionPoint[]
-> {
+function createVarialHeelflipChannels(): Record<MotionChannel, MotionPoint[]> {
   return {
     height: [
       { time: 0, value: 0 },
@@ -537,10 +546,7 @@ function createVarialHeelflipChannels(): Record<
   };
 }
 
-function createBigspinHeelflipChannels(): Record<
-  MotionChannel,
-  MotionPoint[]
-> {
+function createBigspinHeelflipChannels(): Record<MotionChannel, MotionPoint[]> {
   return {
     height: [
       { time: 0, value: 0 },
@@ -582,10 +588,7 @@ function createBigspinHeelflipChannels(): Record<
   };
 }
 
-function createBigspinKickflipChannels(): Record<
-  MotionChannel,
-  MotionPoint[]
-> {
+function createBigspinKickflipChannels(): Record<MotionChannel, MotionPoint[]> {
   return {
     height: [
       { time: 0, value: 0 },
@@ -2107,6 +2110,8 @@ function SkateModel({
   const rightVisualPosition = useRef(new THREE.Vector3());
   const shoeLocalOffset = useRef(new THREE.Vector3());
   const landingShoeQuaternion = useRef(new THREE.Quaternion());
+  const stabilizePlainFlipLanding = useRef(false);
+  const stabilizedLandingQuaternion = useRef(new THREE.Quaternion());
   const leftCatchJoint = useRef<ReturnType<
     (typeof rapier.World.prototype)["createImpulseJoint"]
   > | null>(null);
@@ -2328,9 +2333,7 @@ function SkateModel({
       const secondShoe = secondCatchIsLeft.current
         ? leftShoeBody.current
         : rightShoeBody.current;
-      const secondShoeGroup = secondCatchIsLeft.current
-        ? leftShoe
-        : rightShoe;
+      const secondShoeGroup = secondCatchIsLeft.current ? leftShoe : rightShoe;
       const boardPosition = caughtBoard?.translation();
       const boardRotation = caughtBoard?.rotation();
       if (secondShoe && boardPosition && boardRotation) {
@@ -2428,15 +2431,28 @@ function SkateModel({
     // offsets on top of the physical bodies, which looked like feet sliding
     // to (or remaining bound to) a particular half of a 180-degree board.
     if (physicsReleased.current) {
+      if (
+        groundedAfterRelease.current &&
+        stabilizePlainFlipLanding.current &&
+        boardBody.current
+      ) {
+        const body = boardBody.current;
+        // Two independent, heavy shoe bodies do not include the balancing
+        // constraint a rider's legs and torso provide after touchdown. Once
+        // the deck reaches the floor, hold the exact authored landing
+        // orientation while Rapier continues to resolve vertical motion and
+        // wheel/ground contact. Using that captured quaternion is important:
+        // the imported skateboard's local up axis is not Three's Y axis.
+        body.setEnabledRotations(false, false, false, true);
+        body.setRotation(stabilizedLandingQuaternion.current, true);
+        body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+      }
       for (const body of [
         boardBody.current,
         leftShoeBody.current,
         rightShoeBody.current,
       ]) {
-        body?.setGravityScale(
-          presentationScale * PHYSICS_GRAVITY_SCALE,
-          true,
-        );
+        body?.setGravityScale(presentationScale * PHYSICS_GRAVITY_SCALE, true);
       }
       previousProgress.current = state.progress;
       return;
@@ -2694,10 +2710,7 @@ function SkateModel({
     const catchBlend = (catchTime: number) =>
       THREE.MathUtils.smoothstep(
         state.progress,
-        Math.max(
-          MIN_FOOT_CATCH_TIME,
-          catchTime - FOOT_CATCH_APPROACH_DURATION,
-        ),
+        Math.max(MIN_FOOT_CATCH_TIME, catchTime - FOOT_CATCH_APPROACH_DURATION),
         catchTime,
       );
     const leftCatchBlend = catchBlend(state.footCatch.left);
@@ -2756,10 +2769,7 @@ function SkateModel({
       ),
     );
     const scoopEnd = THREE.MathUtils.clamp(
-      Math.min(
-        firstCatchTime - 0.08,
-        0.34 + spinDemand * 0.1,
-      ),
+      Math.min(firstCatchTime - 0.08, 0.34 + spinDemand * 0.1),
       0.2,
       0.78,
     );
@@ -2787,6 +2797,17 @@ function SkateModel({
     // Sink the visual sole slightly into the deck so the centered shoe pivots
     // remain visually planted after the scene's 10x presentation scale.
     const soleHeight = deckTopOffset + shoeSoleOffset - 0.105;
+    const centerPlainFlipLanding =
+      hasFlipFootwork &&
+      !hasSpinFootwork &&
+      Math.abs(bodyDegrees) < SCOOP_ROTATION_THRESHOLD_DEGREES;
+    const landingLateralCenterX = centerPlainFlipLanding
+      ? (GENERIC_FRONT_FOOT_STANCE.x +
+          TRICK_FOOT_POSES.boltPosition.right.localPosition[0] +
+          GENERIC_REAR_FOOT_STANCE.x +
+          TRICK_FOOT_POSES.boltPosition.left.localPosition[0]) /
+        2
+      : 0;
 
     // Trick-specific setup positions stay deliberately compact: they place
     // the lead foot nearer the relevant edge and preload the rear foot toward
@@ -2931,7 +2952,8 @@ function SkateModel({
     leftLandingAnchor.current
       .set(
         GENERIC_FRONT_FOOT_STANCE.x +
-          TRICK_FOOT_POSES.boltPosition.right.localPosition[0],
+          TRICK_FOOT_POSES.boltPosition.right.localPosition[0] -
+          landingLateralCenterX,
         soleHeight + TRICK_FOOT_POSES.boltPosition.right.localPosition[1],
         GENERIC_FRONT_FOOT_STANCE.z +
           TRICK_FOOT_POSES.boltPosition.right.localPosition[2],
@@ -2941,7 +2963,8 @@ function SkateModel({
     rightLandingAnchor.current
       .set(
         GENERIC_REAR_FOOT_STANCE.x +
-          TRICK_FOOT_POSES.boltPosition.left.localPosition[0],
+          TRICK_FOOT_POSES.boltPosition.left.localPosition[0] -
+          landingLateralCenterX,
         soleHeight + TRICK_FOOT_POSES.boltPosition.left.localPosition[1],
         GENERIC_REAR_FOOT_STANCE.z +
           TRICK_FOOT_POSES.boltPosition.left.localPosition[2],
@@ -2978,14 +3001,16 @@ function SkateModel({
       if (swappedDistance < directDistance) {
         leftLandingBoltLocal.current.set(
           GENERIC_REAR_FOOT_STANCE.x +
-            TRICK_FOOT_POSES.boltPosition.left.localPosition[0],
+            TRICK_FOOT_POSES.boltPosition.left.localPosition[0] -
+            landingLateralCenterX,
           soleHeight + TRICK_FOOT_POSES.boltPosition.left.localPosition[1],
           GENERIC_REAR_FOOT_STANCE.z +
             TRICK_FOOT_POSES.boltPosition.left.localPosition[2],
         );
         rightLandingBoltLocal.current.set(
           GENERIC_FRONT_FOOT_STANCE.x +
-            TRICK_FOOT_POSES.boltPosition.right.localPosition[0],
+            TRICK_FOOT_POSES.boltPosition.right.localPosition[0] -
+            landingLateralCenterX,
           soleHeight + TRICK_FOOT_POSES.boltPosition.right.localPosition[1],
           GENERIC_FRONT_FOOT_STANCE.z +
             TRICK_FOOT_POSES.boltPosition.right.localPosition[2],
@@ -2993,14 +3018,16 @@ function SkateModel({
       } else {
         leftLandingBoltLocal.current.set(
           GENERIC_FRONT_FOOT_STANCE.x +
-            TRICK_FOOT_POSES.boltPosition.right.localPosition[0],
+            TRICK_FOOT_POSES.boltPosition.right.localPosition[0] -
+            landingLateralCenterX,
           soleHeight + TRICK_FOOT_POSES.boltPosition.right.localPosition[1],
           GENERIC_FRONT_FOOT_STANCE.z +
             TRICK_FOOT_POSES.boltPosition.right.localPosition[2],
         );
         rightLandingBoltLocal.current.set(
           GENERIC_REAR_FOOT_STANCE.x +
-            TRICK_FOOT_POSES.boltPosition.left.localPosition[0],
+            TRICK_FOOT_POSES.boltPosition.left.localPosition[0] -
+            landingLateralCenterX,
           soleHeight + TRICK_FOOT_POSES.boltPosition.left.localPosition[1],
           GENERIC_REAR_FOOT_STANCE.z +
             TRICK_FOOT_POSES.boltPosition.left.localPosition[2],
@@ -3055,6 +3082,10 @@ function SkateModel({
       state.progress >= firstCatchTime
     ) {
       physicsReleased.current = true;
+      stabilizePlainFlipLanding.current = centerPlainFlipLanding;
+      stabilizedLandingQuaternion.current.copy(
+        boardTargetQuaternion.current,
+      );
       groundedAfterRelease.current = false;
       physicsReleaseElapsed.current = 0;
       state.restartDelayRemaining = 0;
@@ -3088,9 +3119,7 @@ function SkateModel({
       const pendingShoe = secondCatchIsLeft.current
         ? leftShoeBody.current
         : rightShoeBody.current;
-      const pendingShoeGroup = secondCatchIsLeft.current
-        ? leftShoe
-        : rightShoe;
+      const pendingShoeGroup = secondCatchIsLeft.current ? leftShoe : rightShoe;
       const pendingPosition = pendingShoe?.translation();
       const pendingRotation = pendingShoe?.rotation();
       if (pendingPosition && pendingRotation) {
@@ -3101,11 +3130,7 @@ function SkateModel({
           pendingRotation.w,
         );
         secondCatchStartPosition.current
-          .set(
-          pendingPosition.x,
-          pendingPosition.y,
-          pendingPosition.z,
-          )
+          .set(pendingPosition.x, pendingPosition.y, pendingPosition.z)
           .add(
             shoeLocalOffset.current
               .copy(pendingShoeGroup.position)
@@ -3151,7 +3176,9 @@ function SkateModel({
       // Keep the uncaught foot's final approach in the board's local frame.
       // Interpolating from a fixed world position made the foot chase the
       // already-moving deck and briefly arc forward before the joint bound.
-      landingShoeQuaternion.current.copy(boardTargetQuaternion.current).invert();
+      landingShoeQuaternion.current
+        .copy(boardTargetQuaternion.current)
+        .invert();
       secondCatchStartLocalOffset.current
         .copy(secondCatchStartPosition.current)
         .sub(boardTargetPosition.current)
@@ -3220,6 +3247,7 @@ function SkateModel({
       clearedDuringPhysics
     ) {
       physicsReleased.current = false;
+      stabilizePlainFlipLanding.current = false;
       physicsReleaseElapsed.current = 0;
       groundedAfterRelease.current = false;
       secondCatchElapsed.current = 0;
@@ -3236,6 +3264,7 @@ function SkateModel({
       }
       boardBody.current?.setAdditionalMass(0, true);
       boardBody.current?.setAngularDamping(0.9);
+      boardBody.current?.setEnabledRotations(true, true, true, true);
       leftShoeBody.current?.setAdditionalMass(0, true);
       rightShoeBody.current?.setAdditionalMass(0, true);
       leftShoeBody.current?.setEnabledRotations(true, true, true, true);
