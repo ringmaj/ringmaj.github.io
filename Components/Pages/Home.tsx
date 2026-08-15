@@ -103,7 +103,10 @@ const jobsList = {
 const Home = () => {
   return (
     <>
-      <div className="h-full w-full pt-12 !min-h-[50em] max-sm:!min-h-0 max-sm:px-4 max-sm:pt-3">
+      <div
+        id="home-page"
+        className="h-full w-full pt-12 !min-h-[50em] max-sm:!min-h-0 max-sm:px-4 max-sm:pt-3"
+      >
         <div
           id="about-me-header"
           className="flex h-fit items-center justify-center max-sm:flex-col-reverse max-sm:gap-2"

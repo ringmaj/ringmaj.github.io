@@ -232,6 +232,12 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
 }
 
 @media (max-width: 640px) {
+  html,
+  body {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
   #about-me-page {
     display: flex;
     height: 100%;
@@ -371,5 +377,81 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
 
   .portfolio-scene-satellite {
     height: 100% !important;
+  }
+}
+
+/*
+ * Mobile Safari's expanded browser chrome leaves substantially less than the
+ * device's advertised screen height available to the page. Keep the regular
+ * mobile composition at taller viewport heights, and compact only the Home
+ * layout when the live (dynamic) viewport is short.
+ */
+@media (max-width: 640px) and (max-height: 760px) {
+  #home-page {
+    padding-top: 0.5rem !important;
+    padding-inline: 0.75rem !important;
+  }
+
+  #home-page #about-me-header {
+    gap: 0.25rem;
+  }
+
+  #home-page #about-me-header > img {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-width: 0.25rem;
+  }
+
+  #home-page #about-me-text {
+    padding: 0.7rem 0.9rem;
+  }
+
+  #home-page #about-me-text h1 {
+    margin-bottom: 0.35rem !important;
+    font-size: 1.05rem;
+    line-height: 1.15;
+  }
+
+  #home-page #about-me-text > p {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 0.62rem !important;
+    line-height: 0.92rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+
+  #home-page #about-me-text > p > span:last-of-type {
+    margin-top: 0.35rem;
+  }
+
+  #home-page #about-me-text > div:last-child {
+    margin-top: 0.4rem;
+  }
+
+  #home-page #about-me-text button {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.7rem;
+  }
+
+  #home-page #about-me-footer-mobile {
+    margin-top: 2rem;
+    padding-bottom: 1.5rem;
+  }
+
+  #home-page #about-me-footer-mobile ul {
+    padding-block: 0.2rem;
+  }
+
+  #home-page #about-me-footer-mobile li {
+    height: 3.75rem;
+  }
+
+  #home-page #about-me-footer-mobile li > div > div {
+    height: 1.65rem;
+  }
+
+  #home-page #about-me-footer-mobile img {
+    height: 1.65rem;
   }
 }
