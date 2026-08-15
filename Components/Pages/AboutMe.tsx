@@ -1,13 +1,38 @@
 import Image from "next/image";
 import React from "react";
+import type { IconType } from "react-icons";
+import {
+  FaAws,
+  FaChartLine,
+  FaCubes,
+  FaDatabase,
+  FaKey,
+  FaNetworkWired,
+  FaRoute,
+  FaServer,
+  FaSlidersH,
+  FaTable,
+} from "react-icons/fa";
+import { IoLogoAmplify } from "react-icons/io5";
+import { SiDocker, SiVercel } from "react-icons/si";
+import { TbLambda } from "react-icons/tb";
+import { VscAzure } from "react-icons/vsc";
 
 const groups: string[] = [
   "Programming",
   "Technical Skills",
+  "AWS & Cloud Development",
   "Workflows",
   "Creativity",
 ];
-const skills: { [key: string]: { skill: string; logo: string }[] } = {
+type Skill = {
+  skill: string;
+  logo?: string;
+  icon?: IconType;
+  color?: string;
+};
+
+const skills: Record<string, Skill[]> = {
   ["Programming"]: [
     { skill: "Python", logo: "/Images/Icons/icons8-python.svg" },
     { skill: "C", logo: "/Images/Icons/icons8-c-programming.svg" },
@@ -30,7 +55,6 @@ const skills: { [key: string]: { skill: string; logo: string }[] } = {
   "Technical Skills": [
     { skill: "Linux", logo: "/Images/Icons/tux.png" },
     { skill: "Git", logo: "/Images/Icons/Git-Icon.svg" },
-    { skill: "Docker", logo: "/Images/Icons/icons8-docker.svg" },
     { skill: "Jenkins", logo: "/Images/Icons/icons8-jenkins.svg" },
     { skill: "Autodesk", logo: "/Images/Icons/Autodesk.png" },
     {
@@ -40,6 +64,23 @@ const skills: { [key: string]: { skill: string; logo: string }[] } = {
     { skill: "LibGDX", logo: "/Images/Icons/LibGDX.png" },
     { skill: "Integrity RTOS", logo: "/Images/Icons/green-hills-logo.png" },
     { skill: "VxWorks RTOS", logo: "/Images/Icons/VxWorks.png" },
+  ],
+  "AWS & Cloud Development": [
+    { skill: "AWS", icon: FaAws, color: "#ff9900" },
+    { skill: "EC2", icon: FaServer, color: "#ff9900" },
+    { skill: "S3", icon: FaDatabase, color: "#569a31" },
+    { skill: "Lambda", icon: TbLambda, color: "#ff9900" },
+    { skill: "ECS", icon: FaCubes, color: "#ff9900" },
+    { skill: "CloudWatch", icon: FaChartLine, color: "#759c3e" },
+    { skill: "Amplify", icon: IoLogoAmplify, color: "#ff9900" },
+    { skill: "AppSync", icon: FaNetworkWired, color: "#8c4fff" },
+    { skill: "DynamoDB", icon: FaTable, color: "#527fff" },
+    { skill: "Route 53", icon: FaRoute, color: "#8c4fff" },
+    { skill: "Secrets Manager", icon: FaKey, color: "#dd344c" },
+    { skill: "SSM", icon: FaSlidersH, color: "#e7157b" },
+    { skill: "Vercel", icon: SiVercel, color: "#000000" },
+    { skill: "Docker", icon: SiDocker, color: "#2496ed" },
+    { skill: "Azure", icon: VscAzure, color: "#0078d4" },
   ],
   ["Workflows"]: [
     { skill: "Jira", logo: "/Images/Icons/icons8-jira.svg" },
@@ -80,24 +121,43 @@ const AboutMe = () => {
 
         <ul className="mx-auto mt-8 h-full w-full text-center max-sm:mt-5">
           {groups.map((group) => (
-            <li key={group} className="flex h-[18%] flex-col max-sm:h-auto">
+            <li
+              key={group}
+              data-skill-group={group}
+              className="flex h-[18%] flex-col max-sm:h-auto"
+            >
               <h1 className="text-2xl text-[#043b94] font-[800] text-[1.25rem] mb-4">
                 {group}
               </h1>
               <ul className="mx-auto flex flex-wrap justify-center gap-x-6 gap-y-4 sm:space-x-8">
-                {skills[group].map((skill) => (
-                  <li key={skill.skill} className="flex flex-col items-center">
-                    <Image
-                      src={skill.logo}
-                      alt={skill.skill}
-                      width={32}
-                      height={32}
-                    />
-                    <p className="text-[0.65em] font-[500] mt-2">
-                      {skill.skill}
-                    </p>
-                  </li>
-                ))}
+                {skills[group].map((skill) => {
+                  const SkillIcon = skill.icon;
+
+                  return (
+                    <li
+                      key={skill.skill}
+                      className="flex flex-col items-center"
+                    >
+                      {SkillIcon ? (
+                        <SkillIcon
+                          aria-label={`${skill.skill} logo`}
+                          className="h-8 w-8"
+                          color={skill.color}
+                        />
+                      ) : (
+                        <Image
+                          src={skill.logo!}
+                          alt={skill.skill}
+                          width={32}
+                          height={32}
+                        />
+                      )}
+                      <p className="text-[0.65em] font-[500] mt-2">
+                        {skill.skill}
+                      </p>
+                    </li>
+                  );
+                })}
               </ul>
               <div
                 id="divider"

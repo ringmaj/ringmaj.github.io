@@ -18,14 +18,14 @@ const JET_CAMERA_POSITION: [number, number, number] = [
   11.87773,
 ];
 const JET_MOBILE_CAMERA_ROTATION = [
-  -0.57356,
-  0.22735,
-  0.14459,
+  -0.3577,
+  -0.31874,
+  -0.1166,
 ] as const;
 const JET_MOBILE_CAMERA_POSITION: [number, number, number] = [
-  -1.82289,
-  1.87874,
-  11.29192,
+  -6.83761,
+  1.56104,
+  10.06402,
 ];
 
 function JetCameraOrientation() {

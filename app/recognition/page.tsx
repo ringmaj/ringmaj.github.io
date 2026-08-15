@@ -38,7 +38,7 @@ export default function RecognitionPage() {
   return (
     <NavigationArrows>
       <section
-        data-page-navigation-ignore
+        data-page-navigation-scroll
         className="h-full min-h-[40em] px-10 py-8 max-sm:!min-h-0 max-sm:overflow-y-auto max-sm:px-5 max-sm:py-5 max-sm:pb-16"
       >
         <header className="mb-7 text-center max-sm:mb-5">

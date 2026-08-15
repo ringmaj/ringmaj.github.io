@@ -16,6 +16,7 @@ const jobsList = {
   preCareer: [
     {
       company: "JPL",
+      mobileLabel: "JPL",
       location: "(MESA Labs) Merced, California",
       logo: "/Images/Icons/jpl.svg",
       title: "Software Development Intern",
@@ -24,6 +25,7 @@ const jobsList = {
     },
     {
       company: "HackMerced",
+      mobileLabel: "HackMerced",
       location: "Merced, California",
       logo: "/Images/Icons/UCM.png",
       title: "Software Engineering Intern",
@@ -32,6 +34,7 @@ const jobsList = {
     },
     {
       company: "Merced Nanomaterials Center for Energy and Sensing",
+      mobileLabel: "Merced Nano Center",
       location: "Merced, California",
       logo: "/Images/Icons/MACES.png",
       title: "Student Web Developer",
@@ -40,6 +43,7 @@ const jobsList = {
     },
     {
       company: "TEDxUCMerced",
+      mobileLabel: "TEDxUC Merced",
       location: "Merced, California",
       logo: "/Images/Icons/tedx.svg",
       title: "Volunteer Organizer",
@@ -48,6 +52,7 @@ const jobsList = {
     },
     {
       company: "TEDxYouthSD",
+      mobileLabel: "TEDxYouth SD",
       location: "San Diego, California",
       logo: "/Images/Icons/tedx.svg",
       title: "Volunteer Organizer",
@@ -58,6 +63,7 @@ const jobsList = {
   career: [
     {
       company: "Amazon Leo",
+      mobileLabel: "Amazon Leo",
       location: "Northridge, California",
       logo: "/Images/Icons/amazon-leo.svg",
       title: "Software Integration and Test Engineer",
@@ -66,6 +72,7 @@ const jobsList = {
     },
     {
       company: "Quadrata",
+      mobileLabel: "Quadrata",
       location: "Los Angeles, California",
       logo: "/Images/Icons/Quadrata.png",
       title: "Full-Stack Software Engineer",
@@ -74,6 +81,7 @@ const jobsList = {
     },
     {
       company: "BigBear.ai",
+      mobileLabel: "BigBear.ai",
       location: "Columbia, Maryland",
       logo: "/Images/Icons/BigBearAi.png",
       title: "Senior Full-Stack Software Engineer",
@@ -82,6 +90,7 @@ const jobsList = {
     },
     {
       company: "Northrop Grumman",
+      mobileLabel: "Northrop",
       location: "Los Angeles, California",
       logo: "/Images/Icons/NGC-square.png",
       title: "Embedded Software Engineer II",
@@ -91,6 +100,7 @@ const jobsList = {
 
     {
       company: "Raytheon",
+      mobileLabel: "Raytheon",
       location: "Los Angeles, California",
       logo: "/Images/Icons/Raytheon.png",
       title: "Embedded Software Engineer",
@@ -141,7 +151,7 @@ const Home = () => {
             alt="Henry Ring Profile Photo"
             width={150} // Adjust the width as necessary
             height={150} // Adjust the height as necessary
-            className="ml-[2em] h-auto w-auto rounded-full border-[0.4em] border-white max-sm:ml-0 max-sm:h-20 max-sm:w-20"
+            className="ml-[2em] h-auto w-auto rounded-full border-[0.4em] border-white max-sm:ml-0 max-sm:h-24 max-sm:w-24"
           />
         </div>
         <div
@@ -227,7 +237,7 @@ const Home = () => {
         <div
           id="about-me-footer-mobile"
           data-page-navigation-ignore
-          className="mt-[12rem] hidden w-full pb-12 max-sm:flex max-sm:justify-center"
+          className="!mt-[13em] hidden w-full pb-12 max-sm:flex max-sm:justify-center"
         >
           <div className="w-full max-w-[40rem]">
             <ul className="grid grid-cols-5 items-start gap-1 p-1.5">
@@ -257,7 +267,7 @@ const Home = () => {
                       />
                     </div>
                     <p className="text-center text-[0.46rem] leading-[0.62rem]">
-                      {job.company}
+                      {job.mobileLabel}
                     </p>
                   </HoverPopover>
                 </li>
@@ -289,7 +299,7 @@ const Home = () => {
                       />
                     </div>
                     <p className="text-center text-[0.46rem] leading-[0.62rem]">
-                      {job.company}
+                      {job.mobileLabel}
                     </p>
                   </HoverPopover>
                 </li>

@@ -54,6 +54,19 @@ function isEditableTarget(target: EventTarget | null) {
   );
 }
 
+function getPageNavigationScrollContainer(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return null;
+  return target.closest<HTMLElement>("[data-page-navigation-scroll]");
+}
+
+function canScrollInDirection(container: HTMLElement, direction: number) {
+  const maxScrollTop = container.scrollHeight - container.clientHeight;
+  if (maxScrollTop <= 1) return false;
+  return direction > 0
+    ? container.scrollTop < maxScrollTop - 1
+    : container.scrollTop > 1;
+}
+
 function isModelInspectorOpen() {
   return Boolean(document.documentElement.dataset.modelInspector);
 }
@@ -87,7 +100,12 @@ export default function PageNavigationController({
   const pendingRoute = useRef<PendingRoute | null>(null);
   const wheelBlockedUntil = useRef(0);
   const wheelGesture = useRef({ delta: 0, direction: 0, timestamp: 0 });
-  const touchGesture = useRef({ x: 0, y: 0, triggered: false });
+  const touchGesture = useRef({
+    x: 0,
+    y: 0,
+    triggered: false,
+    scrolling: false,
+  });
 
   pathnameRef.current = pathname;
 
@@ -224,12 +242,6 @@ export default function PageNavigationController({
         return;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
-
-      const now = performance.now();
-      if (navigationLock.current || now < wheelBlockedUntil.current) return;
-
       const normalizedDelta =
         event.deltaMode === WheelEvent.DOM_DELTA_LINE
           ? event.deltaY * 16
@@ -237,6 +249,21 @@ export default function PageNavigationController({
             ? event.deltaY * window.innerHeight
             : event.deltaY;
       const direction = Math.sign(normalizedDelta);
+      const scrollContainer = getPageNavigationScrollContainer(event.target);
+      if (
+        scrollContainer &&
+        canScrollInDirection(scrollContainer, direction)
+      ) {
+        wheelGesture.current.delta = 0;
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const now = performance.now();
+      if (navigationLock.current || now < wheelBlockedUntil.current) return;
+
       const gesture = wheelGesture.current;
 
       if (
@@ -265,6 +292,7 @@ export default function PageNavigationController({
         x: event.touches[0].clientX,
         y: event.touches[0].clientY,
         triggered: false,
+        scrolling: false,
       };
     };
 
@@ -272,7 +300,13 @@ export default function PageNavigationController({
       if (positionInfoEnabled || keyframingEnabled) return;
       if (isModelInspectorOpen()) return;
       if (isEditableTarget(event.target)) return;
-      if (event.touches.length !== 1 || touchGesture.current.triggered) return;
+      if (
+        event.touches.length !== 1 ||
+        touchGesture.current.triggered ||
+        touchGesture.current.scrolling
+      ) {
+        return;
+      }
       if (
         NAVIGATION_ITEMS.findIndex(
           (item) => item.href === pathnameRef.current,
@@ -285,12 +319,22 @@ export default function PageNavigationController({
       const deltaY = event.touches[0].clientY - touchGesture.current.y;
       if (Math.abs(deltaY) <= Math.abs(deltaX) || Math.abs(deltaY) < 8) return;
 
+      const direction = deltaY < 0 ? 1 : -1;
+      const scrollContainer = getPageNavigationScrollContainer(event.target);
+      if (
+        scrollContainer &&
+        canScrollInDirection(scrollContainer, direction)
+      ) {
+        touchGesture.current.scrolling = true;
+        return;
+      }
+
       event.preventDefault();
       event.stopPropagation();
       if (Math.abs(deltaY) < TOUCH_THRESHOLD || navigationLock.current) return;
 
       touchGesture.current.triggered = true;
-      navigateBy(deltaY < 0 ? 1 : -1);
+      navigateBy(direction);
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {

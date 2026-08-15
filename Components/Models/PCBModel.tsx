@@ -17,8 +17,11 @@ const PCB_SHADOW_TARGET_POSITION = new THREE.Vector3(1.56, 0.81, -2.085);
 const PCB_ORBIT_TARGET: [number, number, number] = [
   1.19415, 0.71187, -1.42209,
 ];
+const PCB_MOBILE_ORBIT_TARGET: [number, number, number] = [
+  2.04264, 1.04198, -0.71145,
+];
 const PCB_MOBILE_SCENE_POSITION: [number, number, number] = [
-  1.19415, -0.84713, -0.87678,
+  1.19415, -0.59016, -0.87678,
 ];
 const PCB_ROTATION = [
   -3.02145,
@@ -720,7 +723,7 @@ export default function PCBModel() {
         intensity={1.5314}
       />
       <SmoothOrbitControls
-        target={PCB_ORBIT_TARGET}
+        target={isMobile ? PCB_MOBILE_ORBIT_TARGET : PCB_ORBIT_TARGET}
         rotateObject={controlsRef}
         rotateObjectVertical={false}
         minDistance={7}

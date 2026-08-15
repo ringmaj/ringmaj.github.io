@@ -12,7 +12,7 @@ const PCB_CAMERA_POSITION: [number, number, number] = [
   -6.16164, 3.7758, 5.9373,
 ];
 const PCB_MOBILE_CAMERA_POSITION: [number, number, number] = [
-  -8.28873, 4.6618, 8.06543,
+  -8.40965, 5.3957, 9.74596,
 ];
 const PCB_MOBILE_CAMERA_QUATERNION: [number, number, number, number] = [
   -0.13184, -0.37866, -0.05459, 0.91447,

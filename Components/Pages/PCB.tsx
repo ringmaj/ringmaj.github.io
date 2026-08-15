@@ -28,7 +28,8 @@ export default function PCB() {
             />
           </div>
           <figcaption className="border-t border-black/10 px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-black/55 max-sm:px-2 max-sm:py-1.5 max-sm:text-[0.45rem] max-sm:tracking-[0.1em]">
-            Fusion 360 · Inspect assembly view
+            Fusion 360 · Inspect assembly
+            <span className="max-sm:hidden"> view</span>
           </figcaption>
         </figure>
       </div>

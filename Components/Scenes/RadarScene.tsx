@@ -8,6 +8,18 @@ import NeutralEnvironment from "./NeutralEnvironment";
 import { SceneOutline, useSceneInspector } from "../SceneInspector";
 import ResponsiveSceneCamera from "./ResponsiveSceneCamera";
 
+const RADAR_MOBILE_CAMERA_POSITION: [number, number, number] = [
+  160.88333,
+  -139.61984,
+  -37.04373,
+];
+const RADAR_MOBILE_CAMERA_QUATERNION: [number, number, number, number] = [
+  0.2301,
+  0.05055,
+  -0.01197,
+  0.97178,
+];
+
 const RadarScene = () => {
   const { viewerOpen } = useSceneInspector();
 
@@ -38,7 +50,11 @@ const RadarScene = () => {
       }}
       >
         <RadarModel />
-        <ResponsiveSceneCamera mobileZoom={1.30392} />
+        <ResponsiveSceneCamera
+          mobilePosition={RADAR_MOBILE_CAMERA_POSITION}
+          mobileQuaternion={RADAR_MOBILE_CAMERA_QUATERNION}
+          mobileZoom={0.92933}
+        />
         <NeutralEnvironment intensity={0.09} />
         <SceneOutline />
       </Canvas>

@@ -35,10 +35,16 @@ const WORKSPACE_MOBILE_MODEL_POSITION: [number, number, number] = [
   7.22723, 2.1, 0,
 ];
 const WORKSPACE_MOBILE_CAMERA_POSITION: [number, number, number] = [
-  -1.98312, 5.27089, 49.69758,
+  1.22553, 3.73305, 36.69197,
+];
+const WORKSPACE_MOBILE_CAMERA_QUATERNION: [number, number, number, number] = [
+  -0.07113, -0.09575, -0.00686, 0.99284,
 ];
 const WORKSPACE_ORBIT_TARGET: [number, number, number] = [
   7.43514, -1.82757, 1.3221,
+];
+const WORKSPACE_MOBILE_ORBIT_TARGET: [number, number, number] = [
+  8.09751, -1.44629, 1.39511,
 ];
 const BUILD_INTEGRATION_MOBILE_POSITION: [number, number, number] = [
   -197.87197,
@@ -118,6 +124,7 @@ function SceneShell({
   toneMapping?: THREE.ToneMapping;
   mobileCamera?: {
     position?: [number, number, number];
+    quaternion?: [number, number, number, number];
     zoom?: number;
   };
 }) {
@@ -145,6 +152,7 @@ function SceneShell({
         {mobileCamera && (
           <ResponsiveSceneCamera
             mobilePosition={mobileCamera.position}
+            mobileQuaternion={mobileCamera.quaternion}
             mobileZoom={mobileCamera.zoom}
           />
         )}
@@ -280,6 +288,25 @@ function BakedDirectionalLight({
   );
 }
 
+function BuildIntegrationControls() {
+  const isMobile = useThree((state) => state.size.width <= 640);
+
+  return (
+    <SmoothOrbitControls
+      target={
+        isMobile
+          ? [-76.93173, 93.95778, -10.71213]
+          : [-80, 0, 0]
+      }
+      enableRotate={false}
+      enablePan
+      enableZoom
+      minZoom={0.9}
+      maxZoom={3}
+    />
+  );
+}
+
 export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
   return (
     <SceneShell
@@ -291,8 +318,9 @@ export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
       exposure={0.34}
       toneMapping={THREE.ACESFilmicToneMapping}
       mobileCamera={{
-        position: [-84.96694, 34.13831, 298.00991],
-        zoom: 0.76199,
+        position: [-81.89867, 128.09609, 287.29778],
+        quaternion: [-0.05699, -0.00832, -0.00047, 0.99834],
+        zoom: 0.74095,
       }}
     >
       <ambientLight intensity={0} />
@@ -307,14 +335,7 @@ export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
         intensity={18.08919}
       />
       <SeniorModel modelUrl={modelUrl} />
-      <SmoothOrbitControls
-        target={[-80, 0, 0]}
-        enableRotate={false}
-        enablePan
-        enableZoom
-        minZoom={0.9}
-        maxZoom={3}
-      />
+      <BuildIntegrationControls />
     </SceneShell>
   );
 }
@@ -520,6 +541,22 @@ function WorkspaceShadowLight() {
   );
 }
 
+function WorkspaceOrbitControls() {
+  const isMobile = useThree((state) => state.size.width <= 640);
+
+  return (
+    <SmoothOrbitControls
+      target={
+        isMobile ? WORKSPACE_MOBILE_ORBIT_TARGET : WORKSPACE_ORBIT_TARGET
+      }
+      minDistance={18}
+      maxDistance={45}
+      minPolarAngle={1.32}
+      maxPolarAngle={1.48}
+    />
+  );
+}
+
 export function WorkspaceScene({ modelUrl }: { modelUrl: string }) {
   return (
     <SceneShell
@@ -529,7 +566,10 @@ export function WorkspaceScene({ modelUrl }: { modelUrl: string }) {
         near: 0.1,
         far: 500,
       }}
-      mobileCamera={{ position: WORKSPACE_MOBILE_CAMERA_POSITION }}
+      mobileCamera={{
+        position: WORKSPACE_MOBILE_CAMERA_POSITION,
+        quaternion: WORKSPACE_MOBILE_CAMERA_QUATERNION,
+      }}
       shadows
       dpr={[1, 1.75]}
       environmentIntensity={1.42}
@@ -551,13 +591,7 @@ export function WorkspaceScene({ modelUrl }: { modelUrl: string }) {
         visible={false}
       />
       <WorkspaceModel modelUrl={modelUrl} />
-      <SmoothOrbitControls
-        target={WORKSPACE_ORBIT_TARGET}
-        minDistance={18}
-        maxDistance={45}
-        minPolarAngle={1.32}
-        maxPolarAngle={1.48}
-      />
+      <WorkspaceOrbitControls />
     </SceneShell>
   );
 }
@@ -826,13 +860,13 @@ export function CarProjectScene({ modelUrl }: { modelUrl: string }) {
         orthographic
         animated
         camera={{ position: [0, 1, 50], zoom: 20, near: 0.01, far: 1000 }}
-        mobileCamera={{ zoom: 10.21689 }}
+        mobileCamera={{ zoom: 9.17096 }}
       >
         <hemisphereLight intensity={1.6} groundColor="#999999" />
         <directionalLight position={[20, 20, 30]} intensity={3} />
         <ResponsivePositionGroup
           desktop={[10.5, 7.5, 0]}
-          mobile={[-0.93956, -14.32863, 0]}
+          mobile={[0.25647, 0.35447, 0]}
           rotation={[6 * DEG, 0, 0]}
         >
           <CarModel

@@ -20,6 +20,11 @@ const JET_ORBIT_TARGET: [number, number, number] = [
   -3.24757,
   3.35643,
 ];
+const JET_MOBILE_ORBIT_TARGET: [number, number, number] = [
+  -4.38599,
+  -1.04019,
+  3.10485,
+];
 const FLOAT_POSITION_DELTA = 0.1;
 const FLOAT_ROTATION_DELTA = 0.0001;
 const X_AXIS = new THREE.Vector3(1, 0, 0);
@@ -116,6 +121,7 @@ const LoadJetModel = ({
 
 const JetModel = () => {
   const jet = useRef<THREE.Group>(null);
+  const isMobile = useThree((state) => state.size.width <= 640);
 
   return (
     <>
@@ -126,7 +132,10 @@ const JetModel = () => {
         color="#ff8a3d"
       />
       <Environment preset="apartment" environmentIntensity={1.17} />
-      <SmoothOrbitControls target={JET_ORBIT_TARGET} rotateObject={jet} />
+      <SmoothOrbitControls
+        target={isMobile ? JET_MOBILE_ORBIT_TARGET : JET_ORBIT_TARGET}
+        rotateObject={jet}
+      />
       <Suspense fallback={null}>
         <LoadJetModel url="/Models/jet-test-transformed.glb" group={jet} />
       </Suspense>

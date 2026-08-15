@@ -23,9 +23,19 @@ const RADAR_MOBILE_SCENE_OFFSET: [number, number, number] = [
   0,
 ];
 const RADAR_FLOAT_SPEED = 0.7;
-const RADAR_FLOAT_HEIGHT = 3.5;
-const RADAR_FLOAT_DRIFT = 1.2;
-const RADAR_FLOAT_TILT = THREE.MathUtils.degToRad(0.4);
+const RADAR_FLOAT_HEIGHT = 6;
+const RADAR_FLOAT_DRIFT = 1.8;
+const RADAR_FLOAT_TILT = THREE.MathUtils.degToRad(0.9);
+const RADAR_ORBIT_TARGET: [number, number, number] = [
+  93.98587,
+  43.75356,
+  -500,
+];
+const RADAR_MOBILE_ORBIT_TARGET: [number, number, number] = [
+  114.51747,
+  84.58779,
+  -481.54474,
+];
 
 const LoadRadarModel = ({
   url,
@@ -121,11 +131,12 @@ const LoadRadarModel = ({
 
 const RadarModel = () => {
   const radar = useRef<THREE.Group>(null);
+  const isMobile = useThree((state) => state.size.width <= 640);
 
   return (
     <>
       <SmoothOrbitControls
-        target={[93.98587, 43.75356, -500]}
+        target={isMobile ? RADAR_MOBILE_ORBIT_TARGET : RADAR_ORBIT_TARGET}
         rotateObject={radar}
       />
       <Suspense fallback={null}>

@@ -6,11 +6,13 @@ import * as THREE from "three";
 
 interface ResponsiveSceneCameraProps {
   mobilePosition?: [number, number, number];
+  mobileQuaternion?: [number, number, number, number];
   mobileZoom?: number;
 }
 
 export default function ResponsiveSceneCamera({
   mobilePosition,
+  mobileQuaternion,
   mobileZoom,
 }: ResponsiveSceneCameraProps) {
   const { camera, invalidate, size } = useThree();
@@ -26,6 +28,7 @@ export default function ResponsiveSceneCamera({
 
     if (isMobile) {
       if (mobilePosition) camera.position.set(...mobilePosition);
+      if (mobileQuaternion) camera.quaternion.set(...mobileQuaternion);
       if (mobileZoom !== undefined && camera instanceof THREE.OrthographicCamera) {
         camera.zoom = mobileZoom;
       }
@@ -40,7 +43,14 @@ export default function ResponsiveSceneCamera({
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld(true);
     invalidate();
-  }, [camera, invalidate, mobilePosition, mobileZoom, size.width]);
+  }, [
+    camera,
+    invalidate,
+    mobilePosition,
+    mobileQuaternion,
+    mobileZoom,
+    size.width,
+  ]);
 
   return null;
 }

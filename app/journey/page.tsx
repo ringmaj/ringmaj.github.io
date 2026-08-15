@@ -99,7 +99,7 @@ export default function JourneyPage() {
   return (
     <NavigationArrows>
       <section
-        data-page-navigation-ignore
+        data-page-navigation-scroll
         className="relative h-full min-h-[40em] overflow-hidden px-6 py-3 max-sm:!min-h-0 max-sm:overflow-y-auto max-sm:px-4 max-sm:pb-16 lg:px-12"
       >
         <div

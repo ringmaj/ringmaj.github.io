@@ -93,7 +93,7 @@ const SHOE_MODEL_URL = "/Models/skate-shoe.glb";
 const BOARD_GRAPHIC_TEXTURE_URL = "/Models/boardGraphics.jpg";
 const SHOE_SCALE = 0.65;
 const SKATE_MOBILE_PRESENTATION_POSITION: [number, number, number] = [
-  0.75, -14.5, 0,
+  6.55752, -11.67242, 0,
 ];
 const SKATE_MOBILE_CAMERA_ZOOM = 17.1;
 
@@ -3882,6 +3882,7 @@ function SkateMobileCameraConfiguration({
   useLayoutEffect(() => {
     if (!isMobile || positionInfoEnabled) return;
     camera.position.set(4.82398, -5.60948, 50);
+    camera.quaternion.identity();
     camera.zoom = SKATE_MOBILE_CAMERA_ZOOM;
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld(true);

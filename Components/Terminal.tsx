@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 
 type TerminalLine =
   | {
@@ -88,6 +88,164 @@ const COMPLETE_SESSION: TerminalLine[] = [
   { id: 12, kind: "command", text: "" },
 ];
 
+type TerminalSnapshot = {
+  lines: TerminalLine[];
+  activeLineId: number | null;
+};
+
+const SERVER_TERMINAL_SNAPSHOT: TerminalSnapshot = {
+  lines: [],
+  activeLineId: null,
+};
+
+let terminalSnapshot: TerminalSnapshot = SERVER_TERMINAL_SNAPSHOT;
+let terminalStarted = false;
+let terminalRunId = 0;
+const terminalListeners = new Set<() => void>();
+
+function subscribeToTerminal(listener: () => void) {
+  terminalListeners.add(listener);
+  return () => terminalListeners.delete(listener);
+}
+
+function getTerminalSnapshot() {
+  return terminalSnapshot;
+}
+
+function getServerTerminalSnapshot() {
+  return SERVER_TERMINAL_SNAPSHOT;
+}
+
+function updateTerminalSnapshot(
+  update: (current: TerminalSnapshot) => TerminalSnapshot,
+) {
+  terminalSnapshot = update(terminalSnapshot);
+  terminalListeners.forEach((listener) => listener());
+}
+
+function runTerminalSession() {
+  const runId = ++terminalRunId;
+  terminalStarted = true;
+  let nextId = 0;
+  const isCurrentRun = () => terminalRunId === runId;
+  const sleep = (duration: number) =>
+    new Promise<void>((resolve) => window.setTimeout(resolve, duration));
+
+  const setLines = (
+    update: (current: TerminalLine[]) => TerminalLine[],
+  ) => {
+    if (!isCurrentRun()) return;
+    updateTerminalSnapshot((current) => ({
+      ...current,
+      lines: update(current.lines),
+    }));
+  };
+
+  const setActiveLineId = (activeLineId: number | null) => {
+    if (!isCurrentRun()) return;
+    updateTerminalSnapshot((current) => ({ ...current, activeLineId }));
+  };
+
+  const append = (line: TerminalLine) => {
+    setLines((current) => [...current, line]);
+  };
+
+  const typeLine = async (
+    kind: "command" | "field",
+    value: string,
+    options?: { label?: string; speed?: number },
+  ) => {
+    const id = ++nextId;
+    const speed = options?.speed ?? 42;
+    const line: TerminalLine =
+      kind === "command"
+        ? { id, kind, text: "" }
+        : { id, kind, label: options?.label ?? "", text: "" };
+    append(line);
+    setActiveLineId(id);
+
+    for (let index = 1; index <= value.length; index += 1) {
+      const character = value[index - 1];
+      const punctuationPause = /[./]/.test(character) ? 18 : 0;
+      await sleep(speed + punctuationPause);
+      if (!isCurrentRun()) return;
+      setLines((current) =>
+        current.map((entry) =>
+          entry.id === id ? { ...entry, text: value.slice(0, index) } : entry,
+        ),
+      );
+    }
+  };
+
+  const appendItems = (
+    kind: "files" | "skills" | "projects",
+    items: string[],
+  ) => {
+    setActiveLineId(null);
+    append({ id: ++nextId, kind, items });
+  };
+
+  const run = async () => {
+    updateTerminalSnapshot(() => ({ lines: [], activeLineId: null }));
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      updateTerminalSnapshot(() => ({
+        lines: COMPLETE_SESSION,
+        activeLineId: COMPLETE_SESSION.at(-1)?.id ?? null,
+      }));
+      return;
+    }
+
+    await sleep(550);
+    if (!isCurrentRun()) return;
+    await typeLine("command", "ls", { speed: 115 });
+    await sleep(260);
+    appendItems("files", FILES);
+    await sleep(520);
+
+    await typeLine("command", "./introduction.sh");
+    await sleep(420);
+    await typeLine("field", "Henry Ring", { label: "Name", speed: 34 });
+    await sleep(240);
+    await typeLine("field", "University of California, Merced", {
+      label: "College",
+      speed: 21,
+    });
+    await sleep(240);
+    await typeLine("field", "B.S. Computer Science and Engineering · 2018", {
+      label: "Field of study",
+      speed: 20,
+    });
+    await sleep(240);
+    await typeLine("field", "Full-stack / embedded / DevOps", {
+      label: "Focus",
+      speed: 22,
+    });
+    await sleep(450);
+
+    await typeLine("command", "cat skills.txt");
+    await sleep(260);
+    appendItems("skills", SKILLS);
+    await sleep(650);
+
+    await typeLine("command", "cat projects.txt");
+    await sleep(260);
+    appendItems("projects", PROJECTS);
+    await sleep(520);
+
+    if (!isCurrentRun()) return;
+    const finalId = ++nextId;
+    append({ id: finalId, kind: "command", text: "" });
+    setActiveLineId(finalId);
+  };
+
+  void run();
+}
+
+function ensureTerminalSession() {
+  if (!terminalStarted) runTerminalSession();
+}
+
 function Prompt() {
   return (
     <span aria-hidden="true" className="select-none">
@@ -138,9 +296,7 @@ function TerminalLineView({
   }
 
   const itemColor =
-    line.kind === "skills"
-        ? "text-[#72d6c9]"
-        : "text-[#ffc26f]";
+    line.kind === "skills" ? "text-[#72d6c9]" : "text-[#ffc26f]";
 
   return (
     <div
@@ -169,123 +325,16 @@ function TerminalLineView({
 }
 
 export default function Terminal() {
-  const [lines, setLines] = useState<TerminalLine[]>([]);
-  const [activeLineId, setActiveLineId] = useState<number | null>(null);
-  const [session, setSession] = useState(0);
+  const { lines, activeLineId } = useSyncExternalStore(
+    subscribeToTerminal,
+    getTerminalSnapshot,
+    getServerTerminalSnapshot,
+  );
   const bodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let cancelled = false;
-    let nextId = 0;
-    const timers = new Set<number>();
-
-    const sleep = (duration: number) =>
-      new Promise<void>((resolve) => {
-        const timer = window.setTimeout(() => {
-          timers.delete(timer);
-          resolve();
-        }, duration);
-        timers.add(timer);
-      });
-
-    const append = (line: TerminalLine) => {
-      if (!cancelled) setLines((current) => [...current, line]);
-    };
-
-    const typeLine = async (
-      kind: "command" | "field",
-      value: string,
-      options?: { label?: string; speed?: number },
-    ) => {
-      const id = ++nextId;
-      const speed = options?.speed ?? 42;
-      const line: TerminalLine =
-        kind === "command"
-          ? { id, kind, text: "" }
-          : { id, kind, label: options?.label ?? "", text: "" };
-      append(line);
-      setActiveLineId(id);
-
-      for (let index = 1; index <= value.length; index += 1) {
-        const character = value[index - 1];
-        const punctuationPause = /[./]/.test(character) ? 18 : 0;
-        await sleep(speed + punctuationPause);
-        if (cancelled) return;
-        setLines((current) =>
-          current.map((entry) =>
-            entry.id === id ? { ...entry, text: value.slice(0, index) } : entry,
-          ),
-        );
-      }
-    };
-
-    const appendItems = (
-      kind: "files" | "skills" | "projects",
-      items: string[],
-    ) => {
-      setActiveLineId(null);
-      append({ id: ++nextId, kind, items });
-    };
-
-    const run = async () => {
-      setLines([]);
-      setActiveLineId(null);
-
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        setLines(COMPLETE_SESSION);
-        setActiveLineId(COMPLETE_SESSION.at(-1)?.id ?? null);
-        return;
-      }
-
-      await sleep(550);
-      await typeLine("command", "ls", { speed: 115 });
-      await sleep(260);
-      appendItems("files", FILES);
-      await sleep(520);
-
-      await typeLine("command", "./introduction.sh");
-      await sleep(420);
-      await typeLine("field", "Henry Ring", { label: "Name", speed: 34 });
-      await sleep(240);
-      await typeLine("field", "University of California, Merced", {
-        label: "College",
-        speed: 21,
-      });
-      await sleep(240);
-      await typeLine("field", "B.S. Computer Science and Engineering · 2018", {
-        label: "Field of study",
-        speed: 20,
-      });
-      await sleep(240);
-      await typeLine("field", "Full-stack / embedded / DevOps", {
-        label: "Focus",
-        speed: 22,
-      });
-      await sleep(450);
-
-      await typeLine("command", "cat skills.txt");
-      await sleep(260);
-      appendItems("skills", SKILLS);
-      await sleep(650);
-
-      await typeLine("command", "cat projects.txt");
-      await sleep(260);
-      appendItems("projects", PROJECTS);
-      await sleep(520);
-
-      const finalId = ++nextId;
-      append({ id: finalId, kind: "command", text: "" });
-      setActiveLineId(finalId);
-    };
-
-    void run();
-
-    return () => {
-      cancelled = true;
-      timers.forEach((timer) => window.clearTimeout(timer));
-      timers.clear();
-    };
-  }, [session]);
+    ensureTerminalSession();
+  }, []);
 
   useEffect(() => {
     const body = bodyRef.current;
@@ -296,7 +345,7 @@ export default function Terminal() {
   return (
     <div
       id="terminal-container"
-      className="terminal-font mx-auto w-full min-w-0 max-w-[43rem] overflow-hidden rounded-xl bg-[#111316] shadow-[0_24px_70px_rgba(0,0,0,0.22)]"
+      className=" terminal-font mx-auto w-full min-w-0 max-w-[43rem] overflow-hidden rounded-xl bg-[#111316] shadow-[0_24px_70px_rgba(0,0,0,0.22)]"
       role="region"
       aria-label="Animated portfolio terminal"
     >
@@ -314,7 +363,7 @@ export default function Terminal() {
         </span>
         <button
           type="button"
-          onClick={() => setSession((value) => value + 1)}
+          onClick={runTerminalSession}
           className="ml-auto grid size-7 place-items-center rounded-md text-base text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-white"
           aria-label="Replay terminal session"
           title="Replay terminal session"

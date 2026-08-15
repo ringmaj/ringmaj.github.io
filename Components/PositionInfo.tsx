@@ -158,8 +158,19 @@ function sceneValueLabel(value: THREE.Scene["background"] | THREE.Texture | null
 }
 
 function objectSegment(object: THREE.Object3D) {
-  if (object.name.trim()) return object.name.trim();
   const siblings = object.parent?.children ?? [];
+  const name = object.name.trim();
+
+  if (name) {
+    const namedSiblings = siblings.filter(
+      (sibling) => sibling.name.trim() === name,
+    );
+    if (namedSiblings.length > 1) {
+      return `${name}[${Math.max(namedSiblings.indexOf(object), 0)}]`;
+    }
+    return name;
+  }
+
   const typeIndex = siblings
     .filter((sibling) => sibling.type === object.type)
     .indexOf(object);
