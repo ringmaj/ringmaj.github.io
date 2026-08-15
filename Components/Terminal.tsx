@@ -345,7 +345,7 @@ export default function Terminal() {
   return (
     <div
       id="terminal-container"
-      className=" terminal-font mx-auto w-full min-w-0 max-w-[43rem] overflow-hidden rounded-xl bg-[#111316] shadow-[0_24px_70px_rgba(0,0,0,0.22)]"
+      className="terminal-font mx-auto w-full min-w-0 max-w-[43rem] overflow-hidden rounded-xl bg-[#111316] shadow-[0_24px_70px_rgba(0,0,0,0.22)] max-sm:shadow-none"
       role="region"
       aria-label="Animated portfolio terminal"
     >

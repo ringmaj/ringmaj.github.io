@@ -1239,10 +1239,10 @@ export function SceneInspectorProvider({
         type="button"
         aria-pressed={active}
         data-page-navigation-ignore
-        className={`fixed bottom-5 right-14 z-40 flex cursor-default items-center gap-2 border px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] shadow-lg transition-colors max-sm:bottom-3 max-sm:left-1/2 max-sm:right-auto max-sm:-translate-x-1/2 max-sm:px-2 max-sm:py-1.5 max-sm:text-[0.58rem] ${
+        className={`fixed bottom-5 right-14 z-40 flex cursor-default items-center gap-2 border px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] shadow-lg transition-colors max-sm:bottom-3 max-sm:left-1/2 max-sm:right-auto max-sm:gap-1.5 max-sm:-translate-x-1/2 max-sm:rounded-lg max-sm:px-3 max-sm:py-2 max-sm:text-[0.56rem] max-sm:tracking-[0.14em] max-sm:shadow-none max-sm:backdrop-blur-md ${
           active
-            ? "border-orange-300 bg-orange-500 text-white"
-            : "border-white/30 bg-black/75 text-white hover:border-orange-300 hover:bg-orange-500"
+            ? "border-orange-300 bg-orange-500 text-white max-sm:border-orange-500"
+            : "border-white/30 bg-black/75 text-white hover:border-orange-300 hover:bg-orange-500 max-sm:border-black/15 max-sm:bg-white/90 max-sm:text-black max-sm:hover:border-orange-400 max-sm:hover:bg-white max-sm:active:border-orange-500 max-sm:active:bg-orange-500 max-sm:active:text-white"
         }`}
         onClick={() => {
           if (active) {
@@ -1253,7 +1253,7 @@ export function SceneInspectorProvider({
           }
         }}
       >
-        <FiSearch aria-hidden="true" className="text-base" />
+        <FiSearch aria-hidden="true" className="text-base max-sm:text-sm" />
         {active ? hoveredLabel ?? "Select an object" : "Zoom objects"}
       </button>
       {selection && (

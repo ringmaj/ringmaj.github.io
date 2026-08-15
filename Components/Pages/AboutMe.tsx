@@ -87,7 +87,6 @@ const skills: Record<string, Skill[]> = {
     { skill: "Confluence", logo: "/Images/Icons/icons8-confluence.svg" },
     { skill: "BitBucket", logo: "/Images/Icons/icons8-bitbucket.svg" },
     { skill: "Crucible", logo: "/Images/Icons/crucible-svgrepo-com.svg" },
-    { skill: "ClearQuest", logo: "/Images/Icons/ClearQuest.png" },
     { skill: "Agile", logo: "/Images/Icons/icons8-agile-64.png" },
   ],
   ["Creativity"]: [

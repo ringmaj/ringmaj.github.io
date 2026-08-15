@@ -50,11 +50,9 @@ const NavigationArrows = ({
         type="button"
         aria-label="Previous page"
         className={classnames(
-          "absolute top-[calc(50%-5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl max-sm:bottom-3 max-sm:!left-3 max-sm:top-auto max-sm:h-8 max-sm:min-w-12 max-sm:flex-row max-sm:gap-1 max-sm:rounded-md max-sm:border max-sm:px-2 max-sm:py-0 max-sm:text-xs max-sm:shadow-sm max-sm:backdrop-blur-sm",
+          "absolute top-[calc(50%-5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl transition-colors max-sm:bottom-3 max-sm:!left-3 max-sm:top-auto max-sm:h-8 max-sm:min-w-12 max-sm:flex-row max-sm:gap-1.5 max-sm:rounded-lg max-sm:border max-sm:border-black/15 max-sm:bg-white/90 max-sm:px-3 max-sm:py-0 max-sm:text-[0.56rem] max-sm:font-bold max-sm:uppercase max-sm:tracking-[0.14em] max-sm:!text-black max-sm:shadow-none max-sm:backdrop-blur-md max-sm:hover:border-orange-400 max-sm:hover:bg-white max-sm:active:border-orange-500 max-sm:active:bg-orange-500 max-sm:active:!text-white",
           {
             invisible: !previousPage,
-            "max-sm:border-white/20 max-sm:bg-black/65": color === "white",
-            "max-sm:border-black/10 max-sm:bg-white/85": color !== "white",
           },
         )}
         style={{ color: navigationColor, left: navigationRailLeft }}
@@ -64,7 +62,7 @@ const NavigationArrows = ({
         onFocus={() => previousPage && primePage(previousPage)}
       >
         <GrUp aria-hidden="true" className="max-sm:size-3" />
-        <span className="text-[0.42em] font-light leading-none max-sm:text-[0.58rem]">
+        <span className="text-[0.42em] font-light leading-none max-sm:text-[0.56rem] max-sm:font-bold">
           Prev
         </span>
       </button>
@@ -116,11 +114,9 @@ const NavigationArrows = ({
         type="button"
         aria-label="Next page"
         className={classnames(
-          "absolute top-[calc(50%+1.5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl max-sm:bottom-3 max-sm:!left-auto max-sm:right-3 max-sm:top-auto max-sm:h-8 max-sm:min-w-12 max-sm:flex-row max-sm:gap-1 max-sm:rounded-md max-sm:border max-sm:px-2 max-sm:py-0 max-sm:text-xs max-sm:shadow-sm max-sm:backdrop-blur-sm",
+          "absolute top-[calc(50%+1.5rem)] z-30 flex cursor-pointer flex-col items-center px-2 py-1 text-3xl transition-colors max-sm:bottom-3 max-sm:!left-auto max-sm:right-3 max-sm:top-auto max-sm:h-8 max-sm:min-w-12 max-sm:flex-row max-sm:gap-1.5 max-sm:rounded-lg max-sm:border max-sm:border-black/15 max-sm:bg-white/90 max-sm:px-3 max-sm:py-0 max-sm:text-[0.56rem] max-sm:font-bold max-sm:uppercase max-sm:tracking-[0.14em] max-sm:!text-black max-sm:shadow-none max-sm:backdrop-blur-md max-sm:hover:border-orange-400 max-sm:hover:bg-white max-sm:active:border-orange-500 max-sm:active:bg-orange-500 max-sm:active:!text-white",
           {
             invisible: !nextPage,
-            "max-sm:border-white/20 max-sm:bg-black/65": color === "white",
-            "max-sm:border-black/10 max-sm:bg-white/85": color !== "white",
           },
         )}
         style={{ color: navigationColor, left: navigationRailLeft }}
@@ -129,7 +125,7 @@ const NavigationArrows = ({
         onPointerDown={() => nextPage && primePage(nextPage)}
         onFocus={() => nextPage && primePage(nextPage)}
       >
-        <span className="text-[0.42em] font-light leading-none max-sm:text-[0.58rem]">
+        <span className="text-[0.42em] font-light leading-none max-sm:text-[0.56rem] max-sm:font-bold">
           Next
         </span>
         <GrDown aria-hidden="true" className="max-sm:size-3" />

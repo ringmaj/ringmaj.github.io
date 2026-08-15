@@ -34,8 +34,11 @@ const WORKSPACE_CAMERA_POSITION: [number, number, number] = [
 const WORKSPACE_MOBILE_MODEL_POSITION: [number, number, number] = [
   7.22723, 2.1, 0,
 ];
+const WORKSPACE_MOBILE_MODEL_ROTATION: [number, number, number] = [
+  0.27013, 0.76409, 0.05189,
+];
 const WORKSPACE_MOBILE_CAMERA_POSITION: [number, number, number] = [
-  1.22553, 3.73305, 36.69197,
+  1.45968, 3.55658, 35.48931,
 ];
 const WORKSPACE_MOBILE_CAMERA_QUATERNION: [number, number, number, number] = [
   -0.07113, -0.09575, -0.00686, 0.99284,
@@ -81,15 +84,20 @@ function ResponsivePositionGroup({
   desktop,
   mobile,
   rotation,
+  mobileRotation,
 }: {
   children: React.ReactNode;
   desktop: [number, number, number];
   mobile: [number, number, number];
   rotation?: [number, number, number];
+  mobileRotation?: [number, number, number];
 }) {
   const isMobile = useThree((state) => state.size.width <= 640);
   return (
-    <group position={isMobile ? mobile : desktop} rotation={rotation}>
+    <group
+      position={isMobile ? mobile : desktop}
+      rotation={isMobile ? (mobileRotation ?? rotation) : rotation}
+    >
       {children}
     </group>
   );
@@ -478,6 +486,7 @@ function WorkspaceModel({ modelUrl }: { modelUrl: string }) {
       desktop={WORKSPACE_MODEL_POSITION}
       mobile={WORKSPACE_MOBILE_MODEL_POSITION}
       rotation={WORKSPACE_MODEL_ROTATION}
+      mobileRotation={WORKSPACE_MOBILE_MODEL_ROTATION}
     >
       <group rotation={[0, 45 * DEG, 0]} {...inspectionHandlers}>
         <primitive
