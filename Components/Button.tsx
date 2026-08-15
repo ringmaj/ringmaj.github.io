@@ -11,7 +11,7 @@ const CustomButton = React.forwardRef<
   <Primitive.button
     {...props}
     ref={forwardedRef}
-    className="bg-[var(--main-accent-color)] hover:bg-[var(--main-accent-color-dark)] text-white text-[0.9em] rounded-[5px] py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
+    className="rounded-[5px] bg-[var(--main-accent-color)] px-4 py-2 text-[0.9em] text-white hover:bg-[var(--main-accent-color-dark)] focus:outline-none"
   >
     {children}
   </Primitive.button>

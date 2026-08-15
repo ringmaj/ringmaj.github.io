@@ -4,7 +4,7 @@ export default function ContactPage() {
   return (
     <NavigationArrows>
       <section
-        data-page-navigation-ignore
+        data-page-navigation-scroll
         className="grid h-full min-h-[40em] grid-cols-[0.8fr_1.2fr] items-center gap-12 px-16 max-sm:!min-h-0 max-sm:grid-cols-1 max-sm:content-start max-sm:gap-5 max-sm:overflow-y-auto max-sm:px-8 max-sm:py-5 max-sm:pb-16"
       >
         <div>

@@ -1,8 +1,11 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import classnames from "classnames";
 import CustomButton from "../Button";
 import HoverPopover from "../HoverPopover";
+import { usePageNavigation } from "../PageNavigationController";
 
 const bio = {
   name: "Henry Ring",
@@ -111,6 +114,8 @@ const jobsList = {
 };
 
 const Home = () => {
+  const { navigateToPage } = usePageNavigation();
+
   return (
     <>
       <div
@@ -125,6 +130,13 @@ const Home = () => {
             id="about-me-text"
             className="w-[45em] rounded-lg bg-white p-5 max-sm:w-full max-sm:px-4 max-sm:py-3.5"
           >
+            <Image
+              src="/Images/Henry-profile-photo.png"
+              alt="Henry Ring Profile Photo"
+              width={150}
+              height={150}
+              className="mx-auto mb-3 hidden h-24 w-24 rounded-full border-[0.4em] border-[var(--main-accent-color)] object-cover max-sm:block"
+            />
             <h1 className="display-5 lh-1 !mb-3 flex text-[2rem] font-bold text-body-emphasis max-sm:!mb-2 max-sm:flex-wrap max-sm:text-[1.35rem]">
               <span
                 id="HenryRingName"
@@ -143,7 +155,12 @@ const Home = () => {
               <br className="max-sm:hidden" />
             </p>
             <div className="d-grid gap-2 d-md-flex justify-content-md-start max-sm:mt-2.5">
-              <CustomButton>Start our journey!</CustomButton>
+              <CustomButton
+                type="button"
+                onClick={() => navigateToPage("/about-me")}
+              >
+                Start our journey!
+              </CustomButton>
             </div>
           </div>
           <Image
@@ -151,7 +168,7 @@ const Home = () => {
             alt="Henry Ring Profile Photo"
             width={150} // Adjust the width as necessary
             height={150} // Adjust the height as necessary
-            className="ml-[2em] h-auto w-auto rounded-full border-[0.4em] border-white max-sm:ml-0 max-sm:h-24 max-sm:w-24"
+            className="ml-[2em] h-auto w-auto rounded-full border-[0.4em] border-white max-sm:hidden"
           />
         </div>
         <div
