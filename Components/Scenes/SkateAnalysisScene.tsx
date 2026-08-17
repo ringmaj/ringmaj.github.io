@@ -212,6 +212,7 @@ const GROUND_COLLISION_GROUPS = interactionGroups(GROUND_COLLISION_GROUP, [
 
 type MotionChannel = "height" | "speed" | "x" | "y" | "z" | "body";
 type RotationChannel = Exclude<MotionChannel, "height" | "speed">;
+type AxisChannel = Extract<MotionChannel, "x" | "y" | "z">;
 
 interface MotionPoint {
   time: number;
@@ -526,6 +527,19 @@ function createDefaultChannels(): Record<MotionChannel, MotionPoint[]> {
   };
 }
 
+function createFrontsideKickflipChannels(): Record<
+  MotionChannel,
+  MotionPoint[]
+> {
+  const channels = createDefaultChannels();
+  channels.body = [
+    { time: 0, value: 0 },
+    { time: 0.25626978726871097, value: -0.5483000117375485 },
+    { time: 0.8831862172546374, value: -1 },
+  ];
+  return channels;
+}
+
 function createVarialHeelflipChannels(): Record<MotionChannel, MotionPoint[]> {
   return {
     height: [
@@ -653,6 +667,44 @@ function createBigspinKickflipChannels(): Record<MotionChannel, MotionPoint[]> {
   };
 }
 
+function createFrontside360Channels(): Record<MotionChannel, MotionPoint[]> {
+  return {
+    height: [
+      { time: 0, value: 0 },
+      { time: 0.5, value: 1.5 },
+      { time: 1, value: 0 },
+    ],
+    x: [
+      { time: 0, value: 0 },
+      { time: 0.05, value: -0.4933889996527647 },
+      { time: 0.22068690011211245, value: 0.07677322278319632 },
+      { time: 0.6000000000000001, value: 0 },
+      { time: 0.8, value: 0 },
+      { time: 1, value: 0 },
+    ],
+    y: [
+      { time: 0, value: 0 },
+      { time: 0.5, value: 0 },
+      { time: 1, value: 0 },
+    ],
+    z: [
+      { time: 0, value: 0 },
+      { time: 0.5, value: 0 },
+      { time: 1, value: 0 },
+    ],
+    body: [
+      { time: 0, value: 0 },
+      { time: 0.3172783238940226, value: -0.6837669705387535 },
+      { time: 0.5057894932263955, value: -1 },
+    ],
+    speed: [
+      { time: 0, value: 1 },
+      { time: 0.12850671256965254, value: 0 },
+      { time: 1, value: 0.48961114543613893 },
+    ],
+  };
+}
+
 function createClearedChannels(): Record<MotionChannel, MotionPoint[]> {
   const createPoints = (value: number) => [
     { time: 0, value },
@@ -661,7 +713,11 @@ function createClearedChannels(): Record<MotionChannel, MotionPoint[]> {
   ];
 
   return {
-    height: createPoints(0),
+    height: [
+      { time: 0, value: 0 },
+      { time: 0.5, value: 1.5 },
+      { time: 1, value: 0 },
+    ],
     speed: createPoints(1),
     x: createPoints(0),
     y: createPoints(0),
@@ -678,6 +734,20 @@ const GENERATED_TRICK_PRESETS: GeneratedTrickPreset[] = [
       channels: createDefaultChannels(),
       rotationMax: createDefaultRotationMax(),
       footCatch: createDefaultFootCatch(),
+    }),
+  },
+  {
+    id: "frontside-kickflip",
+    label: "Frontside Kickflip",
+    create: () => ({
+      channels: createFrontsideKickflipChannels(),
+      rotationMax: { x: 360, y: 360, z: 360, body: 180 },
+      // Exported semantic catches are left 0.6723063650306749s and right
+      // 0.5846242620835396s; source shoe roles are reversed internally.
+      footCatch: {
+        left: 0.5846242620835396,
+        right: 0.6723063650306749,
+      },
     }),
   },
   {
@@ -719,6 +789,20 @@ const GENERATED_TRICK_PRESETS: GeneratedTrickPreset[] = [
       footCatch: {
         left: 0.545928393404908,
         right: 0.497603527607362,
+      },
+    }),
+  },
+  {
+    id: "frontside-360",
+    label: "Frontside 360",
+    create: () => ({
+      channels: createFrontside360Channels(),
+      rotationMax: { x: 180, y: 360, z: 360, body: 360 },
+      // Exported semantic catches are left 0.36001634133613947s and right
+      // 0.9577059913271863s; source shoe roles are reversed internally.
+      footCatch: {
+        left: 0.9577059913271863,
+        right: 0.36001634133613947,
       },
     }),
   },
@@ -972,6 +1056,8 @@ function BezierEditor({
   points,
   onChange,
   onZero,
+  inverted,
+  onInvertedChange,
   rotationMax,
   onRotationMaxChange,
   playhead,
@@ -980,6 +1066,8 @@ function BezierEditor({
   points: MotionPoint[];
   onChange: (points: MotionPoint[]) => void;
   onZero: () => void;
+  inverted?: boolean;
+  onInvertedChange?: (checked: boolean) => void;
   rotationMax?: number;
   onRotationMaxChange?: (value: number) => void;
   playhead: PlayheadElements;
@@ -1046,6 +1134,16 @@ function BezierEditor({
     [onChange, points],
   );
 
+  const removeAllPoints = useCallback(() => {
+    const baselineValue = channel.key === "speed" ? 1 : 0;
+    activePoint.current = null;
+    onChange([
+      { time: 0, value: baselineValue },
+      { time: 0.5, value: baselineValue },
+      { time: 1, value: baselineValue },
+    ]);
+  }, [channel.key, onChange]);
+
   const handleKeyDown = useCallback(
     (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
       const valueStep = (channel.max - channel.min) * 0.025;
@@ -1081,7 +1179,7 @@ function BezierEditor({
     >
       <div className="mb-0.5 flex items-center justify-between">
         <h3
-          className="rounded-sm px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em] max-sm:text-[0.48rem] max-sm:tracking-[0.08em]"
+          className="shrink-0 whitespace-nowrap rounded-sm px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em] max-sm:text-[0.48rem] max-sm:tracking-[0.08em]"
           style={{
             color: channel.color,
             backgroundColor: `${channel.color}14`,
@@ -1089,7 +1187,7 @@ function BezierEditor({
         >
           {channel.title}
         </h3>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {rotationMax !== undefined && onRotationMaxChange && (
             <div
               aria-label={`${channel.title} maximum rotation`}
@@ -1125,6 +1223,32 @@ function BezierEditor({
                 <FiPlus aria-hidden="true" />
               </button>
             </div>
+          )}
+          {inverted !== undefined && onInvertedChange && (
+            <button
+              type="button"
+              role="switch"
+              aria-checked={inverted}
+              aria-label={`Invert ${channel.title}`}
+              className="inline-flex h-5 items-center gap-1.5 rounded-full border border-black/10 bg-white px-1.5 text-[0.46rem] font-bold uppercase tracking-[0.06em] text-black/45 transition hover:border-black/25 hover:text-black/65"
+              onClick={() => onInvertedChange(!inverted)}
+              onPointerDown={(event) => event.stopPropagation()}
+              title={`Mirror ${channel.title} values across zero`}
+            >
+              <span className="max-sm:hidden">Invert</span>
+              <span
+                aria-hidden="true"
+                className={`relative h-3 w-5 rounded-full transition-colors ${
+                  inverted ? "bg-black" : "bg-black/15"
+                }`}
+              >
+                <span
+                  className={`absolute left-0.5 top-0.5 size-2 rounded-full bg-white transition-transform ${
+                    inverted ? "translate-x-2" : "translate-x-0"
+                  }`}
+                />
+              </span>
+            </button>
           )}
           <button
             type="button"
@@ -1304,6 +1428,13 @@ function BezierEditor({
                 <FiTrash2 aria-hidden="true" />
                 Delete point
               </ContextMenuItem>
+              <ContextMenuItem
+                className="text-red-600 focus:bg-red-50 focus:text-red-700"
+                onSelect={removeAllPoints}
+              >
+                <FiTrash2 aria-hidden="true" />
+                Delete all control points
+              </ContextMenuItem>
             </ContextMenuContent>
           </ContextMenu>
         ))}
@@ -1449,6 +1580,9 @@ function SkateMotionEditor({
   const [rotationMax, setRotationMax] = useState(() => ({
     ...motion.current.rotationMax,
   }));
+  const [invertedAxes, setInvertedAxes] = useState<
+    Record<AxisChannel, boolean>
+  >({ x: false, y: false, z: false });
   const [footCatch, setFootCatch] = useState(() => ({
     ...motion.current.footCatch,
   }));
@@ -1549,6 +1683,24 @@ function SkateMotionEditor({
     [motion],
   );
 
+  const setAxisInverted = useCallback(
+    (key: AxisChannel, inverted: boolean) => {
+      setSelectedTrickId("custom");
+      setChannels((current) => ({
+        ...current,
+        [key]: current[key].map((point) => {
+          const value = -point.value;
+          return {
+            ...point,
+            value: Math.abs(value) < 1e-10 ? 0 : value,
+          };
+        }),
+      }));
+      setInvertedAxes((current) => ({ ...current, [key]: inverted }));
+    },
+    [],
+  );
+
   const applyTrickPreset = useCallback(
     (preset: GeneratedTrickPreset) => {
       const next = preset.create();
@@ -1563,6 +1715,7 @@ function SkateMotionEditor({
       setChannels(cloneChannels(next.channels));
       setRotationMax({ ...next.rotationMax });
       setFootCatch({ ...next.footCatch });
+      setInvertedAxes({ x: false, y: false, z: false });
       setPaused(false);
       setSelectedTrickId(preset.id);
     },
@@ -1598,6 +1751,7 @@ function SkateMotionEditor({
     motion.current.restartDelayRemaining = 0;
     motion.current.paused = false;
     setChannels(cloneChannels(cleared));
+    setInvertedAxes({ x: false, y: false, z: false });
     setPaused(false);
     setSelectedTrickId("custom");
   }, [motion]);
@@ -1731,6 +1885,21 @@ function SkateMotionEditor({
                   })),
                 )
               }
+              inverted={
+                channel.key === "x" ||
+                channel.key === "y" ||
+                channel.key === "z"
+                  ? invertedAxes[channel.key]
+                  : undefined
+              }
+              onInvertedChange={
+                channel.key === "x" ||
+                channel.key === "y" ||
+                channel.key === "z"
+                  ? (checked) =>
+                      setAxisInverted(channel.key as AxisChannel, checked)
+                  : undefined
+              }
               playhead={playheads.current[channel.key]}
             />
           </Fragment>
@@ -1745,11 +1914,11 @@ function SkateMotionEditor({
           <p className="text-[0.5rem] font-bold uppercase tracking-[0.18em] text-orange-600">
             Detected trick
           </p>
-          <label className="relative mt-0.5 block max-w-[11rem]">
+          <label className="group relative mt-1 block max-w-[11.5rem] rounded-md bg-black/[0.055] transition-colors hover:bg-black/[0.085] focus-within:bg-black/[0.085]">
             <span className="sr-only">Select generated trick</span>
             <select
               aria-label="Select generated trick"
-              className="h-6 w-full cursor-pointer appearance-none truncate border-0 bg-transparent py-0 pl-0 pr-5 text-[0.78rem] font-bold text-black outline-none focus-visible:ring-1 focus-visible:ring-orange-500"
+              className="h-7 w-full cursor-pointer appearance-none truncate rounded-md border-0 bg-transparent py-0 pl-2 pr-8 text-[0.78rem] font-bold text-black outline-none ring-0 focus:outline-none focus:ring-0"
               value={selectedTrickId}
               onChange={(event) => {
                 const preset = GENERATED_TRICK_PRESETS.find(
@@ -1767,7 +1936,7 @@ function SkateMotionEditor({
             </select>
             <FiChevronDown
               aria-hidden="true"
-              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-xs text-black/45"
+              className="pointer-events-none absolute right-1.5 top-1/2 size-4 -translate-y-1/2 rounded bg-black/10 p-0.5 text-black/65 transition-colors group-hover:bg-black/15 group-hover:text-black"
             />
           </label>
         </div>
@@ -2032,6 +2201,13 @@ function SkateModel({
   const stanceOffset = useRef(new THREE.Vector3());
   const caughtPosition = useRef(new THREE.Vector3());
   const caughtQuaternion = useRef(new THREE.Quaternion());
+  const releasedBodyRotation = useRef(0);
+  const physicsBodyAxis = useRef(new THREE.Vector3());
+  const physicsBodyDeltaQuaternion = useRef(new THREE.Quaternion());
+  const physicsBodyPosition = useRef(new THREE.Vector3());
+  const physicsBodyOffset = useRef(new THREE.Vector3());
+  const physicsBodyQuaternion = useRef(new THREE.Quaternion());
+  const physicsBodyVelocity = useRef(new THREE.Vector3());
   const leftYaw = useRef(
     new THREE.Quaternion().setFromAxisAngle(Y_AXIS, 10 * DEG),
   );
@@ -2082,8 +2258,11 @@ function SkateModel({
   const rightVisualPosition = useRef(new THREE.Vector3());
   const shoeLocalOffset = useRef(new THREE.Vector3());
   const landingShoeQuaternion = useRef(new THREE.Quaternion());
-  const stabilizePlainFlipLanding = useRef(false);
+  const stabilizeCaughtLanding = useRef(false);
   const stabilizedLandingQuaternion = useRef(new THREE.Quaternion());
+  const landingReferenceInverse = useRef(new THREE.Quaternion());
+  const landingRelativeQuaternion = useRef(new THREE.Quaternion());
+  const landingYawQuaternion = useRef(new THREE.Quaternion());
   const rearmFromLanding = useRef(false);
   const rearmBoardPosition = useRef(new THREE.Vector3());
   const rearmBoardQuaternion = useRef(new THREE.Quaternion());
@@ -2275,6 +2454,7 @@ function SkateModel({
       setFootPoseTransforms("boltPosition");
       previousProgress.current = 0;
       physicsReleased.current = false;
+      releasedBodyRotation.current = 0;
       physicsReleaseElapsed.current = 0;
       groundedAfterRelease.current = false;
       secondCatchElapsed.current = 0;
@@ -2490,21 +2670,136 @@ function SkateModel({
     // offsets on top of the physical bodies, which looked like feet sliding
     // to (or remaining bound to) a particular half of a 180-degree board.
     if (physicsReleased.current) {
+      // Catching the deck ends the authored board flip/shove and hands the
+      // landing to Rapier, but it must not freeze the rider's independent
+      // body-turn channel. Keep curve time moving to the end, then apply only
+      // the incremental body yaw to the complete physical rig. Rotating every
+      // body around the live board origin preserves joints, contacts, and the
+      // board/shoe spacing while the rider finishes turning naturally.
+      if (!state.paused && state.progress < 1) {
+        const playbackSpeed = THREE.MathUtils.clamp(
+          sampleCurveAtTime(state.channels.speed, state.progress),
+          0,
+          2,
+        );
+        state.progress = Math.min(
+          1,
+          state.progress + (frameDelta * playbackSpeed) / PLAYBACK_DURATION,
+        );
+      }
+      const continuedBodyRotation =
+        sampleCurveAtTime(state.channels.body, state.progress) *
+        THREE.MathUtils.degToRad(state.rotationMax.body);
+      const bodyRotationDelta =
+        continuedBodyRotation - releasedBodyRotation.current;
+      if (Math.abs(bodyRotationDelta) > 1e-7 && boardBody.current) {
+        physicsBodyAxis.current
+          .copy(Y_AXIS)
+          .applyQuaternion(presentationQuaternion)
+          .normalize();
+        physicsBodyDeltaQuaternion.current.setFromAxisAngle(
+          physicsBodyAxis.current,
+          bodyRotationDelta,
+        );
+        const pivot = boardBody.current.translation();
+        centerPosition.current.set(pivot.x, pivot.y, pivot.z);
+
+        for (const body of [
+          boardBody.current,
+          leftShoeBody.current,
+          rightShoeBody.current,
+        ]) {
+          if (!body) continue;
+          const position = body.translation();
+          const rotation = body.rotation();
+          physicsBodyPosition.current.set(position.x, position.y, position.z);
+          if (body !== boardBody.current) {
+            physicsBodyOffset.current
+              .copy(physicsBodyPosition.current)
+              .sub(centerPosition.current)
+              .applyQuaternion(physicsBodyDeltaQuaternion.current);
+            physicsBodyPosition.current
+              .copy(centerPosition.current)
+              .add(physicsBodyOffset.current);
+            body.setTranslation(physicsBodyPosition.current, true);
+          }
+          physicsBodyQuaternion.current
+            .set(rotation.x, rotation.y, rotation.z, rotation.w)
+            .premultiply(physicsBodyDeltaQuaternion.current)
+            .normalize();
+          body.setRotation(physicsBodyQuaternion.current, true);
+
+          const linearVelocity = body.linvel();
+          physicsBodyVelocity.current
+            .set(linearVelocity.x, linearVelocity.y, linearVelocity.z)
+            .applyQuaternion(physicsBodyDeltaQuaternion.current);
+          body.setLinvel(physicsBodyVelocity.current, true);
+          const angularVelocity = body.angvel();
+          physicsBodyVelocity.current
+            .set(angularVelocity.x, angularVelocity.y, angularVelocity.z)
+            .applyQuaternion(physicsBodyDeltaQuaternion.current);
+          body.setAngvel(physicsBodyVelocity.current, true);
+        }
+
+        // These saved world-space orientations are consumed later in the
+        // landing handoff, so advance them with the same rider-frame yaw.
+        stabilizedLandingQuaternion.current
+          .premultiply(physicsBodyDeltaQuaternion.current)
+          .normalize();
+        secondCatchStartQuaternion.current
+          .premultiply(physicsBodyDeltaQuaternion.current)
+          .normalize();
+        secondCatchWorldQuaternion.current
+          .premultiply(physicsBodyDeltaQuaternion.current)
+          .normalize();
+      }
+      releasedBodyRotation.current = continuedBodyRotation;
+
       if (
         groundedAfterRelease.current &&
-        stabilizePlainFlipLanding.current &&
+        stabilizeCaughtLanding.current &&
         boardBody.current
       ) {
         const body = boardBody.current;
         // Two independent, heavy shoe bodies do not include the balancing
-        // constraint a rider's legs and torso provide after touchdown. Once
-        // the deck reaches the floor, hold the exact authored landing
-        // orientation while Rapier continues to resolve vertical motion and
-        // wheel/ground contact. Using that captured quaternion is important:
-        // the imported skateboard's local up axis is not Three's Y axis.
-        body.setEnabledRotations(false, false, false, true);
-        body.setRotation(stabilizedLandingQuaternion.current, true);
-        body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+        // constraint a rider's legs and torso provide after touchdown. Remove
+        // only the physical roll/pitch accumulated around the captured landing
+        // pose; preserve yaw so body spins can finish after either foot catches.
+        // The captured reference is advanced by the authored body curve above.
+        const rotation = body.rotation();
+        physicsBodyQuaternion.current.set(
+          rotation.x,
+          rotation.y,
+          rotation.z,
+          rotation.w,
+        );
+        landingReferenceInverse.current
+          .copy(stabilizedLandingQuaternion.current)
+          .invert();
+        landingRelativeQuaternion.current
+          .copy(physicsBodyQuaternion.current)
+          .multiply(landingReferenceInverse.current)
+          .normalize();
+        const yawProjection = landingRelativeQuaternion.current.y;
+        landingYawQuaternion.current.set(
+          0,
+          yawProjection,
+          0,
+          landingRelativeQuaternion.current.w,
+        );
+        if (landingYawQuaternion.current.lengthSq() < 1e-8) {
+          landingYawQuaternion.current.identity();
+        } else {
+          landingYawQuaternion.current.normalize();
+        }
+        physicsBodyQuaternion.current
+          .copy(landingYawQuaternion.current)
+          .multiply(stabilizedLandingQuaternion.current)
+          .normalize();
+        body.setEnabledRotations(true, true, true, true);
+        body.setRotation(physicsBodyQuaternion.current, true);
+        const angularVelocity = body.angvel();
+        body.setAngvel({ x: 0, y: angularVelocity.y, z: 0 }, true);
       }
       for (const body of [
         boardBody.current,
@@ -3153,7 +3448,10 @@ function SkateModel({
       state.progress >= firstCatchTime
     ) {
       physicsReleased.current = true;
-      stabilizePlainFlipLanding.current = centerPlainFlipLanding;
+      releasedBodyRotation.current = bodyRotation;
+      // Every caught landing needs the missing rider-balance constraint. The
+      // stabilizer removes only roll/pitch, so shove/body yaw remains free.
+      stabilizeCaughtLanding.current = true;
       stabilizedLandingQuaternion.current.copy(
         boardTargetQuaternion.current,
       );
@@ -3321,7 +3619,8 @@ function SkateModel({
       clearedDuringPhysics
     ) {
       physicsReleased.current = false;
-      stabilizePlainFlipLanding.current = false;
+      releasedBodyRotation.current = 0;
+      stabilizeCaughtLanding.current = false;
       physicsReleaseElapsed.current = 0;
       groundedAfterRelease.current = false;
       secondCatchElapsed.current = 0;
@@ -4029,7 +4328,7 @@ export function SkateAnalysisScene({ modelUrl }: { modelUrl: string }) {
       </nav>
       <div
         data-page-navigation-ignore
-        className={`skate-tools-column absolute right-[4.5rem] top-4 z-30 flex w-[22rem] origin-top-right flex-col gap-3 max-[1149px]:right-12 ${mobileToolsOpen ? "" : "max-sm:hidden"}`}
+        className={`skate-tools-column absolute right-[4.5rem] top-4 z-30 flex w-[27rem] origin-top-right flex-col gap-3 max-[1149px]:right-12 max-[1149px]:w-[22rem] ${mobileToolsOpen ? "" : "max-sm:hidden"}`}
       >
         <SkateMotionEditor motion={motion} />
         <SkateAerialPreview modelUrl={modelUrl} motion={motion} />
@@ -4039,13 +4338,32 @@ export function SkateAnalysisScene({ modelUrl }: { modelUrl: string }) {
           transform-origin: top right;
         }
 
-        @media (min-width: 1150px) and (max-height: 900px) {
+        @media (min-width: 1150px) and (max-height: 1100px) {
           .skate-tools-column {
-            transform: scale(0.84);
+            transform: scale(0.86);
           }
         }
 
-        @media (min-width: 641px) and (max-height: 760px) {
+        @media (min-width: 1150px) and (max-height: 1000px) {
+          .skate-tools-column {
+            transform: scale(0.78);
+          }
+        }
+
+        @media (min-width: 1150px) and (max-height: 900px) {
+          .skate-tools-column {
+            transform: scale(0.7);
+          }
+        }
+
+        @media (min-width: 1150px) and (max-height: 760px) {
+          .skate-tools-column {
+            top: 0.5rem;
+            transform: scale(0.58);
+          }
+        }
+
+        @media (min-width: 641px) and (max-width: 1149px) and (max-height: 760px) {
           .skate-tools-column {
             top: 0.5rem;
             transform: scale(0.76);
