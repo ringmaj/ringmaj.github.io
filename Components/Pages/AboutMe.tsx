@@ -103,6 +103,55 @@ const skills: Record<string, Skill[]> = {
   ],
 };
 
+const skillDescriptions: Record<string, string> = {
+  Python: "Automation, backend services, data processing, and engineering tools.",
+  C: "Low-level software for embedded and resource-constrained systems.",
+  "C++": "High-performance applications, simulation, and systems programming.",
+  "C#": "Application development across the .NET ecosystem.",
+  JavaScript: "Interactive web applications and full-stack product development.",
+  React: "Component-driven interfaces for responsive web applications.",
+  "React Native": "Cross-platform mobile applications built with React patterns.",
+  "HTML/CSS": "Semantic interfaces, responsive layouts, and polished visual systems.",
+  Ada: "Reliable, strongly typed software for safety-critical environments.",
+  MATLAB: "Numerical analysis, modeling, visualization, and algorithm prototyping.",
+  Java: "Portable application development and object-oriented systems.",
+  SQL: "Relational data modeling, querying, and database integration.",
+  OpenGL: "Real-time graphics, visualization, and interactive 3D tooling.",
+  "VB.NET": "Desktop and enterprise applications within the .NET platform.",
+  Linux: "Development, deployment, scripting, and systems administration.",
+  Git: "Source control, collaborative development, and release management.",
+  Jenkins: "Automated CI/CD pipelines, builds, testing, and deployments.",
+  Autodesk: "CAD modeling, mechanical design, and engineering visualization.",
+  "Android Studio": "Native Android development, debugging, and device tooling.",
+  LibGDX: "Cross-platform Java framework for interactive graphics and games.",
+  "Integrity RTOS": "Real-time software development on Green Hills INTEGRITY.",
+  "VxWorks RTOS": "Deterministic embedded software for real-time systems.",
+  AWS: "Cloud architecture and delivery across the Amazon Web Services platform.",
+  EC2: "Scalable virtual compute for hosted applications and services.",
+  S3: "Durable object storage for assets, data, and static applications.",
+  Lambda: "Event-driven serverless functions without managing servers.",
+  ECS: "Container orchestration and deployment for production workloads.",
+  CloudWatch: "Centralized cloud logs, metrics, alarms, and observability.",
+  Amplify: "Managed hosting and backend integration for web applications.",
+  AppSync: "Managed GraphQL APIs with real-time data synchronization.",
+  DynamoDB: "Serverless NoSQL storage for scalable, low-latency applications.",
+  "Route 53": "DNS, domain routing, and cloud traffic management.",
+  "Secrets Manager": "Secure storage and rotation of application credentials.",
+  SSM: "Configuration, automation, and operational control through Systems Manager.",
+  Vercel: "Frontend deployment, previews, and edge-hosted Next.js applications.",
+  Docker: "Portable container environments for development and deployment.",
+  Azure: "Cloud services and application delivery on Microsoft Azure.",
+  Jira: "Issue tracking, sprint planning, and engineering project management.",
+  Confluence: "Collaborative technical documentation and team knowledge sharing.",
+  BitBucket: "Git repository hosting and integrated development workflows.",
+  Crucible: "Structured peer code reviews and engineering collaboration.",
+  Agile: "Iterative planning, delivery, feedback, and continuous improvement.",
+  Photoshop: "Image editing, compositing, and production-ready visual assets.",
+  Illustrator: "Vector illustration, icons, diagrams, and scalable graphics.",
+  "After Effects": "Motion graphics, animation, and visual effects workflows.",
+  Blender: "3D modeling, materials, animation, rendering, and asset preparation.",
+};
+
 const AboutMe = () => {
   return (
     <>
@@ -118,24 +167,29 @@ const AboutMe = () => {
           platforms.
         </p>
 
-        <ul className="mx-auto mt-8 h-full w-full text-center max-sm:mt-5">
+        <ul className="skills-groups mx-auto mt-8 h-full w-full text-center max-sm:mt-5">
           {groups.map((group) => (
             <li
               key={group}
               data-skill-group={group}
-              className="flex h-[18%] flex-col max-sm:h-auto"
+              className="skill-group flex h-[18%] flex-col max-sm:h-auto"
             >
-              <h1 className="text-2xl text-[#043b94] font-[800] text-[1.25rem] mb-4">
+              <h1 className="skill-group-title mb-4 text-[1.25rem] font-[800] text-[#043b94]">
                 {group}
               </h1>
-              <ul className="mx-auto flex flex-wrap justify-center gap-x-6 gap-y-4 sm:space-x-8">
+              <ul className="skill-grid mx-auto flex flex-wrap justify-center gap-x-6 gap-y-4">
                 {skills[group].map((skill) => {
                   const SkillIcon = skill.icon;
+                  const tooltipId = `skill-${skill.skill
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")}-description`;
 
                   return (
                     <li
                       key={skill.skill}
-                      className="flex flex-col items-center"
+                      aria-describedby={tooltipId}
+                      className="skill-tile group relative flex flex-col items-center outline-none"
+                      tabIndex={0}
                     >
                       {SkillIcon ? (
                         <SkillIcon
@@ -154,6 +208,22 @@ const AboutMe = () => {
                       <p className="text-[0.65em] font-[500] mt-2">
                         {skill.skill}
                       </p>
+                      <div
+                        id={tooltipId}
+                        role="tooltip"
+                        className="skill-tooltip invisible pointer-events-none absolute bottom-[calc(100%+0.7rem)] left-1/2 z-30 w-56 -translate-x-1/2 translate-y-1 rounded-md bg-[#151515] px-3 py-2.5 text-left text-white opacity-0 shadow-xl transition duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus:visible group-focus:translate-y-0 group-focus:opacity-100 max-sm:hidden"
+                      >
+                        <span className="block text-[0.7rem] font-bold tracking-wide">
+                          {skill.skill}
+                        </span>
+                        <span className="mt-1 block text-[0.64rem] font-normal leading-[0.9rem] text-white/75">
+                          {skillDescriptions[skill.skill]}
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#151515]"
+                        />
+                      </div>
                     </li>
                   );
                 })}

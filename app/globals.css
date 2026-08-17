@@ -235,12 +235,69 @@ html[data-page-transition="entering"][data-page-direction="previous"] main {
 }
 
 @media (min-width: 641px) {
+  #about-me-page > .skills-groups {
+    width: min(100% - 4rem, 75rem);
+    margin-top: 1rem;
+  }
+
   #about-me-page > ul > li {
     height: auto;
+    padding-block: 0.3rem;
+  }
+
+  #about-me-page .skill-group-title {
+    margin-bottom: 0.75rem;
+  }
+
+  #about-me-page .skill-grid {
+    display: grid;
+    width: min(100%, 68rem);
+    grid-template-columns: repeat(16, minmax(0, 1fr));
+    gap: 1rem 0;
+  }
+
+  #about-me-page .skill-tile {
+    width: auto;
+    grid-column: span 2;
+  }
+
+  #about-me-page .skill-tile img,
+  #about-me-page .skill-tile svg {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+  }
+
+  #about-me-page .skill-tile p {
+    min-height: 1.5rem;
+    margin-top: 0.35rem;
+    font-size: 0.68rem;
+    line-height: 0.85rem;
+  }
+
+  #about-me-page
+    li[data-skill-group="Programming"]
+    .skill-tile:nth-child(9) {
+    grid-column: 3 / span 2;
+  }
+
+  #about-me-page
+    li[data-skill-group="AWS & Cloud Development"]
+    .skill-tile:nth-child(9) {
+    grid-column: 2 / span 2;
+  }
+
+  #about-me-page li[data-skill-group="Workflows"] .skill-tile:first-child {
+    grid-column: 4 / span 2;
+  }
+
+  #about-me-page li[data-skill-group="Creativity"] .skill-tile:first-child {
+    grid-column: 5 / span 2;
   }
 
   #about-me-page #divider {
-    margin-block: 0.5rem;
+    width: min(100%, 70rem);
+    margin-block: 0.45rem 0;
   }
 
   #about-me-page > ul > li:last-child #divider {
