@@ -185,10 +185,14 @@ function SeniorModel({ modelUrl }: { modelUrl: string }) {
       object.receiveShadow = true;
       if (object.name === "Ground") {
         const material = new THREE.ShadowMaterial({
-          color: 0xf2f2f2,
-          opacity: 1,
+          color: 0x000000,
+          opacity: 0.14,
+          transparent: true,
+          depthWrite: false,
         });
         object.material = material;
+        object.castShadow = false;
+        object.renderOrder = -2;
         materials.push(material);
       } else if (object.name.includes("cover_1")) {
         const sourceMaterials = Array.isArray(object.material)
@@ -264,10 +268,12 @@ function BakedDirectionalLight({
   position,
   target,
   intensity,
+  castShadow = false,
 }: {
   position: [number, number, number];
   target: [number, number, number];
   intensity: number;
+  castShadow?: boolean;
 }) {
   const scene = useThree((state) => state.scene);
   const [targetX, targetY, targetZ] = target;
@@ -292,6 +298,18 @@ function BakedDirectionalLight({
       position={position}
       target={targetObject}
       intensity={intensity}
+      castShadow={castShadow}
+      shadow-mapSize-width={2048}
+      shadow-mapSize-height={2048}
+      shadow-camera-near={0.1}
+      shadow-camera-far={5000}
+      shadow-camera-left={-1750}
+      shadow-camera-right={1750}
+      shadow-camera-top={1750}
+      shadow-camera-bottom={-1750}
+      shadow-bias={-0.00008}
+      shadow-normalBias={0.5}
+      shadow-radius={3}
     />
   );
 }
@@ -335,12 +353,12 @@ export function BuildIntegrationScene({ modelUrl }: { modelUrl: string }) {
       <directionalLight
         position={[300, 500, -100]}
         intensity={9.67113}
-        castShadow
       />
       <BakedDirectionalLight
         position={[486.0488, 393.2103, -31.8139]}
         target={[142.1962, 49.3577, -469.4445]}
         intensity={18.08919}
+        castShadow
       />
       <SeniorModel modelUrl={modelUrl} />
       <BuildIntegrationControls />
