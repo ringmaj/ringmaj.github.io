@@ -26,7 +26,7 @@ export const NAVIGATION_ITEMS = [
   {
     href: "/diy-pcb-etcher",
     label: "DIY PCB Etcher",
-    assets: ["/Models/PCB/pcb.gltf", "/Models/PCB/pcb.bin"],
+    assets: ["/Models/pcb-shaker-v2.glb"],
   },
   {
     href: "/skate-analysis",

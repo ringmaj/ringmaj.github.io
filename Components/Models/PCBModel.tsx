@@ -8,7 +8,7 @@ import { useInspectableObject } from "../SceneInspector";
 import SmoothOrbitControls from "../Scenes/SmoothOrbitControls";
 import { applyModelMaterialOverride } from "../modelMaterialOverrides";
 
-export const PCB_MODEL_URL = "/Models/PCB/pcb.gltf";
+export const PCB_MODEL_URL = "/Models/pcb-shaker-v2.glb";
 export const ETCHED_PCB_MODEL_URL = "/Models/pcb-etched.glb";
 
 const PCB_POSITION = new THREE.Vector3(1.59042, 0.64523, -2.32668);
@@ -108,6 +108,14 @@ function createFinish(source: THREE.Material) {
     });
   }
 
+  if (name === "rotary lines") {
+    const finish = source.clone();
+    if (finish instanceof THREE.MeshStandardMaterial) {
+      finish.color.set("#3e3d3d");
+    }
+    return finish;
+  }
+
   if (name === "nylon_12_(with_formlabs_fuse_1_3d_printer).002") {
     return new THREE.MeshStandardMaterial({
       name: source.name,
@@ -166,12 +174,11 @@ function createFinish(source: THREE.Material) {
     });
   }
 
-  return new THREE.MeshStandardMaterial({
-    name: source.name,
-    color: "#f4f5f3",
-    metalness: 0,
-    roughness: 0.42,
-  });
+  // Materials introduced by the updated GLB (motor, controls, LED, and their
+  // labels) should retain the colors, emissive values, and texture maps baked
+  // into the source model. The zoom viewer already uses these source values;
+  // cloning them here keeps the main scene visually consistent with it.
+  return source.clone();
 }
 
 type GeometryComponent = {
@@ -367,23 +374,51 @@ function LoadedPCB() {
   const { scene: sourceScene } = useGLTF(PCB_MODEL_URL);
   const glassMaterial = useMemo(
     () =>
-      new THREE.MeshPhysicalMaterial({
-        name: "Etching tank glass",
-        color: "#eefbfc",
-        metalness: 0,
-        roughness: 0.16,
-        transmission: 0.76,
-        thickness: 0.28,
-        ior: 1.46,
+      new THREE.MeshStandardMaterial({
+        name: "Glass",
+        color: "#ededed",
+        metalness: 1,
+        roughness: 1,
         transparent: true,
-        opacity: 0.42,
-        envMapIntensity: 0.9,
-        depthWrite: false,
+        opacity: 0.18,
+        envMapIntensity: 1,
+        side: THREE.DoubleSide,
       }),
     [],
   );
   const preparedModel = useMemo(() => {
-    const clone = sourceScene.clone(true);
+    // The shaker body is the coordinate frame used by the existing mechanical
+    // pivots. The new export places its controls, motor, and LED beside that
+    // hierarchy at the scene root, so move those assemblies into the shaker's
+    // local frame before applying the runtime animation groups.
+    const shakerRoot = sourceScene.getObjectByName("PCB_Shaker_v159");
+    if (!shakerRoot) {
+      throw new Error("The PCB model is missing its shaker assembly root.");
+    }
+    sourceScene.updateMatrixWorld(true);
+    const shakerWorldInverse = shakerRoot.matrixWorld.clone().invert();
+    const clone = shakerRoot.clone(true);
+    clone.name = "PCB shaker assembly";
+    sourceScene.children.forEach((sourceRoot) => {
+      let containsShaker = false;
+      let containsMesh = false;
+      sourceRoot.traverse((object) => {
+        if (object === shakerRoot) containsShaker = true;
+        if (object instanceof THREE.Mesh) containsMesh = true;
+      });
+      if (containsShaker || !containsMesh) return;
+
+      const accessory = sourceRoot.clone(true);
+      const relativeMatrix = shakerWorldInverse
+        .clone()
+        .multiply(sourceRoot.matrixWorld);
+      relativeMatrix.decompose(
+        accessory.position,
+        accessory.quaternion,
+        accessory.scale,
+      );
+      clone.add(accessory);
+    });
     const finishCache = new Map<THREE.Material, THREE.Material>();
     const ownedMaterials = new Set<THREE.Material>();
     const ownedGeometries = new Set<THREE.BufferGeometry>();
@@ -410,16 +445,13 @@ function LoadedPCB() {
       if (!(object instanceof THREE.Mesh)) return;
       object.castShadow = true;
       object.receiveShadow = false;
-      if (object.name === "PCB_Shaker_v159003_5") {
-        object.material = glassMaterial;
-        glassMeshes.push(object);
-        return;
-      }
+      if (object.name === "PCB_Shaker_v159003_5") glassMeshes.push(object);
 
       const sourceMaterials = Array.isArray(object.material)
         ? object.material
         : [object.material];
       const finishes = sourceMaterials.map((material) => {
+        if (material.name.toLowerCase() === "glass") return glassMaterial;
         const existing = finishCache.get(material);
         if (existing) return existing;
         const finish = createFinish(material);

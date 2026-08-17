@@ -249,7 +249,7 @@ function ensureTerminalSession() {
 function Prompt() {
   return (
     <span aria-hidden="true" className="select-none">
-      <span className="text-[#a8e06c]">ring@portfolio</span>
+      <span className="text-[#a8e06c]">ring@cloud</span>
       <span className="text-white/75">:</span>
       <span className="text-[#69c9ff]">~</span>
       <span className="text-white/75">$ </span>
@@ -359,7 +359,7 @@ export default function Terminal() {
           <li className="size-3 rounded-full border border-black/10 bg-[#28c840]" />
         </ul>
         <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 text-[0.68rem] text-white">
-          ring@portfolio — zsh
+          ring@cloud — zsh
         </span>
         <button
           type="button"

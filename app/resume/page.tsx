@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+const RESUME_PDF_URL = "/Henry_Ring_Resume.pdf?v=2026-08-17";
+
 export default function ResumePage() {
   return (
     <section className="flex h-full min-h-0 flex-col bg-neutral-100">
@@ -11,8 +13,8 @@ export default function ResumePage() {
           </p>
         </div>
         <Link
-          href="/Henry_Ring_Resume.pdf"
-          download
+          href={RESUME_PDF_URL}
+          download="Henry_Ring_Resume.pdf"
           className="shrink-0 bg-[var(--main-accent-color)] px-4 py-2 text-sm font-bold text-white hover:bg-[var(--main-accent-color-dark)] max-sm:px-3 max-sm:py-1.5 max-sm:text-xs"
         >
           Download PDF
@@ -20,7 +22,7 @@ export default function ResumePage() {
       </header>
       <iframe
         title="Henry Ring resume"
-        src="/Henry_Ring_Resume.pdf"
+        src={RESUME_PDF_URL}
         className="min-h-0 flex-1 border-0"
       />
     </section>

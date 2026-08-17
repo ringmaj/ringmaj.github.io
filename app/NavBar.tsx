@@ -16,7 +16,7 @@ import { LightingDebugToggle } from "@/Components/LightingDebug";
 const links = [
   { label: "Home", href: "/" },
   { label: "About Me", href: "/about-me" },
-  { label: "Experience", href: "/journey" },
+  { label: "Experience", href: "/overview" },
   { label: "Resume", href: "/resume" },
 ];
 
