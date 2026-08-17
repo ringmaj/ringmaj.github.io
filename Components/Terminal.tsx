@@ -77,6 +77,21 @@ const HELP_SUMMARY =
 const HELP_ALIASES = "Help aliases: commands, ?";
 const HELP_PATH_HINT =
   "Paths support ., .., ~, and absolute project paths. Try `cd app`, `ls`, then `cat page.tsx`.";
+const TERMINAL_COMMANDS = [
+  "cd",
+  "ls",
+  "cat",
+  "open",
+  "pwd",
+  "whoami",
+  "date",
+  "echo",
+  "history",
+  "clear",
+  "help",
+  "commands",
+  "?",
+];
 const HOME_PATH = "/home/ring/portfolio";
 
 type VirtualFile = {
@@ -314,6 +329,100 @@ function getDirectoryNames(path: string, items: string[]) {
     const childPath = path ? `${path}/${item}` : item;
     return VIRTUAL_DIRECTORIES.has(childPath);
   });
+}
+
+function getCanonicalVirtualDirectory(path: string) {
+  if (VIRTUAL_DIRECTORIES.has(path)) return path;
+  let canonicalPath = "";
+
+  for (const segment of path.split("/").filter(Boolean)) {
+    const items = VIRTUAL_DIRECTORIES.get(canonicalPath);
+    const canonicalSegment = items?.find((item) => {
+      const childPath = canonicalPath ? `${canonicalPath}/${item}` : item;
+      return (
+        item.toLowerCase() === segment.toLowerCase() &&
+        VIRTUAL_DIRECTORIES.has(childPath)
+      );
+    });
+    if (!canonicalSegment) return null;
+    canonicalPath = canonicalPath
+      ? `${canonicalPath}/${canonicalSegment}`
+      : canonicalSegment;
+  }
+
+  return canonicalPath;
+}
+
+type CompletionOption = {
+  value: string;
+  cursor: number;
+};
+
+function getTerminalCompletions(
+  value: string,
+  cursor: number,
+  currentDirectory: string,
+): CompletionOption[] {
+  const beforeCursor = value.slice(0, cursor);
+  const afterCursor = value.slice(cursor);
+  const token = beforeCursor.match(/[^\s]*$/)?.[0] ?? "";
+  const tokenStart = beforeCursor.length - token.length;
+  const precedingInput = beforeCursor.slice(0, tokenStart);
+  const command = precedingInput.trim().split(/\s+/)[0]?.toLowerCase() ?? "";
+
+  const replaceToken = (replacement: string): CompletionOption => ({
+    value: `${value.slice(0, tokenStart)}${replacement}${afterCursor}`,
+    cursor: tokenStart + replacement.length,
+  });
+
+  if (tokenStart === 0) {
+    if (!token.includes("/") && !token.startsWith(".") && token !== "~") {
+      return TERMINAL_COMMANDS.filter((candidate) =>
+        candidate.startsWith(token.toLowerCase()),
+      ).map((candidate) => replaceToken(`${candidate} `));
+    }
+  } else if (!["cd", "ls", "cat", "open"].includes(command)) {
+    return [];
+  }
+
+  if (token === "~") return [replaceToken("~/")];
+  if (token === ".") return [replaceToken("./")];
+  if (token === "..") return [replaceToken("../")];
+
+  const lastSlash = token.lastIndexOf("/");
+  const typedParent = lastSlash >= 0 ? token.slice(0, lastSlash + 1) : "";
+  const fragment = token.slice(lastSlash + 1);
+  const normalizedParentPath = normalizeVirtualPath(
+    typedParent || ".",
+    currentDirectory,
+  );
+  const parentPath = getCanonicalVirtualDirectory(normalizedParentPath);
+  if (parentPath === null) return [];
+  const parent = getVirtualEntry(parentPath);
+  if (!parent || parent.kind !== "directory") return [];
+  const completionParent =
+    normalizedParentPath === parentPath
+      ? typedParent
+      : parentPath
+        ? `~/${parentPath}/`
+        : "~/";
+
+  const directoriesOnly = command === "cd";
+  return parent.items
+    .filter((item) =>
+      item.toLowerCase().startsWith(fragment.toLowerCase()),
+    )
+    .filter((item) => {
+      if (!directoriesOnly) return true;
+      const childPath = parentPath ? `${parentPath}/${item}` : item;
+      return VIRTUAL_DIRECTORIES.has(childPath);
+    })
+    .sort((left, right) => left.localeCompare(right))
+    .map((item) => {
+      const childPath = parentPath ? `${parentPath}/${item}` : item;
+      const suffix = VIRTUAL_DIRECTORIES.has(childPath) ? "/" : " ";
+      return replaceToken(`${completionParent}${item}${suffix}`);
+    });
 }
 
 function executeTerminalCommand(rawCommand: string) {
@@ -807,12 +916,23 @@ function TerminalLineView({
 
   const itemColor =
     line.kind === "skills" ? "text-[#72d6c9]" : "text-[#ffc26f]";
+  const longestFileName =
+    line.kind === "files"
+      ? Math.max(10, ...line.items.map((item) => item.length))
+      : 0;
 
   return (
     <div
+      style={
+        line.kind === "files"
+          ? {
+              gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${longestFileName + 2}ch), 1fr))`,
+            }
+          : undefined
+      }
       className={`grid gap-y-0 ${
         line.kind === "files"
-          ? "grid-cols-2 gap-x-3 sm:grid-cols-[13ch_19ch_14ch_17ch_10ch] sm:gap-x-2"
+          ? "gap-x-3"
           : "grid-cols-1"
       } ${itemColor}`}
     >
@@ -845,6 +965,11 @@ export default function Terminal() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const historyIndexRef = useRef(terminalCommandHistory.length);
+  const completionCycleRef = useRef<{
+    options: CompletionOption[];
+    index: number;
+    lastValue: string;
+  } | null>(null);
 
   useEffect(() => {
     ensureTerminalSession();
@@ -866,12 +991,54 @@ export default function Terminal() {
     const command = input;
     if (command.trim()) terminalCommandHistory.push(command);
     historyIndexRef.current = terminalCommandHistory.length;
+    completionCycleRef.current = null;
     executeTerminalCommand(command);
     setInput("");
     window.requestAnimationFrame(() => inputRef.current?.focus());
   };
 
   const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      const currentCycle = completionCycleRef.current;
+      let options: CompletionOption[];
+      let nextIndex = 0;
+
+      if (
+        currentCycle &&
+        currentCycle.options.length > 1 &&
+        currentCycle.lastValue === input
+      ) {
+        options = currentCycle.options;
+        nextIndex = (currentCycle.index + 1) % options.length;
+      } else {
+        options = getTerminalCompletions(
+          input,
+          event.currentTarget.selectionStart ?? input.length,
+          currentDirectory,
+        );
+      }
+
+      const completion = options[nextIndex];
+      if (!completion) {
+        completionCycleRef.current = null;
+        return;
+      }
+
+      setInput(completion.value);
+      completionCycleRef.current = {
+        options,
+        index: nextIndex,
+        lastValue: completion.value,
+      };
+      window.requestAnimationFrame(() => {
+        inputRef.current?.setSelectionRange(completion.cursor, completion.cursor);
+      });
+      return;
+    }
+
+    completionCycleRef.current = null;
+
     if (event.key === "ArrowUp") {
       event.preventDefault();
       if (terminalCommandHistory.length === 0) return;
@@ -938,6 +1105,7 @@ export default function Terminal() {
           onClick={() => {
             setInput("");
             historyIndexRef.current = terminalCommandHistory.length;
+            completionCycleRef.current = null;
             runTerminalSession();
           }}
           className="ml-auto grid size-7 place-items-center rounded-md text-base text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-white"
@@ -970,7 +1138,10 @@ export default function Terminal() {
             <input
               ref={inputRef}
               value={input}
-              onChange={(event) => setInput(event.target.value)}
+              onChange={(event) => {
+                completionCycleRef.current = null;
+                setInput(event.target.value);
+              }}
               onKeyDown={handleInputKeyDown}
               className="min-w-0 flex-1 border-0 bg-transparent p-0 [font:inherit] text-inherit caret-white outline-none"
               aria-label="Terminal command"
